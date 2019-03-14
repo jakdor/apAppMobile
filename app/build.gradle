@@ -7,14 +7,14 @@ project.ext {
     androidxVersion = "1.0.0"
     androidxAppcompatVersion = "1.0.2"
     archVersion = "2.0.0"
-    constraintLayoutVersion = "2.0.0-alpha2"
-    daggerVersion = "2.13"
-    rxKotlinVersion = "2.2.0"
-    rxAndroidVersion = "2.0.1"
-    timberVersion = "4.7.0"
-    retrofitVersion = "2.3.0"
-    okHttpVersion = "3.9.1"
-    leakCanaryVersion = "1.6.1"
+    constraintLayoutVersion = "2.0.0-alpha3"
+    daggerVersion = "2.21"
+    rxKotlinVersion = "2.3.0"
+    rxAndroidVersion = "2.1.1"
+    timberVersion = "4.7.1"
+    retrofitVersion = "2.5.0"
+    okHttpVersion = "3.12.0"
+    leakCanaryVersion = "1.6.3"
 }
 
 android {
@@ -91,6 +91,6 @@ dependencies {
 
     //TEST ANDROID
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
