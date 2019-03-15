@@ -10,8 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
  * Abstract base ViewModel
  */
 abstract class BaseViewModel(application: Application,
-                             protected val rxSchedulersFacade: RxSchedulersFacade
-):
+                             protected val rxSchedulersFacade: RxSchedulersFacade):
     AndroidViewModel(application) {
 
     protected var disposable = CompositeDisposable()

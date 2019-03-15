@@ -69,7 +69,7 @@ object AppInjector {
                     override fun onFragmentCreated(
                         fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
                         if (f is InjectableFragment) {
-                            //AndroidSupportInjection.inject(f)
+                            AndroidSupportInjection.inject(f)
                         }
                     }
                 }, true)
