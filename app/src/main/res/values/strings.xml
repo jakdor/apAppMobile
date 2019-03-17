@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Apapp</string>
+    <string name="apartment_list_title_prefix">Api calls remaining</string>
 </resources>

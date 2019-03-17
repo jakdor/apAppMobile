@@ -4,6 +4,7 @@ import android.util.ArrayMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.di.ViewModelSubComponent
+import com.jakdor.apapp.ui.apartmentList.ApartmentListViewModel
 import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +25,7 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
     private val creators: ArrayMap<Class<*>, Callable<out ViewModel>> = ArrayMap()
 
     init {
-        //creators[GpsInfoViewModel::class.java] = Callable { viewModelSubComponent.gpsInfoViewModel() }
+        creators[ApartmentListViewModel::class.java] = Callable { viewModelSubComponent.apartmentListViewModel() }
     }
 
     /**

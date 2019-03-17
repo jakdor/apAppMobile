@@ -1,5 +1,6 @@
 package com.jakdor.apapp.di
 
+import com.jakdor.apapp.ui.apartmentList.ApartmentListViewModel
 import dagger.Subcomponent
 
 /**
@@ -13,5 +14,5 @@ interface ViewModelSubComponent {
         fun build(): ViewModelSubComponent
     }
 
-    //fun gpsInfoViewModel(): GpsInfoViewModel
+    fun apartmentListViewModel(): ApartmentListViewModel
 }
