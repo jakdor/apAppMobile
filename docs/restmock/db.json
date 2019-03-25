@@ -1,0 +1,55 @@
+{
+  "apartments": [
+    {
+      "id": 1,
+      "name": "mieszkanie1",
+      "city": "Wro",
+      "street": "Grunwald",
+      "apartment": "24/2",
+      "imgList": [
+        "https://cdn.vox-cdn.com/thumbor/Nqj_NACBd-MYueCnjB2Y5ZB70ig=/0x0:3000x2000/1200x800/filters:focal(1260x760:1740x1240)/cdn.vox-cdn.com/uploads/chorus_image/image/59543123/290_West_St_3B_14.0.jpg",
+        "http://tamworthgardens.com.au/wp-content/uploads/2014/11/serviced-apartment-interior-2.jpg"
+      ],
+      "imgThumb": "http://www.inesapartment.com/_Media/001_hr-2.jpeg",
+      "lat": 51.11126861255684,
+      "long": 17.058082222938538,
+      "rating": 4.23
+    },
+    {
+      "id": 1,
+      "name": "pwr",
+      "city": "Wro",
+      "street": "Wybrzeże cośtam",
+      "apartment": "666",
+      "imgList": [
+        "https://i.imgur.com/h0ViA4j.jpg"
+      ],
+      "imgThumb": "https://pbs.twimg.com/profile_images/3247459907/997bd02b9d2b6f114401bc44c2ee79c4.png",
+      "lat": 51.10765815219359,
+      "long": 17.06202507019043,
+      "rating": 2.34
+    },
+    {
+      "id": 1,
+      "name": "mieszkanie2",
+      "city": "Wro",
+      "street": "Grunwald",
+      "apartment": "232/2",
+      "imgList": [],
+      "imgThumb": "http://www.inesapartment.com/_Media/001_hr-2.jpeg",
+      "lat": 51.10957119244237,
+      "long": 17.0647931098938,
+      "rating": 4.23
+    }
+  ],
+  "login": {
+	"bearerToken": "ADA305A2F7B5A84E0A0E29BD810917C0",
+	"refreshToken": "930CDDC47F37BA7FC4F81DAA93456C57"
+   },
+  "refresh": {
+    "bearerToken": "B5A84E0A0E29BDADA305A2810917C0F7"
+  },
+  "register": {
+    "registerStatus": 1
+  }
+}
