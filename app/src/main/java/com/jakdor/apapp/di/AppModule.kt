@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.App
 import com.jakdor.apapp.arch.ViewModelFactory
-import com.jakdor.apapp.common.repository.StackRepository
+import com.jakdor.apapp.common.repository.ApartmentRepository
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import dagger.Module
@@ -40,8 +40,8 @@ class AppModule {
     }
 
     @Provides
-    fun provideStackRepository(): StackRepository {
-        return StackRepository(
+    fun provideStackRepository(): ApartmentRepository {
+        return ApartmentRepository(
             provideRetrofitFactory(),
             provideRxSchedulersFacade())
     }

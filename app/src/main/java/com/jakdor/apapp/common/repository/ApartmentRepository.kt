@@ -1,6 +1,6 @@
 package com.jakdor.apapp.common.repository
 
-import com.jakdor.apapp.common.model.StackQuestions
+import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
@@ -9,7 +9,10 @@ import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import javax.inject.Inject
 
-class StackRepository
+/**
+ * Apartment repository
+ */
+class ApartmentRepository
 @Inject constructor(retrofitFactory: RetrofitFactory,
                     private val rxSchedulersFacade: RxSchedulersFacade){
 
@@ -18,14 +21,14 @@ class StackRepository
 
     private val rxDisposables: CompositeDisposable = CompositeDisposable()
 
-    val stackQuestionsSubject: BehaviorSubject<StackQuestions> = BehaviorSubject.create()
+    val apartmentsListSubject: BehaviorSubject<List<Apartment>> = BehaviorSubject.create()
 
-    fun requestStackQuestions(){
-        rxDisposables.add(apiService.getQuestions()
+    fun requestApartments(){
+        rxDisposables.add(apiService.getApartments()
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
-            .subscribe({ t: StackQuestions? -> if(t != null) stackQuestionsSubject.onNext(t) },
-                {e ->  Timber.e(e, "Error observing StackQuestions")}))
+            .subscribe({ t: List<Apartment>? -> if(t != null) apartmentsListSubject.onNext(t) },
+                {e ->  Timber.e(e, "Error observing Apartments")}))
     }
 
     fun dispose(){

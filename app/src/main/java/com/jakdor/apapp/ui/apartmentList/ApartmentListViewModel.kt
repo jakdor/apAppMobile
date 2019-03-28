@@ -3,8 +3,8 @@ package com.jakdor.apapp.ui.apartmentList
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
-import com.jakdor.apapp.common.model.StackQuestions
-import com.jakdor.apapp.common.repository.StackRepository
+import com.jakdor.apapp.common.model.apartment.Apartment
+import com.jakdor.apapp.common.repository.ApartmentRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import timber.log.Timber
 import javax.inject.Inject
@@ -12,20 +12,20 @@ import javax.inject.Inject
 class ApartmentListViewModel
 @Inject constructor(application: Application,
                     rxSchedulersFacade: RxSchedulersFacade,
-                    private val stackRepository: StackRepository):
+                    private val apartmentRepository: ApartmentRepository):
     BaseViewModel(application, rxSchedulersFacade){
 
-    val stackQuestionsLiveData = MutableLiveData<StackQuestions>()
+    val apartmentsListLiveData = MutableLiveData<List<Apartment>>()
 
-    fun observeStackQuestionsSubject(){
-        disposable.add(stackRepository.stackQuestionsSubject
+    fun observeApartmentsListSubject(){
+        disposable.add(apartmentRepository.apartmentsListSubject
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
-            .subscribe({ t: StackQuestions -> stackQuestionsLiveData.postValue(t) },
-                {e ->  Timber.e(e, "Error observing StackQuestionsSubject")}))
+            .subscribe({ t: List<Apartment> -> apartmentsListLiveData.postValue(t) },
+                {e ->  Timber.e(e, "Error observing ApartmentsListSubject")}))
     }
 
-    fun requestStackQuestionsUpdate(){
-        stackRepository.requestStackQuestions()
+    fun requestApartmentsListUpdate(){
+        apartmentRepository.requestApartments()
     }
 }
