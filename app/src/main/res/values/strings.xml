@@ -2,12 +2,12 @@
     <string name="app_name">Apapp</string>
     <string name="apartment_list_title_prefix">Api calls remaining</string>
     <string name="stack_overflow_user_icon_desc">Stack Overflow user icon</string>
-	<string name="registration">Rejestracja</string>
-	<string name="nameEditText">Imię</string>
-	<string name="surnameEditText">Nazwisko</string>
-	<string name="emailEditText">E-mail</string>
-	<string name="loginEditText">Login</string>
-	<string name="password">Hasło</string>
-	<string name="re_enter_password">Powtórz hasło</string>
+	<string name="registrationLabel">Rejestracja</string>
+	<string name="nameLabel">Imię</string>
+	<string name="surnameLabel">Nazwisko</string>
+	<string name="emailLabel">E-mail</string>
+	<string name="loginLabel">Login</string>
+	<string name="passwordLabel">Hasło</string>
+	<string name="re_passwordLabel">Powtórz hasło</string>
 	<string name="registerButton">Zarejestruj</string>
 </resources>
