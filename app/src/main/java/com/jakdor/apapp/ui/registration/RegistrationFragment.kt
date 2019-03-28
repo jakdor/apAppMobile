@@ -6,9 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
+import com.jakdor.apapp.ui.MainActivity
+import kotlinx.android.synthetic.main.fragment_registration.*
 import javax.inject.Inject
 
 class RegistrationFragment : Fragment(), InjectableFragment {
@@ -18,10 +22,8 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     var viewModel: RegistrationViewModel? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_registration, container, false)
     }
 
