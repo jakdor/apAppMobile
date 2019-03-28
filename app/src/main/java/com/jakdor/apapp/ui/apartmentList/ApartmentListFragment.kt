@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakdor.apapp.R
-import com.jakdor.apapp.common.model.StackQuestions
+import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.databinding.FragmentApartmentListBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.utils.GlideApp
@@ -52,28 +52,24 @@ class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, I
         binding.viewModel = viewModel
         observeStackQuestionsLiveData()
 
-        viewModel?.observeStackQuestionsSubject()
-        viewModel?.requestStackQuestionsUpdate()
+        viewModel?.observeApartmentsListSubject()
+        viewModel?.requestApartmentsListUpdate()
         swipe_refresh_layout.isRefreshing = true
     }
 
     override fun onRefresh() {
-        viewModel?.requestStackQuestionsUpdate()
+        viewModel?.requestApartmentsListUpdate()
     }
 
     fun observeStackQuestionsLiveData(){
-        viewModel?.stackQuestionsLiveData?.observe(this, Observer {
-            handleNewStackQuestions(it)
+        viewModel?.apartmentsListLiveData?.observe(this, Observer {
+            handleNewApartmentList(it)
         })
     }
 
-    fun handleNewStackQuestions(model: StackQuestions){
-        binding.title = getString(R.string.apartment_list_title_prefix) + ": " + model.quotaRemaining.toString()
-
-        if(model.items != null) {
-            if (!recyclerViewInit) initRecyclerView()
-            recyclerViewAdapter.updateItems(model.items!!.toMutableList())
-        }
+    fun handleNewApartmentList(model: List<Apartment>){
+        if (!recyclerViewInit) initRecyclerView()
+        recyclerViewAdapter.updateItems(model.toMutableList())
 
         item_recycler.scrollToPosition(0)
         swipe_refresh_layout.isRefreshing = false

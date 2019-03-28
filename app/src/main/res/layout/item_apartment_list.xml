@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<data>
-		<variable name="item" type="com.jakdor.apapp.common.model.Item"/>
+		<variable name="apartment" type="com.jakdor.apapp.common.model.apartment.Apartment"/>
 	</data>
 
 	<androidx.cardview.widget.CardView
@@ -18,7 +18,7 @@
 				android:layout_height="match_parent">
 
 			<ImageView
-					android:id="@+id/item_image"
+					android:id="@+id/apartment_image"
 					android:layout_width="100dp"
 					android:layout_height="100dp"
 					android:contentDescription="@string/stack_overflow_user_icon_desc"
@@ -27,28 +27,28 @@
 					app:layout_constraintBottom_toBottomOf="parent"/>
 
 			<TextView
-					android:id="@+id/item_title"
+					android:id="@+id/apartment_title"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginEnd="8dp"
 					android:layout_marginStart="8dp"
 					android:layout_marginTop="8dp"
 					android:textStyle="bold"
-					android:text="@{item.title}"
-					app:layout_constraintStart_toEndOf="@+id/item_image"
+					android:text="@{apartment.name}"
+					app:layout_constraintStart_toEndOf="@+id/apartment_image"
 					app:layout_constraintTop_toTopOf="parent"
 					app:layout_constraintEnd_toEndOf="parent"/>
 
 			<TextView
-					android:id="@+id/item_message"
+					android:id="@+id/apartment_message"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="8dp"
 					android:layout_marginTop="8dp"
 					android:layout_marginEnd="8dp"
-					android:text="@{item.owner.displayName}"
-					app:layout_constraintStart_toEndOf="@+id/item_image"
-					app:layout_constraintTop_toBottomOf="@+id/item_title"
+					android:text="@{apartment.street}"
+					app:layout_constraintStart_toEndOf="@+id/apartment_image"
+					app:layout_constraintTop_toBottomOf="@+id/apartment_title"
 					app:layout_constraintEnd_toEndOf="parent"/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
