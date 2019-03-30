@@ -34,4 +34,47 @@ class RegistrationViewModel
         }
         return null
     }
+
+    fun validateEmail(email: String): String? {
+
+        val emailPattern: Pattern = Pattern.compile("(?:[^@]+)(?:\\@)(?:[^@]+)")
+        val emailPattern2: Pattern = Pattern.compile("(?:.+)(?:\\.)(?:[^\\.\\@]+)")
+
+        val findAt: Pattern = Pattern.compile("(?:\\@)")
+        val findDot: Pattern = Pattern.compile("(?:\\.)")
+
+        if(!emailPattern.matcher(email).find()){
+            if(!findAt.matcher(email).find()) {
+                return "Brak @ w adresie email"
+            }else{
+                return "Błędny adres email"
+            }
+        }
+
+        if(!emailPattern2.matcher(email).find()){
+            if(!findDot.matcher(email).find()) {
+                return "Brak . w adresie email"
+            }else{
+                return "Błędny adres email"
+            }
+        }
+
+        return null
+    }
+
+    fun isEmptyValidation(textToValidate: String): String? {
+
+        if(textToValidate.isEmpty()){
+            return "To pole nie może być puste"
+        }
+
+        return null
+    }
+
+    fun validateLogin(login: String): String? {
+
+        //TODO: sprawdzenie czy w bazie istnieje juz login
+
+        return null
+    }
 }
