@@ -37,6 +37,8 @@ class LoginFragment : Fragment(), InjectableFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loginButton.isEnabled = false
+
         loginEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
