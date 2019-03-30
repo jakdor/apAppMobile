@@ -2,9 +2,9 @@
     <string name="app_name">Apapp</string>
     <string name="apartment_list_title_prefix">Api calls remaining</string>
     <string name="stack_overflow_user_icon_desc">Stack Overflow user icon</string>
-	<string name="loginBannerTextView">Logowanie</string>
-	<string name="loginEditText">Login</string>
-	<string name="passwordTextView">Hasło</string>
-	<string name="loginButton">Zaloguj</string>
-	<string name="registerButton">Zarejestruj</string>
+	<string name="login_banner">Logowanie</string>
+	<string name="login_label">Login</string>
+	<string name="password_label">Hasło</string>
+	<string name="sing_in_label">Zaloguj</string>
+	<string name="sing_up_label">Zarejestruj</string>
 </resources>
