@@ -16,7 +16,7 @@
 				android:layout_height="match_parent">
 
 			<Button
-					android:id="@+id/switchRegistration"
+					android:id="@+id/switch_registration"
 					android:text="Rejestracja"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"

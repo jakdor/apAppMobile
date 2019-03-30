@@ -261,6 +261,8 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         })
     }
 
+
+
     companion object {
         const val CLASS_TAG = "RegistrationFragment"
 

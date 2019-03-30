@@ -1,5 +1,6 @@
 package com.jakdor.apapp.ui.apartmentList
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -44,8 +45,10 @@ class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, I
         super.onViewCreated(view, savedInstanceState)
         swipe_refresh_layout.setOnRefreshListener(this)
 
-        switchRegistration.setOnClickListener{
-            fragmentManager?.beginTransaction()?.replace(R.id.mainFragmentLayout, RegistrationFragment())?.commit()
+        switch_registration.setOnClickListener{
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.mainFragmentLayout, RegistrationFragment(), null)
+                ?.commitAllowingStateLoss()
         }
     }
 
