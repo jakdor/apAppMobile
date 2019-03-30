@@ -1,5 +1,6 @@
 package com.jakdor.apapp.ui.registration
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -48,12 +49,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         val email: String = email_editText.text.toString()
         email_editText.error = viewModel?.isEmptyValidation(email)
 
-        val rePassword: String = rePassword_editText.text.toString()
-        rePassword_editText.error = viewModel?.isEmptyValidation(rePassword)
-
-        val password: String = password_editText.text.toString()
-        password_editText.error = viewModel?.isEmptyValidation(password)
-
         val login: String = login_editText.text.toString()
         login_editText.error = viewModel?.isEmptyValidation(login)
     }
@@ -61,16 +56,25 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        register_button.setOnClickListener {
+
+            val password: String = password_editText.text.toString()
+            val rePassword: String = rePassword_editText.text.toString()
+
+            if(password != rePassword){
+                rePassword_editText.error = "Podane hasła się nie zgadzają"
+            }
+        }
+
         register_button.isEnabled = false
 
         password_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 val password: String = password_editText.text.toString()
-                val rePassword: String = rePassword_editText.text.toString()
 
                 when {
-                    viewModel?.validatePassword(password, rePassword) != null -> {
-                        password_editText.error = viewModel?.validatePassword(password, rePassword)
+                    viewModel?.validatePassword(password) != null -> {
+                        password_editText.error = viewModel?.validatePassword(password)
                         isPasswordCorrect = false
                     }
                     viewModel?.isEmptyValidation(password)!=null -> {
@@ -94,8 +98,8 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 val password: String = password_editText.text.toString()
 
                 when {
-                    viewModel?.validatePassword(password, password) != null -> {
-                        password_editText.error = viewModel?.validatePassword(password, password)
+                    viewModel?.validatePassword(password) != null -> {
+                        password_editText.error = viewModel?.validatePassword(password)
                         isPasswordCorrect = false
                     }
                     viewModel?.isEmptyValidation(password)!=null -> {
@@ -112,12 +116,11 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         })
         rePassword_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val password: String = password_editText.text.toString()
                 val rePassword: String = rePassword_editText.text.toString()
 
                 when {
-                    viewModel?.validatePassword(rePassword, password) != null -> {
-                        rePassword_editText.error = viewModel?.validatePassword(rePassword, password)
+                    viewModel?.validatePassword(rePassword) != null -> {
+                        rePassword_editText.error = viewModel?.validatePassword(rePassword)
                         isRePasswordCorrect = false
                     }
                     viewModel?.isEmptyValidation(rePassword)!=null -> {
@@ -141,12 +144,11 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 val rePassword: String = rePassword_editText.text.toString()
-                val password: String = password_editText.text.toString()
 
                 when {
-                    viewModel?.validatePassword(rePassword, password) != null -> {
+                    viewModel?.validatePassword(rePassword) != null -> {
 
-                        rePassword_editText.error = viewModel?.validatePassword(rePassword, password)
+                        rePassword_editText.error = viewModel?.validatePassword(rePassword)
                         isRePasswordCorrect = false
                     }
                     viewModel?.isEmptyValidation(rePassword)!=null -> {

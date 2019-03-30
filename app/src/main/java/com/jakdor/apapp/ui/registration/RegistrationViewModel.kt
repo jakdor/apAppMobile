@@ -11,7 +11,7 @@ class RegistrationViewModel
                     rxSchedulersFacade: RxSchedulersFacade):
     BaseViewModel(application, rxSchedulersFacade){
 
-    fun validatePassword(password: String, rePassword: String): String? {
+    fun validatePassword(password: String): String? {
 
         val upperCase: Pattern = Pattern.compile("[A-Z]")
         val digitCase: Pattern = Pattern.compile("[0-9]")
@@ -28,9 +28,6 @@ class RegistrationViewModel
         }
         if(password.length < 8){
             return "Hasło musi zawierać conajmniej 8 znaków"
-        }
-        if(password != rePassword){
-            return "Podane hasła się nie zgadzają"
         }
         return null
     }

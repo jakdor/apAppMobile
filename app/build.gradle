@@ -53,6 +53,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$project.androidxVersion"
     implementation "androidx.preference:preference:$project.androidxVersion"
     implementation "androidx.constraintlayout:constraintlayout:$project.constraintLayoutVersion"
+    implementation "com.android.support:design"
 
     //android architecture
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
