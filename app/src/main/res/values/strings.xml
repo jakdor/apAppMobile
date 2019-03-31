@@ -1,7 +1,5 @@
 <resources>
 	<string name="app_name">Apapp</string>
-	<string name="apartment_list_title_prefix">Api calls remaining</string>
-	<string name="stack_overflow_user_icon_desc">Stack Overflow user icon</string>
 	<string name="login_banner">Logowanie</string>
 	<string name="login_label">Login</string>
 	<string name="password_label">Hasło</string>
@@ -9,4 +7,22 @@
 	<string name="sing_up_label">Zarejestruj</string>
 	<string name="singed_up">Zarejestrowano</string>
 	<string name="singed_in">Zalogowano</string>
+	<string name="registrationLabel">Rejestracja</string>
+	<string name="nameLabel">Imię</string>
+	<string name="surnameLabel">Nazwisko</string>
+	<string name="emailLabel">E-mail</string>
+	<string name="loginLabel">Login</string>
+	<string name="passwordLabel">Hasło</string>
+	<string name="re_passwordLabel">Powtórz hasło</string>
+	<string name="registerButton">Zarejestruj</string>
+	<string name="passwordLength">Hasło musi zawierać conajmniej 8 znaków</string>
+	<string name="passwordSpecialCase">Hasło musi zawierać conajmniej jeden znak specjalny</string>
+	<string name="passwordDigitCase">Hasło musi zawierać conajmniej jedną cyfrę</string>
+	<string name="passwordUpperCase">Hasło musi zawierać conajmniej jedną dużą literę</string>
+	<string name="emailNoAt">Brak @ w adresie email</string>
+	<string name="emailNoDot">Brak . w adresie email</string>
+	<string name="emailWrong">Błędny adres email</string>
+	<string name="noEmptyField">To pole nie może być puste</string>
+	<string name="passwordsNoMatch">Podane hasła się nie zgadzają</string>
+	<string name="apartment_list_icon_desc">apartment thumbnail</string>
 </resources>

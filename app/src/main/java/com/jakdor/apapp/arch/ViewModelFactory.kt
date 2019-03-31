@@ -4,6 +4,7 @@ import android.util.ArrayMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.di.ViewModelSubComponent
+import com.jakdor.apapp.ui.registration.RegistrationViewModel
 import com.jakdor.apapp.ui.apartmentList.ApartmentListViewModel
 import com.jakdor.apapp.ui.login.LoginViewModel
 import java.util.concurrent.Callable
@@ -28,6 +29,7 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
     init {
         creators[ApartmentListViewModel::class.java] = Callable { viewModelSubComponent.apartmentListViewModel() }
         creators[LoginViewModel::class.java] = Callable { viewModelSubComponent.loginViewModel() }
+        creators[RegistrationViewModel::class.java] = Callable { viewModelSubComponent.registrationViewModel() }
     }
 
     /**

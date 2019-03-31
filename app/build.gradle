@@ -16,6 +16,7 @@ project.ext {
     okHttpVersion = "3.12.0"
     glideVersion = "4.9.0"
     leakCanaryVersion = "1.6.3"
+    supportDesign = "27.1.0"
 }
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$project.androidxVersion"
     implementation "androidx.preference:preference:$project.androidxVersion"
     implementation "androidx.constraintlayout:constraintlayout:$project.constraintLayoutVersion"
+    implementation "com.android.support:design:$project.supportDesign"
 
     //android architecture
     kapt "androidx.lifecycle:lifecycle-compiler:$project.archVersion"

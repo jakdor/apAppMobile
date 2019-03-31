@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.jakdor.apapp.R
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
+import com.jakdor.apapp.ui.registration.RegistrationFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import timber.log.Timber
@@ -24,8 +25,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        switchToLoginFragment();
-        //switchToApartmentListFragment()
+        //switchToLoginFragment();
+        switchToApartmentListFragment()
+        //switchToRegistrationFragment()
     }
 
     fun switchToApartmentListFragment(){
@@ -35,10 +37,17 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         Timber.i("Lunched ApartmentListFragment")
     }
 
-    fun switchToLoginFragment(){
+    fun switchToLoginFragment() {
         supportFragmentManager.beginTransaction()
             .add(R.id.mainFragmentLayout, LoginFragment.getInstance(), LoginFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched LoginFragment")
+    }
+
+    fun switchToRegistrationFragment(){
+        supportFragmentManager.beginTransaction()
+            .add(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Launched RegistrationFragment")
     }
 }
