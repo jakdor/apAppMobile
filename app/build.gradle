@@ -57,8 +57,6 @@ dependencies {
     implementation "com.android.support:design:$project.supportDesign"
 
     //android architecture
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$project.archVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$project.archVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$project.archVersion"
