@@ -13,20 +13,20 @@ class LoginViewModel
     BaseViewModel(application, rxSchedulersFacade){
 
 
-    val loginPossibility = MutableLiveData<Boolean>().apply { value = false }
+    val loginPossibility = MutableLiveData<Boolean>().apply { postValue(false) }
 
     var isLoginFilled: Boolean = false
     var isPasswordFilled: Boolean = false
 
     fun checkLoginFilled (etText : String)  {
         isLoginFilled = !etText.trim().isEmpty()
-        loginPossibility.value = isLoginFilled && isPasswordFilled
+        loginPossibility.postValue(isLoginFilled && isPasswordFilled)
 
     }
 
     fun checkPasswordFilled (etText : String)  {
         isPasswordFilled = !etText.trim().isEmpty()
-        loginPossibility.value = isLoginFilled && isPasswordFilled
+        loginPossibility.postValue( isLoginFilled && isPasswordFilled)
     }
 
 }
