@@ -207,9 +207,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             RegistrationViewModel.PasswordStatus.LENGTH ->{
                 input.error = getString(R.string.passwordLength)
             }
-            RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
-                input.error = getString(R.string.passwordSpecialCase)
-            }
             RegistrationViewModel.PasswordStatus.DIGITCASE ->{
                 input.error = getString(R.string.passwordDigitCase)
             }

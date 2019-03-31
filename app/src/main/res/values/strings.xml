@@ -16,7 +16,6 @@
 	<string name="re_passwordLabel">Powtórz hasło</string>
 	<string name="registerButton">Zarejestruj</string>
 	<string name="passwordLength">Hasło musi zawierać conajmniej 8 znaków</string>
-	<string name="passwordSpecialCase">Hasło musi zawierać conajmniej jeden znak specjalny</string>
 	<string name="passwordDigitCase">Hasło musi zawierać conajmniej jedną cyfrę</string>
 	<string name="passwordUpperCase">Hasło musi zawierać conajmniej jedną dużą literę</string>
 	<string name="emailNoAt">Brak @ w adresie email</string>

@@ -24,12 +24,11 @@ class RegistrationViewModel
     private var isSurnameNotEmpty: Boolean = false
 
     enum class PasswordStatus{
-        OK, UPPERCASE, DIGITCASE, LENGTH, SPECIALCASE, CORRECT
+        OK, UPPERCASE, DIGITCASE, LENGTH, CORRECT
     }
 
     val passwordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
     val rePasswordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
-    val passwordsCorrect = MutableLiveData<Boolean>().apply { value = false }
 
     enum class EmailStatus{
         OK, NODOT, NOAT, WRONGEMAIL
@@ -54,7 +53,6 @@ class RegistrationViewModel
 
         val upperCase: Pattern = Pattern.compile("[A-Z]")
         val digitCase: Pattern = Pattern.compile("[0-9]")
-        val specialCase: Pattern = Pattern.compile("[\$&+,:;=?@#|'<>.^*()%!-]")
 
         if(isPassword){
             isPasswordCorrect= false
@@ -78,14 +76,6 @@ class RegistrationViewModel
                 passwordStatus.postValue(PasswordStatus.DIGITCASE)
             } else{
                 rePasswordStatus.postValue(PasswordStatus.DIGITCASE)
-            }
-            return
-        }
-        if(!specialCase.matcher(password).find()){
-            if(isPassword){
-                passwordStatus.postValue(PasswordStatus.SPECIALCASE)
-            } else{
-                rePasswordStatus.postValue(PasswordStatus.SPECIALCASE)
             }
             return
         }
