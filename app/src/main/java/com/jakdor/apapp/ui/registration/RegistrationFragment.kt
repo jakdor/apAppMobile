@@ -56,6 +56,12 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        register_button.setOnClickListener{
+            val login: String = login_editText.text.toString()
+
+            viewModel?.validateLogin(login)
+        }
+
         password_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
             }
@@ -121,15 +127,15 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         })
         login_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
+                val login: String = login_editText.text.toString()
+
+                viewModel?.validateLogin(login)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val login: String = login_editText.text.toString()
-
-                viewModel?.validateLogin(login)
             }
         })
     }

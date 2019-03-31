@@ -19,7 +19,7 @@ class RegistrationViewModel
     private var isPasswordCorrect: Boolean = false
     private var isRePasswordCorrect: Boolean = false
     private var isEmailCorrect: Boolean = false
-    private var isLoginCorrect: Boolean = false
+    private var isLoginCorrect: Boolean = true
     private var isNameNotEmpty: Boolean = false
     private var isSurnameNotEmpty: Boolean = false
 
