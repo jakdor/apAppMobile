@@ -1,6 +1,5 @@
 package com.jakdor.apapp.ui.registration
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
 import javax.inject.Inject
+import kotlin.math.log
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -21,13 +22,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     var viewModel: RegistrationViewModel? = null
-
-    var isPasswordCorrect: Boolean = false
-    var isRePasswordCorrect: Boolean = false
-    var isEmailCorrect: Boolean = false
-    var isLoginCorrect: Boolean = false
-    var isNameNotEmpty: Boolean = false
-    var isSurnameNotEmpty: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,132 +34,55 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(RegistrationViewModel::class.java)
         }
 
-        val surname: String = surname_editText.text.toString()
-        surname_editText.error = viewModel?.isEmptyValidation(surname)
+        val registerObserver = Observer<Boolean> { newStatus ->
+            register_button.isEnabled = newStatus
+        }
 
-        val name: String = name_editText.text.toString()
-        name_editText.error = viewModel?.isEmptyValidation(name)
+        viewModel?.registerPossibility?.observe(this, registerObserver)
 
-        val email: String = email_editText.text.toString()
-        email_editText.error = viewModel?.isEmptyValidation(email)
+        observePasswordStatus()
 
-        val login: String = login_editText.text.toString()
-        login_editText.error = viewModel?.isEmptyValidation(login)
+        observeRePasswordStatus()
+
+        observeEmailStatus()
+
+        observeLoginStatus()
+
+        observeNameStatus()
+
+        observeSurnameStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        register_button.setOnClickListener {
-
-            val password: String = password_editText.text.toString()
-            val rePassword: String = rePassword_editText.text.toString()
-
-            if(password != rePassword){
-                rePassword_editText.error = "Podane hasła się nie zgadzają"
-            }
-        }
-
-        register_button.isEnabled = false
-
         password_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val password: String = password_editText.text.toString()
-
-                when {
-                    viewModel?.validatePassword(password) != null -> {
-                        password_editText.error = viewModel?.validatePassword(password)
-                        isPasswordCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(password)!=null -> {
-                        password_editText.error = viewModel?.isEmptyValidation(password)
-                        isPasswordCorrect = false
-                    }
-                    else -> {
-                        password_editText.error=null
-                        isPasswordCorrect = true
-                    }
-                }
-
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 val password: String = password_editText.text.toString()
 
-                when {
-                    viewModel?.validatePassword(password) != null -> {
-                        password_editText.error = viewModel?.validatePassword(password)
-                        isPasswordCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(password)!=null -> {
-                        password_editText.error = viewModel?.isEmptyValidation(password)
-                        isPasswordCorrect = false
-                    }
-                    else -> {
-                        password_editText.error=null
-                        isPasswordCorrect = true
-                    }
-                }
-
+                viewModel?.validatePassword(password,true)
             }
         })
         rePassword_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val rePassword: String = rePassword_editText.text.toString()
-
-                when {
-                    viewModel?.validatePassword(rePassword) != null -> {
-                        rePassword_editText.error = viewModel?.validatePassword(rePassword)
-                        isRePasswordCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(rePassword)!=null -> {
-                        rePassword_editText.error = viewModel?.isEmptyValidation(rePassword)
-                        isRePasswordCorrect = false
-                    }
-                    else -> {
-                        rePassword_editText.error=null
-                        isRePasswordCorrect = true
-                    }
-                }
-
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 val rePassword: String = rePassword_editText.text.toString()
 
-                when {
-                    viewModel?.validatePassword(rePassword) != null -> {
-
-                        rePassword_editText.error = viewModel?.validatePassword(rePassword)
-                        isRePasswordCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(rePassword)!=null -> {
-                        rePassword_editText.error = viewModel?.isEmptyValidation(rePassword)
-                        isRePasswordCorrect = false
-                    }
-                    else -> {
-                        rePassword_editText.error=null
-                        isRePasswordCorrect = true
-                    }
-                }
+                viewModel?.validatePassword(rePassword, false)
             }
         })
         email_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -175,26 +92,11 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val email: String = email_editText.text.toString()
 
-                when {
-                    viewModel?.validateEmail(email) != null -> {
-                        email_editText.error = viewModel?.validateEmail(email)
-                        isEmailCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(email)!=null -> {
-                        email_editText.error = viewModel?.isEmptyValidation(email)
-                        isEmailCorrect = false
-                    }
-                    else -> {
-                        email_editText.error = null
-                        isEmailCorrect = true
-                    }
-                }
+                viewModel?.validateEmail(email)
             }
         })
         name_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -202,68 +104,149 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val name: String = name_editText.text.toString()
 
-                if(viewModel?.isEmptyValidation(name) != null){
-                    name_editText.error = viewModel?.isEmptyValidation(name)
-                    isNameNotEmpty = false
-                }else{
-                    name_editText.error = null
-                    isNameNotEmpty = true
-                }
+                viewModel?.isEmptyValidation(name, true)
             }
         })
         surname_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 val surname: String = surname_editText.text.toString()
 
-                if(viewModel?.isEmptyValidation(surname) != null){
-                    surname_editText.error = viewModel?.isEmptyValidation(surname)
-                    isSurnameNotEmpty = false
-                }else{
-                    surname_editText.error = null
-                    isSurnameNotEmpty = true
-                }
+                viewModel?.isEmptyValidation(surname, false)
             }
         })
         login_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                register_button.isEnabled = (isPasswordCorrect && isRePasswordCorrect && isEmailCorrect
-                        && isNameNotEmpty && isSurnameNotEmpty && isLoginCorrect)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val login: String = login_editText.text.toString()
 
-                when {
-                    viewModel?.validateLogin(login) != null -> {
-                        login_editText.error = viewModel?.validateLogin(login)
-                        isLoginCorrect = false
-                    }
-                    viewModel?.isEmptyValidation(login)!=null -> {
-                        login_editText.error = viewModel?.isEmptyValidation(login)
-                        isLoginCorrect = false
-                    }
-                    else -> {
-                        login_editText.error = null
-                        isLoginCorrect = true
-                    }
-                }
+                viewModel?.validateLogin(login)
             }
         })
     }
 
+    private fun observeEmailStatus(){
+        val emailObserver = Observer<RegistrationViewModel.EmailStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.EmailStatus.OK-> {
+                    email_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.EmailStatus.NOAT -> {
+                    email_wrapper.error = getString(R.string.emailNoAt)
+                }
+                RegistrationViewModel.EmailStatus.NODOT ->{
+                    email_wrapper.error = getString(R.string.emailNoDot)
+                }
+                RegistrationViewModel.EmailStatus.WRONGEMAIL ->{
+                    email_wrapper.error = getString(R.string.emailWrong)
+                }
+            }
+        }
 
+        viewModel?.emailStatus?.observe(this, emailObserver)
+    }
+
+    private fun observePasswordStatus() {
+        val passwordObserver = Observer<RegistrationViewModel.PasswordStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.PasswordStatus.OK -> {
+                    password_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.PasswordStatus.LENGTH ->{
+                    password_wrapper.error = getString(R.string.passwordLength)
+                }
+                RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
+                    password_wrapper.error = getString(R.string.passwordSpecialCase)
+                }
+                RegistrationViewModel.PasswordStatus.DIGITCASE ->{
+                    password_wrapper.error = getString(R.string.passwordDigitCase)
+                }
+                RegistrationViewModel.PasswordStatus.UPPERCASE ->{
+                    password_wrapper.error = getString(R.string.passwordUpperCase)
+                }
+            }
+        }
+
+        viewModel?.passwordStatus?.observe(this, passwordObserver)
+    }
+
+    private fun observeRePasswordStatus() {
+        val rePasswordObserver = Observer<RegistrationViewModel.PasswordStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.PasswordStatus.OK -> {
+                    rePassword_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.PasswordStatus.LENGTH ->{
+                    rePassword_wrapper.error = getString(R.string.passwordLength)
+                }
+                RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
+                    rePassword_wrapper.error = getString(R.string.passwordSpecialCase)
+                }
+                RegistrationViewModel.PasswordStatus.DIGITCASE ->{
+                    rePassword_wrapper.error = getString(R.string.passwordDigitCase)
+                }
+                RegistrationViewModel.PasswordStatus.UPPERCASE ->{
+                    rePassword_wrapper.error = getString(R.string.passwordUpperCase)
+                }
+            }
+        }
+
+        viewModel?.rePasswordStatus?.observe(this, rePasswordObserver)
+    }
+
+    private fun observeSurnameStatus() {
+        val surnameObserver = Observer<RegistrationViewModel.FullNameStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.FullNameStatus.OK -> {
+                    surname_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.FullNameStatus.EMPTY ->{
+                    surname_wrapper.error = getString(R.string.noEmptyField)
+                }
+            }
+        }
+
+        viewModel?.surnameStatus?.observe(this, surnameObserver)
+    }
+
+    private fun observeNameStatus() {
+        val nameObserver = Observer<RegistrationViewModel.FullNameStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.FullNameStatus.OK -> {
+                    name_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.FullNameStatus.EMPTY ->{
+                    name_wrapper.error = getString(R.string.noEmptyField)
+                }
+            }
+        }
+
+        viewModel?.nameStatus?.observe(this, nameObserver)
+    }
+
+    private fun observeLoginStatus() {
+        val loginObserver = Observer<RegistrationViewModel.LoginStatus> { newStatus ->
+            when(newStatus){
+                RegistrationViewModel.LoginStatus.OK -> {
+                    login_wrapper.isErrorEnabled = false
+                }
+                RegistrationViewModel.LoginStatus.EMPTY ->{
+                    login_wrapper.error = getString(R.string.noEmptyField)
+                }
+            }
+        }
+
+        viewModel?.loginStatus?.observe(this, loginObserver)
+    }
 
     companion object {
         const val CLASS_TAG = "RegistrationFragment"

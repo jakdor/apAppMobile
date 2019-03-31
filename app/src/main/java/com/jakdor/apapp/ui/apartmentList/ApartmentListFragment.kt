@@ -1,7 +1,5 @@
 package com.jakdor.apapp.ui.apartmentList
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +16,9 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.databinding.FragmentApartmentListBinding
 import com.jakdor.apapp.di.InjectableFragment
-import com.jakdor.apapp.ui.registration.RegistrationFragment
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_list.*
-import java.util.Vector
+import java.util.*
 import javax.inject.Inject
 
 class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, InjectableFragment {
@@ -44,12 +41,6 @@ class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, I
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipe_refresh_layout.setOnRefreshListener(this)
-
-        switch_registration.setOnClickListener{
-            fragmentManager?.beginTransaction()
-                ?.replace(R.id.mainFragmentLayout, RegistrationFragment(), null)
-                ?.commitAllowingStateLoss()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
