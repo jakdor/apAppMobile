@@ -47,7 +47,7 @@ class LoginFragment : Fragment(), InjectableFragment {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                viewModel?.checkLoginFilled(loginEditText)
+                viewModel?.checkLoginFilled(loginEditText.text.toString())
             }
         })
 
@@ -57,7 +57,7 @@ class LoginFragment : Fragment(), InjectableFragment {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                viewModel?.checkPasswordFilled(editPassword)
+                viewModel?.checkPasswordFilled(editPassword.text.toString())
 
             }
         })

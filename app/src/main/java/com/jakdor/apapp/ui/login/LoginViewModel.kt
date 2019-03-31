@@ -18,14 +18,14 @@ class LoginViewModel
     var isLoginFilled: Boolean = false
     var isPasswordFilled: Boolean = false
 
-    fun checkLoginFilled (etText : EditText)  {
-        isLoginFilled = !etText.text.toString().trim().isEmpty()
+    fun checkLoginFilled (etText : String)  {
+        isLoginFilled = !etText.trim().isEmpty()
         loginPossibility.value = isLoginFilled && isPasswordFilled
 
     }
 
-    fun checkPasswordFilled (etText : EditText)  {
-        isPasswordFilled = !etText.text.toString().trim().isEmpty()
+    fun checkPasswordFilled (etText : String)  {
+        isPasswordFilled = !etText.trim().isEmpty()
         loginPossibility.value = isLoginFilled && isPasswordFilled
     }
 
