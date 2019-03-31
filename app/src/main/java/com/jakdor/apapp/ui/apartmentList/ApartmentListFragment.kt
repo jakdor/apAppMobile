@@ -18,7 +18,7 @@ import com.jakdor.apapp.databinding.FragmentApartmentListBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_list.*
-import java.util.*
+import java.util.Vector
 import javax.inject.Inject
 
 class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, InjectableFragment {
