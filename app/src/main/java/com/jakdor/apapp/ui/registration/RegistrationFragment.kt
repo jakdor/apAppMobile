@@ -14,6 +14,7 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
 import javax.inject.Inject
+import kotlin.math.log
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -159,8 +160,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 }
                 RegistrationViewModel.EmailStatus.WRONGEMAIL ->{
                     email_wrapper.error = getString(R.string.emailWrong)
-                }else->{
-                    email_wrapper.isErrorEnabled = false
                 }
             }
         }
@@ -185,9 +184,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 }
                 RegistrationViewModel.PasswordStatus.UPPERCASE ->{
                     password_wrapper.error = getString(R.string.passwordUpperCase)
-                }
-                else->{
-                password_wrapper.isErrorEnabled = false
                 }
             }
         }
@@ -216,9 +212,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 RegistrationViewModel.PasswordStatus.CORRECT -> {
                     rePassword_wrapper.error = getString(R.string.passwordsNoMatch)
                 }
-                else->{
-                    rePassword_wrapper.isErrorEnabled = false
-                }
             }
         }
 
@@ -233,9 +226,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 }
                 RegistrationViewModel.FullNameStatus.EMPTY ->{
                     surname_wrapper.error = getString(R.string.noEmptyField)
-                }
-                else->{
-                    surname_wrapper.isErrorEnabled = false
                 }
             }
         }
@@ -252,9 +242,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 RegistrationViewModel.FullNameStatus.EMPTY ->{
                     name_wrapper.error = getString(R.string.noEmptyField)
                 }
-                else->{
-                    name_wrapper.isErrorEnabled = false
-                }
             }
         }
 
@@ -269,9 +256,6 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 }
                 RegistrationViewModel.LoginStatus.EMPTY ->{
                     login_wrapper.error = getString(R.string.noEmptyField)
-                }
-                else->{
-                    login_wrapper.isErrorEnabled = false
                 }
             }
         }
