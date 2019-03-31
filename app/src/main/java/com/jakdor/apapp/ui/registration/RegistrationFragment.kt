@@ -59,7 +59,13 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         register_button.setOnClickListener{
             val login: String = login_editText.text.toString()
 
+            val password: String = password_editText.text.toString()
+            val rePassword: String = rePassword_editText.text.toString()
+
+
             viewModel?.validateLogin(login)
+
+            viewModel?.checkPasswords(password, rePassword)
         }
 
         password_editText.addTextChangedListener(object : TextWatcher{
@@ -202,6 +208,9 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 }
                 RegistrationViewModel.PasswordStatus.UPPERCASE ->{
                     rePassword_wrapper.error = getString(R.string.passwordUpperCase)
+                }
+                RegistrationViewModel.PasswordStatus.CORRECT -> {
+                    rePassword_wrapper.error = getString(R.string.passwordsNoMatch)
                 }
             }
         }

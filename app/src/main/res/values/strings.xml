@@ -18,4 +18,5 @@
 	<string name="emailNoDot">Brak . w adresie email</string>
 	<string name="emailWrong">Błędny adres email</string>
 	<string name="noEmptyField">To pole nie może być puste</string>
+	<string name="passwordsNoMatch">Podane hasła się nie zgadzają</string>
 </resources>

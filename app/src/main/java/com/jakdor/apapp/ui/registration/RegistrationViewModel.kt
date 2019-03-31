@@ -24,11 +24,12 @@ class RegistrationViewModel
     private var isSurnameNotEmpty: Boolean = false
 
     enum class PasswordStatus{
-        OK, UPPERCASE, DIGITCASE, LENGTH, SPECIALCASE
+        OK, UPPERCASE, DIGITCASE, LENGTH, SPECIALCASE, CORRECT
     }
 
     val passwordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
     val rePasswordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
+    val passwordsCorrect = MutableLiveData<Boolean>().apply { value = false }
 
     enum class EmailStatus{
         OK, NODOT, NOAT, WRONGEMAIL
@@ -195,6 +196,20 @@ class RegistrationViewModel
 
         isLoginCorrect = true
         loginStatus.postValue(LoginStatus.OK)
+
+        registerPossibility.postValue(isEmailCorrect && isPasswordCorrect && isRePasswordCorrect
+                && isLoginCorrect && isNameNotEmpty && isSurnameNotEmpty)
+    }
+
+    fun checkPasswords(password: String, rePassword: String){
+
+        if(password != rePassword){
+            isRePasswordCorrect = false
+            rePasswordStatus.postValue(PasswordStatus.CORRECT)
+        }else{
+            isRePasswordCorrect = true
+            rePasswordStatus.postValue(PasswordStatus.OK)
+        }
 
         registerPossibility.postValue(isEmailCorrect && isPasswordCorrect && isRePasswordCorrect
                 && isLoginCorrect && isNameNotEmpty && isSurnameNotEmpty)
