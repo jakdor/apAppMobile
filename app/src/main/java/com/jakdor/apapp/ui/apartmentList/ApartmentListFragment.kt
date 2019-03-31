@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakdor.apapp.R
-import com.jakdor.apapp.common.model.apartment.Apartment
+import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.databinding.FragmentApartmentListBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.utils.GlideApp
@@ -67,9 +67,9 @@ class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, I
         })
     }
 
-    fun handleNewApartmentList(model: List<Apartment>){
+    fun handleNewApartmentList(model: ApartmentList){
         if (!recyclerViewInit) initRecyclerView()
-        recyclerViewAdapter.updateItems(model.toMutableList())
+        if(model.apartments != null) recyclerViewAdapter.updateItems(model.apartments!!.toMutableList())
 
         item_recycler.scrollToPosition(0)
         swipe_refresh_layout.isRefreshing = false

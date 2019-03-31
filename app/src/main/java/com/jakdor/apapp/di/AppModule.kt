@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.App
 import com.jakdor.apapp.arch.ViewModelFactory
 import com.jakdor.apapp.common.repository.ApartmentRepository
+import com.jakdor.apapp.common.repository.AuthRepository
+import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import dagger.Module
@@ -29,6 +31,12 @@ class AppModule {
         return ViewModelFactory(viewModelBuilder.build())
     }
 
+    @Singleton
+    @Provides
+    fun provideAuthRepository(): AuthRepository{
+        return AuthRepository(provideRetrofitFactory())
+    }
+
     @Provides
     fun provideRetrofitFactory(): RetrofitFactory {
         return RetrofitFactory()
@@ -43,6 +51,12 @@ class AppModule {
     fun provideStackRepository(): ApartmentRepository {
         return ApartmentRepository(
             provideRetrofitFactory(),
+            provideBearerAuthWrapper(),
             provideRxSchedulersFacade())
+    }
+
+    @Provides
+    fun provideBearerAuthWrapper(): BearerAuthWrapper {
+        return BearerAuthWrapper(provideRetrofitFactory(), provideAuthRepository())
     }
 }

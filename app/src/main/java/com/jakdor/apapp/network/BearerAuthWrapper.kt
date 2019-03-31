@@ -1,0 +1,41 @@
+package com.jakdor.apapp.network
+
+import com.jakdor.apapp.common.repository.AuthRepository
+import io.reactivex.Observable
+import timber.log.Timber
+import javax.inject.Inject
+
+/**
+ * Automatic handling of calls requiring auth header
+ */
+@Suppress("UNREACHABLE_CODE")
+class BearerAuthWrapper
+@Inject constructor(private val retrofitFactory: RetrofitFactory,
+                    private val authRepository: AuthRepository){
+
+    var apiAuthService: BackendService =
+        retrofitFactory.createService(BackendService.API_URL, BackendService::class.java, authRepository.getBearerToken())
+
+    fun <S> wrapCall(observableCall: Observable<S>): Observable<S> {
+        return Observable.create<S> {
+
+            var callResponse: S? = null
+
+            try {
+                callResponse = observableCall.blockingFirst()
+            } catch (e: Exception) {
+                if (e.message != null && e.message!!.contains("401")) {
+                    Timber.i("Invalid bearer token")
+                }
+            }
+
+            if (callResponse == null) {
+                it.onError(throw Exception("Unauthorized"))
+            } else {
+                it.onNext(callResponse)
+            }
+
+            it.onComplete()
+        }
+    }
+}
