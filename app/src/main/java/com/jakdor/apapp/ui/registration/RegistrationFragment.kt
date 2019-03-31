@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
 import javax.inject.Inject
-import kotlin.math.log
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -41,15 +41,10 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         viewModel?.registerPossibility?.observe(this, registerObserver)
 
         observePasswordStatus()
-
         observeRePasswordStatus()
-
         observeEmailStatus()
-
         observeLoginStatus()
-
         observeNameStatus()
-
         observeSurnameStatus()
     }
 
@@ -80,6 +75,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 viewModel?.validatePassword(password,true)
             }
         })
+
         rePassword_editText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
             }
@@ -93,6 +89,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 viewModel?.validatePassword(rePassword, false)
             }
         })
+
         email_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
             }
@@ -107,6 +104,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 viewModel?.validateEmail(email)
             }
         })
+
         name_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
             }
@@ -119,6 +117,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 viewModel?.isEmptyValidation(name, true)
             }
         })
+
         surname_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
             }
@@ -131,6 +130,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
                 viewModel?.isEmptyValidation(surname, false)
             }
         })
+
         login_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 val login: String = login_editText.text.toString()
@@ -147,120 +147,101 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     }
 
     private fun observeEmailStatus(){
-        val emailObserver = Observer<RegistrationViewModel.EmailStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.EmailStatus.OK-> {
-                    email_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.EmailStatus.NOAT -> {
-                    email_wrapper.error = getString(R.string.emailNoAt)
-                }
-                RegistrationViewModel.EmailStatus.NODOT ->{
-                    email_wrapper.error = getString(R.string.emailNoDot)
-                }
-                RegistrationViewModel.EmailStatus.WRONGEMAIL ->{
-                    email_wrapper.error = getString(R.string.emailWrong)
-                }
-            }
-        }
-
-        viewModel?.emailStatus?.observe(this, emailObserver)
+        viewModel?.emailStatus?.observe(this, Observer {
+            handleNewEmailStatus(it)
+        })
     }
 
     private fun observePasswordStatus() {
-        val passwordObserver = Observer<RegistrationViewModel.PasswordStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.PasswordStatus.OK -> {
-                    password_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.PasswordStatus.LENGTH ->{
-                    password_wrapper.error = getString(R.string.passwordLength)
-                }
-                RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
-                    password_wrapper.error = getString(R.string.passwordSpecialCase)
-                }
-                RegistrationViewModel.PasswordStatus.DIGITCASE ->{
-                    password_wrapper.error = getString(R.string.passwordDigitCase)
-                }
-                RegistrationViewModel.PasswordStatus.UPPERCASE ->{
-                    password_wrapper.error = getString(R.string.passwordUpperCase)
-                }
-            }
-        }
-
-        viewModel?.passwordStatus?.observe(this, passwordObserver)
+        viewModel?.passwordStatus?.observe(this, Observer {
+            handleNewPasswordStatus(it, password_wrapper)
+        })
     }
 
     private fun observeRePasswordStatus() {
-        val rePasswordObserver = Observer<RegistrationViewModel.PasswordStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.PasswordStatus.OK -> {
-                    rePassword_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.PasswordStatus.LENGTH ->{
-                    rePassword_wrapper.error = getString(R.string.passwordLength)
-                }
-                RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
-                    rePassword_wrapper.error = getString(R.string.passwordSpecialCase)
-                }
-                RegistrationViewModel.PasswordStatus.DIGITCASE ->{
-                    rePassword_wrapper.error = getString(R.string.passwordDigitCase)
-                }
-                RegistrationViewModel.PasswordStatus.UPPERCASE ->{
-                    rePassword_wrapper.error = getString(R.string.passwordUpperCase)
-                }
-                RegistrationViewModel.PasswordStatus.CORRECT -> {
-                    rePassword_wrapper.error = getString(R.string.passwordsNoMatch)
-                }
-            }
-        }
-
-        viewModel?.rePasswordStatus?.observe(this, rePasswordObserver)
+        viewModel?.rePasswordStatus?.observe(this, Observer {
+            handleNewPasswordStatus(it, rePassword_wrapper)
+        })
     }
 
     private fun observeSurnameStatus() {
-        val surnameObserver = Observer<RegistrationViewModel.FullNameStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.FullNameStatus.OK -> {
-                    surname_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.FullNameStatus.EMPTY ->{
-                    surname_wrapper.error = getString(R.string.noEmptyField)
-                }
-            }
-        }
-
-        viewModel?.surnameStatus?.observe(this, surnameObserver)
+        viewModel?.surnameStatus?.observe(this, Observer {
+            handleNewNameStatus(it, surname_wrapper)
+        })
     }
 
     private fun observeNameStatus() {
-        val nameObserver = Observer<RegistrationViewModel.FullNameStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.FullNameStatus.OK -> {
-                    name_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.FullNameStatus.EMPTY ->{
-                    name_wrapper.error = getString(R.string.noEmptyField)
-                }
-            }
-        }
-
-        viewModel?.nameStatus?.observe(this, nameObserver)
+        viewModel?.nameStatus?.observe(this, Observer {
+            handleNewNameStatus(it, name_wrapper)
+        })
     }
 
     private fun observeLoginStatus() {
-        val loginObserver = Observer<RegistrationViewModel.LoginStatus> { newStatus ->
-            when(newStatus){
-                RegistrationViewModel.LoginStatus.OK -> {
-                    login_wrapper.isErrorEnabled = false
-                }
-                RegistrationViewModel.LoginStatus.EMPTY ->{
-                    login_wrapper.error = getString(R.string.noEmptyField)
-                }
+        viewModel?.loginStatus?.observe(this, Observer {
+            handleNewLoginStatus(it)
+        })
+    }
+
+    fun handleNewEmailStatus(status: RegistrationViewModel.EmailStatus){
+        when(status){
+            RegistrationViewModel.EmailStatus.OK-> {
+                email_wrapper.isErrorEnabled = false
+            }
+            RegistrationViewModel.EmailStatus.NOAT -> {
+                email_wrapper.error = getString(R.string.emailNoAt)
+            }
+            RegistrationViewModel.EmailStatus.NODOT ->{
+                email_wrapper.error = getString(R.string.emailNoDot)
+            }
+            RegistrationViewModel.EmailStatus.WRONGEMAIL ->{
+                email_wrapper.error = getString(R.string.emailWrong)
             }
         }
+    }
 
-        viewModel?.loginStatus?.observe(this, loginObserver)
+    fun handleNewPasswordStatus(status: RegistrationViewModel.PasswordStatus, input: TextInputLayout){
+        when(status){
+            RegistrationViewModel.PasswordStatus.OK -> {
+                input.isErrorEnabled = false
+            }
+            RegistrationViewModel.PasswordStatus.LENGTH ->{
+                input.error = getString(R.string.passwordLength)
+            }
+            RegistrationViewModel.PasswordStatus.SPECIALCASE ->{
+                input.error = getString(R.string.passwordSpecialCase)
+            }
+            RegistrationViewModel.PasswordStatus.DIGITCASE ->{
+                input.error = getString(R.string.passwordDigitCase)
+            }
+            RegistrationViewModel.PasswordStatus.UPPERCASE ->{
+                input.error = getString(R.string.passwordUpperCase)
+            }
+            RegistrationViewModel.PasswordStatus.CORRECT -> {
+                input.error = getString(R.string.passwordsNoMatch)
+            }
+        }
+    }
+
+    fun handleNewNameStatus(status: RegistrationViewModel.FullNameStatus, input: TextInputLayout){
+        when(status){
+            RegistrationViewModel.FullNameStatus.OK -> {
+                input.isErrorEnabled = false
+            }
+            RegistrationViewModel.FullNameStatus.EMPTY ->{
+                input.error = getString(R.string.noEmptyField)
+            }
+        }
+    }
+
+    fun handleNewLoginStatus(status: RegistrationViewModel.LoginStatus){
+        when(status){
+            RegistrationViewModel.LoginStatus.OK -> {
+                login_wrapper.isErrorEnabled = false
+            }
+            RegistrationViewModel.LoginStatus.EMPTY ->{
+                login_wrapper.error = getString(R.string.noEmptyField)
+            }
+        }
     }
 
     companion object {

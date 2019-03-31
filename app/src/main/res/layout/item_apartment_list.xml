@@ -21,7 +21,7 @@
 					android:id="@+id/apartment_image"
 					android:layout_width="100dp"
 					android:layout_height="100dp"
-					android:contentDescription="@string/stack_overflow_user_icon_desc"
+					android:contentDescription="@string/apartment_list_icon_desc"
 					app:layout_constraintTop_toTopOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintBottom_toBottomOf="parent"/>
