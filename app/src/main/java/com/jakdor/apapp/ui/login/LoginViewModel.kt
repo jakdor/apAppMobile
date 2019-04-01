@@ -15,7 +15,7 @@ class LoginViewModel
     BaseViewModel(application, rxSchedulersFacade){
 
     val loginPossibility = MutableLiveData<Boolean>().apply { postValue(false) }
-    val loginRequestStatus = MutableLiveData<Boolean>().apply { postValue(false) }
+    val loginRequestStatus = MutableLiveData<Boolean>()
 
     var isLoginFilled: Boolean = false
     var isPasswordFilled: Boolean = false

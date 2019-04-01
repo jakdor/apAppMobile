@@ -26,6 +26,17 @@ class BearerAuthWrapper
             } catch (e: Exception) {
                 if (e.message != null && e.message!!.contains("401")) {
                     Timber.i("Invalid bearer token")
+
+                    try{
+                        val refreshResponse = authRepository.refreshBearerToken().blockingFirst()
+
+                        if(refreshResponse != null){
+                            callResponse = observableCall.blockingFirst()
+                        }
+
+                    } catch (e2: Exception) {
+                        Timber.i("Refresh token failed")
+                    }
                 }
             }
 

@@ -13,6 +13,7 @@ class AuthRepository
 @Inject constructor(private val retrofitFactory: RetrofitFactory,
                     private val preferencesRepository: PreferencesRepository){
 
+    private var isLogged: Boolean = false
     private var loginStr: String = ""
     private var bearerToken : String = ""
     private var refreshToken : String = ""
@@ -67,13 +68,21 @@ class AuthRepository
 
     fun getTokens(){
         val tokenHashed = preferencesRepository.getString(TOKEN_KEY)
-        if(tokenHashed.isEmpty()) return
+        if(tokenHashed.isEmpty()){
+            isLogged = false
+            return
+        }
         val tokenSerialized = Base64.decode(tokenHashed.toByteArray(
             Charset.defaultCharset()), Base64.DEFAULT).toString(Charset.defaultCharset())
         val tokenObj = Gson().fromJson(tokenSerialized, TokenStorageModel::class.java)
         bearerToken = tokenObj.accessToken
         refreshToken = tokenObj.refreshToken
         loginStr = preferencesRepository.getString(LOGIN_KEY)
+        isLogged = true
+    }
+
+    fun isLoggedIn(): Boolean{
+        return isLogged
     }
 
     companion object {

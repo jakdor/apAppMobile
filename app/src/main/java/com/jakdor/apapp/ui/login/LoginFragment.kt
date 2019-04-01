@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.jakdor.apapp.ui.MainActivity
 
 class LoginFragment : Fragment(), InjectableFragment {
 
@@ -77,8 +78,13 @@ class LoginFragment : Fragment(), InjectableFragment {
     }
 
     fun handleNewLoginRequestStatus(status: Boolean){
-        if(status) Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
-        else Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+        if(status) {
+            Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
+            (activity as MainActivity).switchToApartmentListFragment()
+        }
+        else {
+            Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+        }
     }
 
     companion object {
