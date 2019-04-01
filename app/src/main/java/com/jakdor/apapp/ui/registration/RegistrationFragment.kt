@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
+import com.jakdor.apapp.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_registration.*
 import javax.inject.Inject
 
@@ -40,6 +42,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
         viewModel?.registerPossibility?.observe(this, registerObserver)
 
+        observeRegisterRequestStatus()
         observePasswordStatus()
         observeRePasswordStatus()
         observeEmailStatus()
@@ -53,80 +56,63 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
         register_button.setOnClickListener{
             val login: String = login_editText.text.toString()
-
+            val email: String = email_editText.text.toString()
             val password: String = password_editText.text.toString()
             val rePassword: String = rePassword_editText.text.toString()
+            val name: String = name_editText.text.toString()
+            val surname: String = surname_editText.text.toString()
 
-
-            viewModel?.validateLogin(login)
-
-            viewModel?.checkPasswords(password, rePassword)
+            if(viewModel?.checkPasswords(password, rePassword) == true){
+                viewModel?.registerRequest(login, email, password, name, surname)
+            }
         }
 
         password_editText.addTextChangedListener(object : TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password: String = password_editText.text.toString()
-
                 viewModel?.validatePassword(password,true)
             }
         })
 
         rePassword_editText.addTextChangedListener(object : TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val rePassword: String = rePassword_editText.text.toString()
-
                 viewModel?.validatePassword(rePassword, false)
             }
         })
 
         email_editText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val email: String = email_editText.text.toString()
-
                 viewModel?.validateEmail(email)
             }
         })
 
         name_editText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val name: String = name_editText.text.toString()
-
                 viewModel?.isEmptyValidation(name, true)
             }
         })
 
         surname_editText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val surname: String = surname_editText.text.toString()
-
                 viewModel?.isEmptyValidation(surname, false)
             }
         })
@@ -134,15 +120,17 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         login_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 val login: String = login_editText.text.toString()
-
                 viewModel?.validateLogin(login)
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+    private fun observeRegisterRequestStatus() {
+        viewModel?.registerRequest?.observe(this, Observer {
+            handleNewRegisterStatus(it)
         })
     }
 
@@ -182,62 +170,51 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         })
     }
 
+    fun handleNewRegisterStatus(status: RegistrationViewModel.RegisterRequestStatus){
+        when(status){
+            RegistrationViewModel.RegisterRequestStatus.ERROR -> {
+                Toast.makeText(context, getString(R.string.registerError), Toast.LENGTH_SHORT).show()
+            }
+            RegistrationViewModel.RegisterRequestStatus.OK -> {
+                Toast.makeText(context, getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show()
+                (activity as MainActivity).switchToLoginFragment()
+            }
+            RegistrationViewModel.RegisterRequestStatus.EDIT -> {}
+        }
+    }
+
     fun handleNewEmailStatus(status: RegistrationViewModel.EmailStatus){
         when(status){
-            RegistrationViewModel.EmailStatus.OK-> {
-                email_wrapper.isErrorEnabled = false
-            }
-            RegistrationViewModel.EmailStatus.NOAT -> {
-                email_wrapper.error = getString(R.string.emailNoAt)
-            }
-            RegistrationViewModel.EmailStatus.NODOT ->{
-                email_wrapper.error = getString(R.string.emailNoDot)
-            }
-            RegistrationViewModel.EmailStatus.WRONGEMAIL ->{
-                email_wrapper.error = getString(R.string.emailWrong)
-            }
+            RegistrationViewModel.EmailStatus.OK-> email_wrapper.isErrorEnabled = false
+            RegistrationViewModel.EmailStatus.NOAT -> email_wrapper.error = getString(R.string.emailNoAt)
+            RegistrationViewModel.EmailStatus.NODOT -> email_wrapper.error = getString(R.string.emailNoDot)
+            RegistrationViewModel.EmailStatus.WRONGEMAIL -> email_wrapper.error = getString(R.string.emailWrong)
+            RegistrationViewModel.EmailStatus.TAKEN -> email_wrapper.error = getString(R.string.emailTaken)
         }
     }
 
     fun handleNewPasswordStatus(status: RegistrationViewModel.PasswordStatus, input: TextInputLayout){
         when(status){
-            RegistrationViewModel.PasswordStatus.OK -> {
-                input.isErrorEnabled = false
-            }
-            RegistrationViewModel.PasswordStatus.LENGTH ->{
-                input.error = getString(R.string.passwordLength)
-            }
-            RegistrationViewModel.PasswordStatus.DIGITCASE ->{
-                input.error = getString(R.string.passwordDigitCase)
-            }
-            RegistrationViewModel.PasswordStatus.UPPERCASE ->{
-                input.error = getString(R.string.passwordUpperCase)
-            }
-            RegistrationViewModel.PasswordStatus.CORRECT -> {
-                input.error = getString(R.string.passwordsNoMatch)
-            }
+            RegistrationViewModel.PasswordStatus.OK -> input.isErrorEnabled = false
+            RegistrationViewModel.PasswordStatus.LENGTH -> input.error = getString(R.string.passwordLength)
+            RegistrationViewModel.PasswordStatus.DIGITCASE -> input.error = getString(R.string.passwordDigitCase)
+            RegistrationViewModel.PasswordStatus.UPPERCASE -> input.error = getString(R.string.passwordUpperCase)
+            RegistrationViewModel.PasswordStatus.CORRECT -> input.error = getString(R.string.passwordsNoMatch)
         }
     }
 
     fun handleNewNameStatus(status: RegistrationViewModel.FullNameStatus, input: TextInputLayout){
         when(status){
-            RegistrationViewModel.FullNameStatus.OK -> {
-                input.isErrorEnabled = false
-            }
-            RegistrationViewModel.FullNameStatus.EMPTY ->{
-                input.error = getString(R.string.noEmptyField)
-            }
+            RegistrationViewModel.FullNameStatus.OK -> input.isErrorEnabled = false
+            RegistrationViewModel.FullNameStatus.EMPTY -> input.error = getString(R.string.noEmptyField)
         }
     }
 
     fun handleNewLoginStatus(status: RegistrationViewModel.LoginStatus){
         when(status){
-            RegistrationViewModel.LoginStatus.OK -> {
-                login_wrapper.isErrorEnabled = false
-            }
-            RegistrationViewModel.LoginStatus.EMPTY ->{
-                login_wrapper.error = getString(R.string.noEmptyField)
-            }
+            RegistrationViewModel.LoginStatus.OK -> login_wrapper.isErrorEnabled = false
+            RegistrationViewModel.LoginStatus.EMPTY -> login_wrapper.error = getString(R.string.noEmptyField)
+            RegistrationViewModel.LoginStatus.TAKEN -> login_wrapper.error = getString(R.string.loginTaken)
         }
     }
 

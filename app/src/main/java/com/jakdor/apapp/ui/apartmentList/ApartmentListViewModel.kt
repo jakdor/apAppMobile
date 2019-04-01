@@ -22,7 +22,7 @@ class ApartmentListViewModel
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({ t: ApartmentList -> apartmentsListLiveData.postValue(t) },
-                {e ->  Timber.e(e, "Error observing ApartmentsListSubject")}))
+                {e ->  Timber.e(e, "ERROR observing ApartmentsListSubject")}))
     }
 
     fun requestApartmentsListUpdate(){

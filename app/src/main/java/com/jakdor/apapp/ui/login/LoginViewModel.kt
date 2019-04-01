@@ -35,7 +35,7 @@ class LoginViewModel
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({t -> loginRequestStatus.postValue(t)},
-                {e -> Timber.e(e, "Error observing loginRequest")}))
+                {e -> Timber.e(e, "ERROR observing loginRequest")}))
     }
 
 }

@@ -54,7 +54,7 @@ class LoginFragment : Fragment(), InjectableFragment {
         }
 
         registerButton.setOnClickListener {
-            Toast.makeText(activity, getString(R.string.singed_up), Toast.LENGTH_LONG).show()
+            (activity as MainActivity).addRegistrationFragment()
         }
     }
 

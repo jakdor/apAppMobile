@@ -44,6 +44,14 @@ class AuthRepository
             }
     }
 
+    fun register(login: String, email: String, password: String, name: String, surname: String):
+            Observable<RegisterStatusEnum>{
+        return apiService.postRegister(RegisterRequest(login, email, password, name, surname))
+            .flatMap {
+                    t: RegisterResponse? -> Observable.just(t?.registerStatus)
+            }
+    }
+
     fun refreshBearerToken(): Observable<String?> {
         return apiService.postRefresh(RefreshRequest(loginStr, bearerToken))
             .doOnNext {

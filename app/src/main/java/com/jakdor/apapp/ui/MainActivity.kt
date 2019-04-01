@@ -51,10 +51,19 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         Timber.i("Lunched LoginFragment")
     }
 
-    fun switchToRegistrationFragment(){
+    fun addRegistrationFragment(){
         supportFragmentManager.beginTransaction()
-            .add(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
+            .replace(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched RegistrationFragment")
+    }
+
+    override fun onBackPressed() {
+        if(supportFragmentManager.findFragmentByTag(RegistrationFragment.CLASS_TAG) != null){
+            switchToLoginFragment()
+        }
+        else{
+            super.onBackPressed()
+        }
     }
 }

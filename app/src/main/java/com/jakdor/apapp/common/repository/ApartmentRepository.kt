@@ -32,7 +32,7 @@ class ApartmentRepository
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({ t: ApartmentList? -> if(t != null) apartmentsListSubject.onNext(t) },
-                {e ->  Timber.e(e, "Error observing Apartments")}))
+                {e ->  Timber.e(e, "ERROR observing Apartments")}))
     }
 
     fun dispose(){
