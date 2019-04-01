@@ -1,17 +1,19 @@
 package com.jakdor.apapp.ui.registration
 
 import android.app.Application
-import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
-import com.jakdor.apapp.R
 import com.jakdor.apapp.arch.BaseViewModel
+import com.jakdor.apapp.common.model.auth.RegisterStatusEnum
+import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 class RegistrationViewModel
 @Inject constructor(application: Application,
-                    rxSchedulersFacade: RxSchedulersFacade):
+                    rxSchedulersFacade: RxSchedulersFacade,
+                    private val authRepository: AuthRepository):
     BaseViewModel(application, rxSchedulersFacade){
 
     val registerPossibility = MutableLiveData<Boolean>().apply { value = false }
@@ -23,31 +25,36 @@ class RegistrationViewModel
     private var isNameNotEmpty: Boolean = false
     private var isSurnameNotEmpty: Boolean = false
 
-    enum class PasswordStatus{
-        OK, UPPERCASE, DIGITCASE, LENGTH, CORRECT
-    }
-
     val passwordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
     val rePasswordStatus = MutableLiveData<PasswordStatus>().apply { value = PasswordStatus.OK }
-
-    enum class EmailStatus{
-        OK, NODOT, NOAT, WRONGEMAIL
-    }
-
     val emailStatus = MutableLiveData<EmailStatus>().apply { value = EmailStatus.OK }
-
-    enum class LoginStatus{
-        OK, EMPTY
-    }
-
     val loginStatus = MutableLiveData<LoginStatus>().apply { value = LoginStatus.OK }
-
-    enum class FullNameStatus{
-        OK, EMPTY
-    }
-
     val nameStatus = MutableLiveData<FullNameStatus>().apply { value = FullNameStatus.OK }
     val surnameStatus = MutableLiveData<FullNameStatus>().apply { value = FullNameStatus.OK }
+    val registerRequest = MutableLiveData<RegisterRequestStatus>()
+
+    fun registerRequest(login: String, email: String, password: String, name: String, surname: String){
+        disposable.add(authRepository.register(login, email, password, name, surname)
+            .observeOn(rxSchedulersFacade.io())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({t -> newRegisterStatus(t)},
+                {e -> Timber.e(e, "ERROR observing registerRequest")}))
+    }
+
+    fun newRegisterStatus(status: RegisterStatusEnum){
+        when(status){
+            RegisterStatusEnum.ERROR -> registerRequest.postValue(RegisterRequestStatus.ERROR)
+            RegisterStatusEnum.OK -> registerRequest.postValue(RegisterRequestStatus.OK)
+            RegisterStatusEnum.EMAIL_TAKEN -> {
+                registerRequest.postValue(RegisterRequestStatus.EDIT)
+                emailStatus.postValue(EmailStatus.TAKEN)
+            }
+            RegisterStatusEnum.LOGIN_TAKEN -> {
+                registerRequest.postValue(RegisterRequestStatus.EDIT)
+                loginStatus.postValue(LoginStatus.TAKEN)
+            }
+        }
+    }
 
     fun validatePassword(password: String, isPassword: Boolean) {
 
@@ -171,9 +178,6 @@ class RegistrationViewModel
     }
 
     fun validateLogin(login: String) {
-
-        //TODO: sprawdzenie czy w bazie istnieje juz login
-
         isLoginCorrect = false
 
         registerPossibility.postValue(isEmailCorrect && isPasswordCorrect && isRePasswordCorrect
@@ -191,17 +195,39 @@ class RegistrationViewModel
                 && isLoginCorrect && isNameNotEmpty && isSurnameNotEmpty)
     }
 
-    fun checkPasswords(password: String, rePassword: String){
+    fun checkPasswords(password: String, rePassword: String): Boolean {
 
         if(password != rePassword){
             isRePasswordCorrect = false
             rePasswordStatus.postValue(PasswordStatus.CORRECT)
-        }else{
+        } else {
             isRePasswordCorrect = true
             rePasswordStatus.postValue(PasswordStatus.OK)
         }
 
         registerPossibility.postValue(isEmailCorrect && isPasswordCorrect && isRePasswordCorrect
                 && isLoginCorrect && isNameNotEmpty && isSurnameNotEmpty)
+
+        return isRePasswordCorrect
+    }
+
+    enum class PasswordStatus{
+        OK, UPPERCASE, DIGITCASE, LENGTH, CORRECT
+    }
+
+    enum class EmailStatus{
+        OK, NODOT, NOAT, WRONGEMAIL, TAKEN
+    }
+
+    enum class LoginStatus{
+        OK, EMPTY, TAKEN
+    }
+
+    enum class FullNameStatus{
+        OK, EMPTY
+    }
+
+    enum class RegisterRequestStatus{
+        ERROR, OK, EDIT
     }
 }
