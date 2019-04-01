@@ -1,18 +1,83 @@
 package com.jakdor.apapp.common.repository
 
+import android.util.Base64
+import com.google.gson.Gson
+import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.RetrofitFactory
+import io.reactivex.Observable
+import java.nio.charset.Charset
 import javax.inject.Inject
 
 class AuthRepository
-@Inject constructor(private val retrofitFactory: RetrofitFactory){
+@Inject constructor(private val retrofitFactory: RetrofitFactory,
+                    private val preferencesRepository: PreferencesRepository){
+
+    private var loginStr: String = ""
+    private var bearerToken : String = ""
+    private var refreshToken : String = ""
+
+    init {
+        getTokens()
+    }
 
     private val apiService: BackendService =
         retrofitFactory.createService(BackendService.API_URL, BackendService::class.java)
-
-    private var bearerToken : String = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1MjM1QTUxQjg1MDIxMkMzN0VDQjMyODc3QkY5MzhDODc5Q0JBQUQiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJjZjgzMDMxNS02YWFlLTQwYjAtOWM3OC0zNTFiODdjYTM0MGMiLCJuYW1lIjoiNTZ5QHoueiIsInRva2VuX3VzYWdlIjoiYWNjZXNzX3Rva2VuIiwianRpIjoiNTQ0MGZhNTAtNGVlYy00Y2E3LTgwNjUtNjkyNDljZjg1YjNlIiwic2NvcGUiOiJvZmZsaW5lX2FjY2VzcyIsImF1ZCI6IlJlc291cmNlU2VydmVyIiwibmJmIjoxNTU0MDcyOTk4LCJleHAiOjE1NTQwNzY1OTgsImlhdCI6MTU1NDA3Mjk5OCwiaXNzIjoiaHR0cDovL2F1dGhzZXJ2ZXIvIn0.unG7z63Muzv-yEUnADkmaKyHvddPh21ucXjbcxlyg9M_-i0Hnr4SOIf7oWutAf53-7dFMo_Gkzc5H0d47VuzVyUDZZLxKQ3I7z6DBg-VSPGEVk6nk9sA8-xGc1ioSZimLITzQUy0byJ8v5UCgXxY-nj0WEtfuuEt3R2fwv1fsI2QMsefukk6iwwdezVgoKgA_DGCvUB_j5DyGPegQFbkZ2jbsPznKdZCY73HIv2qZxWrH-FSuBlBniwldyOvpaPTM2hCBpl7ovipMqDGAda3JkQ7uUysEyOPQQ7ALi9Hvm3Bp2adyxgH_Zn1_Voz40MvVzgWHJyRY1g43t5kao9duQ"
-
+    
     fun getBearerToken(): String{
         return bearerToken
+    }
+    
+    fun login(login: String, password: String): Observable<Boolean> {
+        return apiService.postLogin(LoginRequest(login, password))
+            .doOnNext {
+                if(it != null && it.error == null){
+                    this.loginStr = login
+                    bearerToken = it.accessToken ?: ""
+                    refreshToken = it.refreshToken ?: ""
+                    saveTokens()
+                }
+            }
+            .flatMap { 
+                t: LoginResponse? -> Observable.just(t != null && t.error == null)
+            }
+    }
+
+    fun refreshBearerToken(): Observable<String?> {
+        return apiService.postRefresh(RefreshRequest(loginStr, bearerToken))
+            .doOnNext {
+                if(it != null){
+                    bearerToken = it.accessToken
+                    saveTokens()
+                }
+            }
+            .flatMap {
+                t: RefreshResponse? ->  Observable.just(t?.accessToken)
+            }
+    }
+
+    fun saveTokens(){
+        val tokenObj = TokenStorageModel(bearerToken, refreshToken)
+        val tokenSerialized = Gson().toJson(tokenObj)
+        val tokenHashed = Base64.encode(tokenSerialized.toByteArray(
+            Charset.defaultCharset()), Base64.DEFAULT).toString(Charset.defaultCharset())
+        preferencesRepository.saveAsync(TOKEN_KEY, tokenHashed)
+        preferencesRepository.saveAsync(LOGIN_KEY, loginStr)
+    }
+
+    fun getTokens(){
+        val tokenHashed = preferencesRepository.getString(TOKEN_KEY)
+        if(tokenHashed.isEmpty()) return
+        val tokenSerialized = Base64.decode(tokenHashed.toByteArray(
+            Charset.defaultCharset()), Base64.DEFAULT).toString(Charset.defaultCharset())
+        val tokenObj = Gson().fromJson(tokenSerialized, TokenStorageModel::class.java)
+        bearerToken = tokenObj.accessToken
+        refreshToken = tokenObj.refreshToken
+        loginStr = preferencesRepository.getString(LOGIN_KEY)
+    }
+
+    companion object {
+        private const val TOKEN_KEY = "tokenStorageKey"
+        private const val LOGIN_KEY = "loginStorageKey"
     }
 }

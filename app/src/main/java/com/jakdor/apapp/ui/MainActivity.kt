@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //switchToLoginFragment();
-        switchToApartmentListFragment()
+        switchToLoginFragment();
+        //switchToApartmentListFragment()
         //switchToRegistrationFragment()
     }
 

@@ -7,6 +7,7 @@
 	<string name="sing_up_label">Zarejestruj</string>
 	<string name="singed_up">Zarejestrowano</string>
 	<string name="singed_in">Zalogowano</string>
+	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
 	<string name="nameLabel">Imię</string>
 	<string name="surnameLabel">Nazwisko</string>

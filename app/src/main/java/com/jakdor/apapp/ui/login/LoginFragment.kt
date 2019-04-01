@@ -1,6 +1,5 @@
 package com.jakdor.apapp.ui.login
 
-
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,7 +16,6 @@ import javax.inject.Inject
 import android.widget.Toast
 import androidx.lifecycle.Observer
 
-
 class LoginFragment : Fragment(), InjectableFragment {
 
     @Inject
@@ -25,27 +23,18 @@ class LoginFragment : Fragment(), InjectableFragment {
 
     var viewModel: LoginViewModel? = null
 
+    private var isLoginUnlocked = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
         loginEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun afterTextChanged(s: Editable?) {
                 viewModel?.checkLoginFilled(loginEditText.text.toString())
             }
@@ -53,38 +42,44 @@ class LoginFragment : Fragment(), InjectableFragment {
 
         editPassword.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun afterTextChanged(s: Editable?) {
                 viewModel?.checkPasswordFilled(editPassword.text.toString())
-
             }
         })
 
         loginButton.setOnClickListener {
-            Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
+            if(isLoginUnlocked) viewModel?.login(loginEditText.text.toString(), editPassword.text.toString())
         }
 
         registerButton.setOnClickListener {
             Toast.makeText(activity, getString(R.string.singed_up), Toast.LENGTH_LONG).show()
         }
-
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (viewModel == null)
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
 
-        val loginObserver = Observer<Boolean> { newStatus ->
-            loginButton.isEnabled = newStatus
-        }
+        viewModel?.loginPossibility?.observe(this, Observer {
+            handleNewLoginPossibility(it)
+        })
 
-        viewModel?.loginPossibility?.observe(this, loginObserver)
+        viewModel?.loginRequestStatus?.observe(this, Observer {
+            handleNewLoginRequestStatus(it)
+        })
     }
 
+    fun handleNewLoginPossibility(status: Boolean){
+        isLoginUnlocked = status
+        loginButton.isEnabled = status
+    }
+
+    fun handleNewLoginRequestStatus(status: Boolean){
+        if(status) Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
+        else Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+    }
 
     companion object {
         const val CLASS_TAG = "LoginFragment"
