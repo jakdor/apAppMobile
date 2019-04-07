@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Apapp</string>
+	<string name="app_name">TrueHome</string>
 	<string name="login_banner">Logowanie</string>
 	<string name="login_label">Login</string>
 	<string name="password_label">Hasło</string>
