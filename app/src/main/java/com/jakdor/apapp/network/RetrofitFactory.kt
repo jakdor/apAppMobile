@@ -15,6 +15,8 @@ class RetrofitFactory {
 
     private lateinit var retrofit: Retrofit
 
+    private val authenticationInterceptor = AuthenticationInterceptor()
+
     private val retrofitBuilder = Retrofit.Builder()
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
@@ -32,11 +34,37 @@ class RetrofitFactory {
      * @param serviceClass retrofit config interface
      * @param <S> serviceClass type
      * @return retrofit instance
-    </S> */
+     */
     fun <S> createService(apiUrl: String, serviceClass: Class<S>): S {
         addLogger()
         retrofitBuilder.baseUrl(apiUrl).client(okHttpClientBuilder.build())
         retrofit = retrofitBuilder.build()
+        return retrofit.create(serviceClass)
+    }
+
+    /**
+     * Token authorization header - token provided after successful login with
+     * one-time login & password
+     * @param apiUrl base API url
+     * @param serviceClass retrofit config interface
+     * @param authToken authorization token
+     * @param <S> serviceClass type
+     * @return retrofit instance
+     */
+    fun <S> createService(apiUrl: String, serviceClass: Class<S>, authToken: String?): S {
+        if (authToken != null) {
+            if (!authToken.isEmpty()) {
+                authenticationInterceptor.authToken = authToken
+
+                if (!okHttpClientBuilder.interceptors().contains(authenticationInterceptor)) {
+                    okHttpClientBuilder.addInterceptor(authenticationInterceptor)
+                    addLogger()
+                    retrofitBuilder.baseUrl(apiUrl).client(okHttpClientBuilder.build())
+                    retrofit = retrofitBuilder.build()
+                }
+            }
+        }
+
         return retrofit.create(serviceClass)
     }
 

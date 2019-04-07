@@ -4,12 +4,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Apartment
-constructor(@SerializedName("name") @Expose var name: String,
-            @SerializedName("city") @Expose var city: String,
-            @SerializedName("street") @Expose var street: String,
-            @SerializedName("apartment") @Expose var apartment: String,
-            @SerializedName("imgList") @Expose var imgList: List <String>,
-            @SerializedName("imgThumb") @Expose var imgThumb: String,
-            @SerializedName("lat") @Expose var lat: Float,
-            @SerializedName("long") @Expose var long: Float,
-            @SerializedName("rating") @Expose var rating: Float)
+constructor(@SerializedName("ID_Ap") @Expose var id: Int,
+            @SerializedName("Name") @Expose var name: String,
+            @SerializedName("City") @Expose var city: String,
+            @SerializedName("Street") @Expose var street: String,
+            @SerializedName("ApartmentNumber") @Expose var apartment: String,
+            @SerializedName("ImgList") @Expose var imgList: List <String>,
+            @SerializedName("ImgThumb") @Expose var imgThumb: String,
+            @SerializedName("Lat") @Expose var lat: Float,
+            @SerializedName("Long") @Expose var long: Float,
+            @SerializedName("Rate") @Expose var rating: Float)

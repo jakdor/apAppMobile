@@ -7,6 +7,7 @@
 	<string name="sing_up_label">Zarejestruj</string>
 	<string name="singed_up">Zarejestrowano</string>
 	<string name="singed_in">Zalogowano</string>
+	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
 	<string name="nameLabel">Imię</string>
 	<string name="surnameLabel">Nazwisko</string>
@@ -23,5 +24,9 @@
 	<string name="emailWrong">Błędny adres email</string>
 	<string name="noEmptyField">To pole nie może być puste</string>
 	<string name="passwordsNoMatch">Podane hasła się nie zgadzają</string>
+	<string name="loginTaken">Login zajęty</string>
+	<string name="emailTaken">Email zajęty</string>
+	<string name="registerError">Nie można zarejestrować</string>
+	<string name="registerSuccess">Zarejestrowano</string>
 	<string name="apartment_list_icon_desc">apartment thumbnail</string>
 </resources>
