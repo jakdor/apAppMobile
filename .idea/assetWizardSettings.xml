@@ -63,7 +63,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="scalingPercent" value="80" />
+                                                <entry key="scalingPercent" value="70" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -76,7 +76,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="$USER_HOME$/Obrazy/Zrzut ekranu z 2019-04-07 20-54-52.png" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Pulpit/icon.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -132,6 +132,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>
