@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, LoginFragment.getInstance(), LoginFragment.CLASS_TAG)
             .commit()
-        Timber.i("Lunched LoginFragment")
+        Timber.i("Launched LoginFragment")
     }
 
     fun addRegistrationFragment(){
