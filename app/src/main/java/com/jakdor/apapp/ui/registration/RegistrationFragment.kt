@@ -15,8 +15,9 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
-import kotlinx.android.synthetic.main.fragment_registration.*
+import kotlinx.android.synthetic.main.registration.*
 import javax.inject.Inject
+
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -27,6 +28,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         return inflater.inflate(R.layout.fragment_registration, container, false)
     }
 
