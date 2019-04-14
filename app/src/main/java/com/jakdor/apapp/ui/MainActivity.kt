@@ -13,6 +13,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
