@@ -19,8 +19,6 @@ import kotlinx.android.synthetic.main.registration.*
 import javax.inject.Inject
 import androidx.appcompat.app.AppCompatActivity
 
-
-
 class RegistrationFragment : Fragment(), InjectableFragment {
 
     @Inject
@@ -30,7 +28,9 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        (activity as AppCompatActivity).supportActionBar!!.hide()
+        if(activity != null && activity is AppCompatActivity) {
+            (activity as AppCompatActivity).supportActionBar!!.hide()
+        }
         return inflater.inflate(R.layout.fragment_registration, container, false)
     }
 

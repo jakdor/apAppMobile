@@ -28,7 +28,9 @@ class LoginFragment : Fragment(), InjectableFragment {
     private var isLoginUnlocked = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as AppCompatActivity).supportActionBar!!.hide()
+        if(activity != null && activity is AppCompatActivity) {
+            (activity as AppCompatActivity).supportActionBar!!.hide()
+        }
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
