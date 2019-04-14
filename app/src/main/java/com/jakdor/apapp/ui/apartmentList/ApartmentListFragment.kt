@@ -36,7 +36,7 @@ class ApartmentListFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, I
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         if(activity != null && activity is AppCompatActivity) {
-            (activity as AppCompatActivity).supportActionBar!!.hide()
+            (activity as AppCompatActivity).supportActionBar!!.show()
         }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apartment_list, container, false)
         return binding.root
