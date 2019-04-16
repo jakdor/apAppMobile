@@ -29,4 +29,8 @@
 	<string name="registerError">Nie można zarejestrować</string>
 	<string name="registerSuccess">Zarejestrowano</string>
 	<string name="apartment_list_icon_desc">apartment thumbnail</string>
+	<string name="apartment_number">Numer mieszkania</string>
+	<string name="apartment_street">Ulica</string>
+	<string name="apartment_city">Miasto</string>
+	<string name="apartment_name">Nazwa mieszkania</string>
 </resources>

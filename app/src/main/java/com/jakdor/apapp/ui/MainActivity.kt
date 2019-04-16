@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.jakdor.apapp.R
+import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.common.repository.AuthRepository
+import com.jakdor.apapp.ui.apartment.ApartmentFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
@@ -30,12 +32,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(authRepository.isLoggedIn()){
+        switchToAddApartmentFragment()
+        /*if(authRepository.isLoggedIn()){
             switchToApartmentListFragment()
         }
         else{
             switchToLoginFragment()
-        }
+        }*/
     }
 
     fun switchToApartmentListFragment(){
@@ -50,6 +53,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             .replace(R.id.mainFragmentLayout, LoginFragment.getInstance(), LoginFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched LoginFragment")
+    }
+
+    fun switchToAddApartmentFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Launched ApartmentFragment")
     }
 
     fun addRegistrationFragment(){

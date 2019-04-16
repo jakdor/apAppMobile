@@ -59,12 +59,12 @@ class RegistrationFragment : Fragment(), InjectableFragment {
         super.onViewCreated(view, savedInstanceState)
 
         register_button.setOnClickListener{
-            val login: String = login_editText.text.toString()
-            val email: String = email_editText.text.toString()
+            val login: String = apartment_number_editText.text.toString()
+            val email: String = apartment_street_editText.text.toString()
             val password: String = password_editText.text.toString()
             val rePassword: String = rePassword_editText.text.toString()
-            val name: String = name_editText.text.toString()
-            val surname: String = surname_editText.text.toString()
+            val name: String = apartment_name_editText.text.toString()
+            val surname: String = apartment_city_editText.text.toString()
 
             if(viewModel?.checkPasswords(password, rePassword) == true){
                 viewModel?.registerRequest(login, email, password, name, surname)
@@ -91,39 +91,39 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             }
         })
 
-        email_editText.addTextChangedListener(object: TextWatcher{
+        apartment_street_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val email: String = email_editText.text.toString()
+                val email: String = apartment_street_editText.text.toString()
                 viewModel?.validateEmail(email)
             }
         })
 
-        name_editText.addTextChangedListener(object: TextWatcher{
+        apartment_name_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val name: String = name_editText.text.toString()
+                val name: String = apartment_name_editText.text.toString()
                 viewModel?.isEmptyValidation(name, true)
             }
         })
 
-        surname_editText.addTextChangedListener(object: TextWatcher{
+        apartment_city_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val surname: String = surname_editText.text.toString()
+                val surname: String = apartment_city_editText.text.toString()
                 viewModel?.isEmptyValidation(surname, false)
             }
         })
 
-        login_editText.addTextChangedListener(object: TextWatcher{
+        apartment_number_editText.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val login: String = login_editText.text.toString()
+                val login: String = apartment_number_editText.text.toString()
                 viewModel?.validateLogin(login)
             }
 
@@ -158,13 +158,13 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     private fun observeSurnameStatus() {
         viewModel?.surnameStatus?.observe(this, Observer {
-            handleNewNameStatus(it, surname_wrapper)
+            handleNewNameStatus(it, apartment_city_wrapper)
         })
     }
 
     private fun observeNameStatus() {
         viewModel?.nameStatus?.observe(this, Observer {
-            handleNewNameStatus(it, name_wrapper)
+            handleNewNameStatus(it, apartment_name_wrapper)
         })
     }
 
@@ -189,11 +189,11 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     fun handleNewEmailStatus(status: RegistrationViewModel.EmailStatus){
         when(status){
-            RegistrationViewModel.EmailStatus.OK-> email_wrapper.isErrorEnabled = false
-            RegistrationViewModel.EmailStatus.NOAT -> email_wrapper.error = getString(R.string.emailNoAt)
-            RegistrationViewModel.EmailStatus.NODOT -> email_wrapper.error = getString(R.string.emailNoDot)
-            RegistrationViewModel.EmailStatus.WRONGEMAIL -> email_wrapper.error = getString(R.string.emailWrong)
-            RegistrationViewModel.EmailStatus.TAKEN -> email_wrapper.error = getString(R.string.emailTaken)
+            RegistrationViewModel.EmailStatus.OK-> apartment_street_wrapper.isErrorEnabled = false
+            RegistrationViewModel.EmailStatus.NOAT -> apartment_street_wrapper.error = getString(R.string.emailNoAt)
+            RegistrationViewModel.EmailStatus.NODOT -> apartment_street_wrapper.error = getString(R.string.emailNoDot)
+            RegistrationViewModel.EmailStatus.WRONGEMAIL -> apartment_street_wrapper.error = getString(R.string.emailWrong)
+            RegistrationViewModel.EmailStatus.TAKEN -> apartment_street_wrapper.error = getString(R.string.emailTaken)
         }
     }
 
@@ -216,9 +216,9 @@ class RegistrationFragment : Fragment(), InjectableFragment {
 
     fun handleNewLoginStatus(status: RegistrationViewModel.LoginStatus){
         when(status){
-            RegistrationViewModel.LoginStatus.OK -> login_wrapper.isErrorEnabled = false
-            RegistrationViewModel.LoginStatus.EMPTY -> login_wrapper.error = getString(R.string.noEmptyField)
-            RegistrationViewModel.LoginStatus.TAKEN -> login_wrapper.error = getString(R.string.loginTaken)
+            RegistrationViewModel.LoginStatus.OK -> apartment_number_wrapper.isErrorEnabled = false
+            RegistrationViewModel.LoginStatus.EMPTY -> apartment_number_wrapper.error = getString(R.string.noEmptyField)
+            RegistrationViewModel.LoginStatus.TAKEN -> apartment_number_wrapper.error = getString(R.string.loginTaken)
         }
     }
 
