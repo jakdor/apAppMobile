@@ -17,6 +17,8 @@ project.ext {
     glideVersion = "4.9.0"
     leakCanaryVersion = "1.6.3"
     supportDesign = "27.1.0"
+    easyImageVersion = "3.0.1"
+    nammuVersion = "1.2.1"
 }
 
 android {
@@ -36,6 +38,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io' }
         }
     }
 }
@@ -89,6 +96,12 @@ dependencies {
     //Glide
     kapt "com.github.bumptech.glide:compiler:$project.glideVersion"
     implementation "com.github.bumptech.glide:glide:$project.glideVersion"
+
+    //EasyImage
+    implementation "com.github.jkwiecien:EasyImage:$project.easyImageVersion"
+
+    //Nammu - permission check/grant
+    implementation "com.github.tajchert:Nammu:$project.nammuVersion"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$project.leakCanaryVersion"

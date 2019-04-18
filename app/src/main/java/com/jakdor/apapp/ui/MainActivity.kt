@@ -1,10 +1,13 @@
 package com.jakdor.apapp.ui
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.jakdor.apapp.R
-import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
@@ -12,8 +15,12 @@ import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import pl.tajchert.nammu.Nammu
+import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import javax.inject.Inject
+
+
 
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -32,6 +39,25 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val externalStorageCheck = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val cameraCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+
+        if (externalStorageCheck != PackageManager.PERMISSION_GRANTED &&
+            cameraCheck != PackageManager.PERMISSION_GRANTED) {
+            Nammu.askForPermission(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA), object : PermissionCallback {
+                override fun permissionGranted() {
+
+                }
+
+                override fun permissionRefused() {
+                    finish()
+                }
+
+            })
+        }
+
         switchToAddApartmentFragment()
         /*if(authRepository.isLoggedIn()){
             switchToApartmentListFragment()
@@ -39,6 +65,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         else{
             switchToLoginFragment()
         }*/
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     fun switchToApartmentListFragment(){
