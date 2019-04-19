@@ -33,4 +33,5 @@
 	<string name="apartment_street">Ulica</string>
 	<string name="apartment_city">Miasto</string>
 	<string name="apartment_name">Nazwa mieszkania</string>
+	<string name="apartment_photos_label">Zdjęcia</string>
 </resources>

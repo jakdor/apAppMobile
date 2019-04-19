@@ -11,13 +11,17 @@
 				android:id="@+id/LinearLayout1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:layout_marginEnd="8dp"
-				android:layout_marginStart="8dp"
-				android:orientation="horizontal"
+				android:orientation="vertical"
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent">
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginStart="8dp"
+				android:orientation="horizontal">
 			<androidx.recyclerview.widget.RecyclerView
 					android:id="@+id/item_recycler"
 					android:layout_width="0dp"
@@ -33,10 +37,17 @@
 			<Button
 					android:id="@+id/add_image_button"
 					android:drawableTop="@drawable/add_a_photo"
-					android:text="Zdjęcia"
+					android:text="@string/apartment_photos_label"
 					android:layout_gravity="center"
 					android:layout_width="110dp"
 					android:layout_height="110dp"/>
+		</LinearLayout>
+			<Button
+					android:id="@+id/delete_apartment_images"
+					android:text="Usuń zdjęcia"
+					android:layout_gravity="center"
+					android:layout_width="match_parent"
+					android:layout_height="50dp"/>
 		</LinearLayout>
 		<LinearLayout
 				android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.image_apartment_list.*
 import pl.aprilapps.easyphotopicker.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class ApartmentFragment: Fragment(), InjectableFragment {
@@ -65,6 +67,10 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 (activity as MainActivity).openChooser()
             }
         }
+        delete_apartment_images.setOnClickListener {
+            photos.clear()
+            recyclerViewAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -74,9 +80,18 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     }
 
     fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
-        photos.addAll(returnedPhotos)
-        recyclerViewAdapter.notifyDataSetChanged()
-        item_recycler.scrollToPosition(photos.size -1)
+        if(returnedPhotos.size <= 8) {
+            photos.addAll(returnedPhotos)
+            recyclerViewAdapter.notifyDataSetChanged()
+            item_recycler.scrollToPosition(photos.size - 1)
+        }else{
+            for(image in 0..7){
+                photos.add(returnedPhotos[image])
+            }
+            recyclerViewAdapter.notifyDataSetChanged()
+            item_recycler.scrollToPosition(photos.size - 1)
+            Toast.makeText(activity,"Można dodać maksymalnie 8 zdjęć", Toast.LENGTH_SHORT).show()
+        }
     }
 
     companion object {
