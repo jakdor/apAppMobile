@@ -1,5 +1,6 @@
 package com.jakdor.apapp.ui.apartment
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.jakdor.apapp.R
-import pl.aprilapps.easyphotopicker.MediaFile
 import java.util.*
 
-class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<MediaFile>):
+class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Bitmap>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -27,7 +27,7 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val item = imagesList[position]
 
-        glide.load(item.file)
+        glide.load(item)
             .apply(
                 RequestOptions()
                     .fitCenter()

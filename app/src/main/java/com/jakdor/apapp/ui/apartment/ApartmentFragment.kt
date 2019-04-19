@@ -1,26 +1,22 @@
 package com.jakdor.apapp.ui.apartment
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
-import kotlinx.android.synthetic.main.image_apartment_list.*
-import pl.aprilapps.easyphotopicker.*
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class ApartmentFragment: Fragment(), InjectableFragment {
@@ -32,16 +28,11 @@ class ApartmentFragment: Fragment(), InjectableFragment {
 
     private lateinit var recyclerViewAdapter: ApartmentImageAdapter
 
-    private val PHOTOS_KEY: String = "apartment_images_list"
-    private var photos: ArrayList<MediaFile> = arrayListOf()
+    private var photos: ArrayList<Bitmap> = arrayListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (activity != null && activity is AppCompatActivity) {
             (activity as AppCompatActivity).supportActionBar!!.show()
-        }
-
-        if(savedInstanceState != null){
-            photos = savedInstanceState.getParcelableArrayList(PHOTOS_KEY)
         }
 
         return inflater.inflate(R.layout.add_new_apartment, container, false)
@@ -73,25 +64,12 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putSerializable(PHOTOS_KEY, photos)
-    }
-
-    fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
-        if(returnedPhotos.size <= 8) {
-            photos.addAll(returnedPhotos)
-            recyclerViewAdapter.notifyDataSetChanged()
-            item_recycler.scrollToPosition(photos.size - 1)
-        }else{
-            for(image in 0..7){
-                photos.add(returnedPhotos[image])
+    fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
+            for(image in returnedPhotos){
+                photos.add(BitmapFactory.decodeFile(image))
             }
             recyclerViewAdapter.notifyDataSetChanged()
             item_recycler.scrollToPosition(photos.size - 1)
-            Toast.makeText(activity,"Można dodać maksymalnie 8 zdjęć", Toast.LENGTH_SHORT).show()
-        }
     }
 
     companion object {

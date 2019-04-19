@@ -1,13 +1,17 @@
 package com.jakdor.apapp.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.annotation.NonNull
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.fxn.pix.Options
+import com.fxn.pix.Pix
+import com.fxn.utility.ImageQuality
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
@@ -16,14 +20,12 @@ import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import pl.aprilapps.easyphotopicker.*
 import pl.tajchert.nammu.Nammu
 import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import javax.inject.Inject
 
-
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     @Inject
     lateinit var authRepository: AuthRepository
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    private lateinit var easyImage: EasyImage
+    private lateinit var options: Options
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
         return dispatchingAndroidInjector
@@ -60,13 +62,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             })
         }
 
-        easyImage = EasyImage.Builder(this)
-            .setChooserTitle("Wybierz")
-            .setCopyImagesToPublicGalleryFolder(false)
-            .setChooserType(ChooserType.CAMERA_AND_GALLERY)
-            .setFolderName("Apartment image")
-            .allowMultiple(true)
-            .build()
+            options = Options.init()
+            .setRequestCode(100)
+            .setCount(8)
+            .setPath("/")
 
         switchToAddApartmentFragment()
         /*if(authRepository.isLoggedIn()){
@@ -82,21 +81,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
-        easyImage.handleActivityResult(requestCode, resultCode, data, this, object : DefaultCallback() {
-            override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                apartmentFragment.onPhotosReturned(imageFiles)
-            }
-
-            override fun onImagePickerError(@NonNull error: Throwable, @NonNull source: MediaSource) {
-                //Some error handling
-                error.printStackTrace()
-            }
-
-            override fun onCanceled(@NonNull source: MediaSource) {
-                //Not necessary to remove any files manually anymore
-            }
-        })
+        if (resultCode === Activity.RESULT_OK && requestCode === 100) {
+            val returnValue = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+            apartmentFragment.onPhotosReturned(returnValue)
+        }
     }
+
 
     fun switchToApartmentListFragment(){
         supportFragmentManager.beginTransaction()
@@ -137,26 +127,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     fun openChooser(){
         val isCameraAvailable = checkCameraFeaturesAvailability()
-        val isGalleryApp = checkGalleryAppAvailability()
 
-        if (isCameraAvailable && isGalleryApp) {
-            easyImage.openChooser(this)
-        } else if (isGalleryApp) {
-            easyImage.openGallery(this)
+        if (isCameraAvailable) {
+            Pix.start(this,options)
         }
     }
 
     fun checkCameraFeaturesAvailability(): Boolean {
         //device has no camera
         if (this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            return true
-        }
-        return false
-    }
-
-    fun checkGalleryAppAvailability(): Boolean {
-        //device has no app that handles gallery intent
-        if (easyImage.canDeviceHandleGallery()) {
             return true
         }
         return false
