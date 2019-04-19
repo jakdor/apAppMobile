@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,12 +16,11 @@ import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import pl.aprilapps.easyphotopicker.*
 import pl.tajchert.nammu.Nammu
 import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import javax.inject.Inject
-
-
 
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    private lateinit var easyImage: EasyImage
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
         return dispatchingAndroidInjector
@@ -58,6 +60,14 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             })
         }
 
+        easyImage = EasyImage.Builder(this)
+            .setChooserTitle("Wybierz")
+            .setCopyImagesToPublicGalleryFolder(false)
+            .setChooserType(ChooserType.CAMERA_AND_GALLERY)
+            .setFolderName("Apartment image")
+            .allowMultiple(true)
+            .build()
+
         switchToAddApartmentFragment()
         /*if(authRepository.isLoggedIn()){
             switchToApartmentListFragment()
@@ -70,9 +80,22 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        for (fragment in supportFragmentManager.fragments) {
-            fragment.onActivityResult(requestCode, resultCode, data)
-        }
+        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
+
+        easyImage.handleActivityResult(requestCode, resultCode, data, this, object : DefaultCallback() {
+            override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+                apartmentFragment.onPhotosReturned(imageFiles)
+            }
+
+            override fun onImagePickerError(@NonNull error: Throwable, @NonNull source: MediaSource) {
+                //Some error handling
+                error.printStackTrace()
+            }
+
+            override fun onCanceled(@NonNull source: MediaSource) {
+                //Not necessary to remove any files manually anymore
+            }
+        })
     }
 
     fun switchToApartmentListFragment(){
@@ -110,5 +133,32 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         else{
             super.onBackPressed()
         }
+    }
+
+    fun openChooser(){
+        val isCameraAvailable = checkCameraFeaturesAvailability()
+        val isGalleryApp = checkGalleryAppAvailability()
+
+        if (isCameraAvailable && isGalleryApp) {
+            easyImage.openChooser(this)
+        } else if (isGalleryApp) {
+            easyImage.openGallery(this)
+        }
+    }
+
+    fun checkCameraFeaturesAvailability(): Boolean {
+        //device has no camera
+        if (this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            return true
+        }
+        return false
+    }
+
+    fun checkGalleryAppAvailability(): Boolean {
+        //device has no app that handles gallery intent
+        if (easyImage.canDeviceHandleGallery()) {
+            return true
+        }
+        return false
     }
 }

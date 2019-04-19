@@ -3,22 +3,21 @@ package com.jakdor.apapp.ui.apartment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.jakdor.apapp.R
-import kotlinx.android.synthetic.main.image_apartment_list.view.*
 import pl.aprilapps.easyphotopicker.MediaFile
+import java.util.*
 
-
-class ApartmentImageAdapter
-constructor(private val glide: RequestManager, private val imagesList: List<MediaFile>):
+class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<MediaFile>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
 
-        return Holder(inflater.inflate(R.layout.image_apartment_list,parent,false))
+        return Holder(inflater.inflate(R.layout.image_apartment_list, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -34,13 +33,14 @@ constructor(private val glide: RequestManager, private val imagesList: List<Medi
                     .fitCenter()
                     .placeholder(R.mipmap.ic_launcher_round)
             )
+            .centerCrop()
             .into(holder.imageView)
     }
 
-    class Holder
-    constructor(val view: View):
-        RecyclerView.ViewHolder(view) {
+    class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var imageView = view.apartment_image
+        var imageView: ImageView = itemView.findViewById(R.id.apartment_image)
+
+
     }
 }

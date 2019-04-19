@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
 	<androidx.cardview.widget.CardView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="8dp"
+			android:layout_margin="10dp"
 			app:cardCornerRadius="8dp"
 			app:cardElevation="4dp">
 		<ImageView
@@ -14,4 +15,4 @@
 				android:layout_height="100dp"
 				android:contentDescription="@string/apartment_list_icon_desc"/>
 	</androidx.cardview.widget.CardView>
-</layout>
+</ScrollView>
