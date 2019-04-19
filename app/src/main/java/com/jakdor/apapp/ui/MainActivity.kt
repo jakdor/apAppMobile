@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var options: Options
+    private var returnedImages: ArrayList<String> = arrayListOf()
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
         return dispatchingAndroidInjector
@@ -63,9 +64,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         }
 
             options = Options.init()
-            .setRequestCode(100)
-            .setCount(8)
-            .setPath("/")
+                .setRequestCode(100)
+                .setCount(8)
+                .setPreSelectedUrls(returnedImages)
+                .setPath("/")
 
         switchToAddApartmentFragment()
         /*if(authRepository.isLoggedIn()){
@@ -82,8 +84,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
         if (resultCode === Activity.RESULT_OK && requestCode === 100) {
-            val returnValue = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-            apartmentFragment.onPhotosReturned(returnValue)
+            returnedImages.clear()
+            returnedImages.addAll(data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS))
+            apartmentFragment.onPhotosReturned(returnedImages)
         }
     }
 

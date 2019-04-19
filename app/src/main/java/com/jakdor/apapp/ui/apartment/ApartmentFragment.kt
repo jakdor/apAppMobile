@@ -65,6 +65,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
+            photos.clear()
             for(image in returnedPhotos){
                 photos.add(BitmapFactory.decodeFile(image))
             }
