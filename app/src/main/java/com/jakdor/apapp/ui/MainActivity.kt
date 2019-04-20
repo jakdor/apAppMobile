@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
-import com.fxn.utility.ImageQuality
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
@@ -23,6 +23,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import pl.tajchert.nammu.Nammu
 import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
@@ -84,8 +85,23 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
         if (resultCode === Activity.RESULT_OK && requestCode === 100) {
-            returnedImages.addAll(data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS))
+            val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+            if(returnedImages.size > 0){
+                for(image in imagesList) {
+                    sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
+                    if(!returnedImages.contains(image)){
+                        returnedImages.add(image)
+                    }
+                }
+            }else{
+                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(imagesList[0]))))
+                returnedImages.addAll(imagesList)
+            }
+
             apartmentFragment.onPhotosReturned(returnedImages)
+        }
+        if(resultCode == Activity.RESULT_CANCELED){
+            Toast.makeText(this,"Error", Toast.LENGTH_SHORT).show()
         }
     }
 
