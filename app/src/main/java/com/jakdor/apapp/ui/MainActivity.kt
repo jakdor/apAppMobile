@@ -71,13 +71,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setPreSelectedUrls(returnedImages)
                 .setPath("/DCIM/TrueHome")
 
-        switchToAddApartmentFragment()
-        /*if(authRepository.isLoggedIn()){
-            switchToApartmentListFragment()
+        //switchToAddApartmentFragment()
+        if(authRepository.isLoggedIn()){
+            switchToAddApartmentFragment()
         }
         else{
             switchToLoginFragment()
-        }*/
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

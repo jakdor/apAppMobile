@@ -3,13 +3,15 @@ package com.jakdor.apapp.ui.apartment
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
+import com.jakdor.apapp.common.repository.AddApartmentRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 class ApartmentViewModel
 @Inject constructor(application: Application,
-                    rxSchedulersFacade: RxSchedulersFacade):
+                    rxSchedulersFacade: RxSchedulersFacade,
+                    private val addApartmentRepository: AddApartmentRepository):
                     BaseViewModel(application, rxSchedulersFacade){
 
     val addApartmentPossibilty = MutableLiveData<Boolean>().apply { value = false }
@@ -23,6 +25,10 @@ class ApartmentViewModel
     val apartmentCityStatus = MutableLiveData<Boolean>().apply { value = false }
     val apartmentStreetStatus = MutableLiveData<Boolean>().apply { value = false }
     val apartmentNumberStatus = MutableLiveData<ApartmentNumberStatus>().apply { value = ApartmentNumberStatus.WRONG_PATTERN }
+
+    fun addApartment(name: String, city: String, street: String, apartmentNumber: String){
+        addApartmentRepository.addApartment(name,city,street,apartmentNumber)
+    }
 
     fun apartmentNameValidation(apartmentName: String){
 

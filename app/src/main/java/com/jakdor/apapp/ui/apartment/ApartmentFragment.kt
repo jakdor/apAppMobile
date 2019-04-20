@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -54,6 +55,12 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
+        val addApartmentObserver = Observer<Boolean> { newStatus ->
+            add_apartment_button.isEnabled = newStatus
+        }
+
+        viewModel?.addApartmentPossibilty?.observe(this, addApartmentObserver)
+
         observeApartmentNameStatus()
         observeApartmentCityStatus()
         observeApartmentStreetStatus()
@@ -74,6 +81,14 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 (activity as MainActivity).clearImages()
             }
             recyclerViewAdapter.notifyDataSetChanged()
+        }
+        add_apartment_button.setOnClickListener {
+            val name = apartment_name_editText.text.toString()
+            val city = apartment_city_editText.text.toString()
+            val street = apartment_street_editText.text.toString()
+            val apartmentNumber = apartment_number_editText.text.toString()
+
+            viewModel?.addApartment(name,city,street,apartmentNumber)
         }
 
         apartment_name_editText.addTextChangedListener(object: TextWatcher{

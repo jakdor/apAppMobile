@@ -1,5 +1,7 @@
 package com.jakdor.apapp.common.repository
 
+import com.jakdor.apapp.common.model.apartment.Apartment
+import com.jakdor.apapp.common.model.apartment.ApartmentAdd
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
 import com.jakdor.apapp.network.BackendService
