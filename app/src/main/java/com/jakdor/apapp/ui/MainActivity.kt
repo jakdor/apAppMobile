@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setRequestCode(100)
                 .setCount(8)
                 .setPreSelectedUrls(returnedImages)
-                .setPath("/")
+                .setPath("/DCIM/TrueHome")
 
         switchToAddApartmentFragment()
         /*if(authRepository.isLoggedIn()){
@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
         if (resultCode === Activity.RESULT_OK && requestCode === 100) {
-            returnedImages.clear()
             returnedImages.addAll(data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS))
             apartmentFragment.onPhotosReturned(returnedImages)
         }
@@ -142,5 +141,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
             return true
         }
         return false
+    }
+
+    fun clearImages() {
+        returnedImages.clear()
     }
 }

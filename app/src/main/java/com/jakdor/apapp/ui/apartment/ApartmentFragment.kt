@@ -60,6 +60,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         }
         delete_apartment_images.setOnClickListener {
             photos.clear()
+            (activity as MainActivity).clearImages()
             recyclerViewAdapter.notifyDataSetChanged()
         }
     }
