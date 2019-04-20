@@ -60,15 +60,19 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         }
         delete_apartment_images.setOnClickListener {
             photos.clear()
-            (activity as MainActivity).clearImages()
+            if (activity != null && activity is MainActivity) {
+                (activity as MainActivity).clearImages()
+            }
             recyclerViewAdapter.notifyDataSetChanged()
         }
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
             photos.clear()
-            for(image in returnedPhotos){
-                photos.add(BitmapFactory.decodeFile(image))
+            if(returnedPhotos.size > 0) {
+                for (image in returnedPhotos) {
+                    photos.add(BitmapFactory.decodeFile(image))
+                }
             }
             recyclerViewAdapter.notifyDataSetChanged()
             item_recycler.scrollToPosition(photos.size - 1)

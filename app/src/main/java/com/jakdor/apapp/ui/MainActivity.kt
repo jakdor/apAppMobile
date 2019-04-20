@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -86,22 +87,17 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
         if (resultCode === Activity.RESULT_OK && requestCode === 100) {
             val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-            if(returnedImages.size > 0){
-                for(image in imagesList) {
-                    sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
-                    if(!returnedImages.contains(image)){
-                        returnedImages.add(image)
-                    }
-                }
-            }else{
-                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(imagesList[0]))))
-                returnedImages.addAll(imagesList)
+            for(image in imagesList) {
+                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
             }
+            returnedImages.clear()
+            returnedImages.addAll(imagesList)
 
             apartmentFragment.onPhotosReturned(returnedImages)
         }
         if(resultCode == Activity.RESULT_CANCELED){
-            Toast.makeText(this,"Error", Toast.LENGTH_SHORT).show()
+            returnedImages.clear()
+            apartmentFragment.onPhotosReturned(returnedImages)
         }
     }
 
