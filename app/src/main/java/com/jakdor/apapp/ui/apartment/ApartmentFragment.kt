@@ -3,19 +3,24 @@ package com.jakdor.apapp.ui.apartment
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
+import kotlinx.android.synthetic.main.new_apartment.*
 import javax.inject.Inject
 
 
@@ -48,6 +53,11 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
+
+        observeApartmentNameStatus()
+        observeApartmentCityStatus()
+        observeApartmentStreetStatus()
+        observeApartmentNumberStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +75,74 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
             recyclerViewAdapter.notifyDataSetChanged()
         }
+
+        apartment_name_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentName = apartment_name_editText.text.toString()
+
+                viewModel?.apartmentNameValidation(apartmentName)
+            }
+
+        })
+
+        apartment_city_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentCity = apartment_city_editText.text.toString()
+
+                viewModel?.apartmentCityValidation(apartmentCity)
+            }
+
+        })
+
+        apartment_street_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentStreet = apartment_street_editText.text.toString()
+
+                viewModel?.apartmentStreetValidation(apartmentStreet)
+            }
+
+        })
+
+        apartment_number_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentNumber = apartment_number_editText.text.toString()
+
+                viewModel?.apartmentNumberValidation(apartmentNumber)
+            }
+
+        })
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
@@ -76,6 +154,48 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
             recyclerViewAdapter.notifyDataSetChanged()
             item_recycler.scrollToPosition(photos.size - 1)
+    }
+
+    private fun observeApartmentNameStatus() {
+        viewModel?.apartmentNameStatus?.observe(this, Observer {
+            handleApartmentStatus(it, apartment_name_wrapper)
+        })
+    }
+
+    private fun observeApartmentCityStatus(){
+        viewModel?.apartmentCityStatus?.observe(this, Observer {
+            handleApartmentStatus(it, apartment_city_wrapper)
+        })
+    }
+
+    private fun observeApartmentStreetStatus() {
+        viewModel?.apartmentStreetStatus?.observe(this, Observer {
+            handleApartmentStatus(it, apartment_street_wrapper)
+        })
+    }
+
+    private fun observeApartmentNumberStatus() {
+        viewModel?.apartmentNumberStatus?.observe(this, Observer {
+            handleNewNumberStatus(it)
+        })
+    }
+
+    private fun handleApartmentStatus(status: Boolean, input: TextInputLayout) {
+        if(status){
+            input.isErrorEnabled = false
+        }else{
+            input.error = getString(R.string.noEmptyField)
+        }
+    }
+
+    private fun handleNewNumberStatus(status: ApartmentViewModel.ApartmentNumberStatus) {
+        when(status){
+            ApartmentViewModel.ApartmentNumberStatus.OK -> apartment_number_wrapper.isErrorEnabled = false
+            ApartmentViewModel.ApartmentNumberStatus.EMPTY ->
+                apartment_number_wrapper.error = getString(R.string.noEmptyField)
+            ApartmentViewModel.ApartmentNumberStatus.WRONG_PATTERN ->
+                apartment_number_wrapper.error = getString(R.string.apartmentNumberPatternInfo)
+        }
     }
 
     companion object {
