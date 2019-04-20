@@ -37,4 +37,5 @@
 	<string name="selection_limiter_pix">Można wybrać maksymalnie %d zdjęć</string>
 	<string name="pix_selected">Wybrano</string>
 	<string name="apartmentNumberPatternInfo">Numer budynku/Numer mieszkania</string>
+	<string name="add_apartment">Dodaj apartament</string>
 </resources>

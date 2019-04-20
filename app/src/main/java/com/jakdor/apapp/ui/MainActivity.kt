@@ -87,11 +87,21 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
         if (resultCode === Activity.RESULT_OK && requestCode === 100) {
             val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-            for(image in imagesList) {
-                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
+            if(returnedImages.size > 0) {
+                if(returnedImages.size < 8) {
+                    for (image in imagesList) {
+                        sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
+                        if (!returnedImages.contains(image)) {
+                            returnedImages.add(image)
+                        }
+                    }
+                }else{
+                    Toast.makeText(this, getString(R.string.selection_limiter_pix, 8), Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(imagesList[0]))))
+                returnedImages.addAll(imagesList)
             }
-            returnedImages.clear()
-            returnedImages.addAll(imagesList)
 
             apartmentFragment.onPhotosReturned(returnedImages)
         }
@@ -140,7 +150,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     }
 
     fun openChooser(){
-        val isCameraAvailable = checkCameraFeaturesAvailability()
+        val isCameraAvailable = true//checkCameraFeaturesAvailability()
 
         if (isCameraAvailable) {
             Pix.start(this,options)
