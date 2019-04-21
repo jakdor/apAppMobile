@@ -1,9 +1,9 @@
 package com.jakdor.apapp.ui.apartment
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -49,10 +49,23 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
 
         var imageView: ImageView = itemView.findViewById(R.id.apartment_image)
         var cardView: CardView = itemView.findViewById(R.id.image_cardView)
+        var deleteButton: Button = itemView.findViewById(R.id.delete_image)
         var itemPosition: Int = 0
 
+        var secondClick: Boolean = false
+
         init {
-            cardView.setOnClickListener { recyclerViewItemClickListener.onItemClick(itemView, itemPosition) }
+            cardView.setOnClickListener {
+                //recyclerViewItemClickListener.onItemClick(itemView, itemPosition)
+                if(!secondClick) {
+                    deleteButton.visibility = View.VISIBLE
+                    secondClick = true
+                }else{
+                    deleteButton.visibility = View.GONE
+                    secondClick = false
+                }
+            }
+            deleteButton.setOnClickListener{ recyclerViewItemClickListener.onItemClick(itemView, itemPosition)}
         }
 
 

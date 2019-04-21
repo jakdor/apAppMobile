@@ -9,6 +9,4 @@ constructor(@SerializedName("Name") @Expose var name: String,
             @SerializedName("Street") @Expose var street: String,
             @SerializedName("ApartmentNumber") @Expose var apartment: String,
             @SerializedName("Lat") @Expose var lat: Float,
-            @SerializedName("Long") @Expose var long: Float,
-            @SerializedName("idUser") @Expose var idUser: Int
-)
+            @SerializedName("Long") @Expose var long: Float)

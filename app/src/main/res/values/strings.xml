@@ -39,4 +39,5 @@
 	<string name="apartmentNumberPatternInfo">Numer budynku/numer mieszkania lub numer budynku</string>
 	<string name="add_apartment">Dodaj apartament</string>
 	<string name="delete_images_label">Usuń zdjęcia</string>
+	<string name="delete_apartment_image">Usuń zdjęcie</string>
 </resources>

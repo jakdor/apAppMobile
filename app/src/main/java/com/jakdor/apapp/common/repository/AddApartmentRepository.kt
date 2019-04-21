@@ -5,6 +5,7 @@ import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
@@ -21,9 +22,9 @@ class AddApartmentRepository
 
     val apartmentIdSubject: BehaviorSubject<Int> = BehaviorSubject.create()
 
-    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float) {
+    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, lat, long, 1)))
+            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, lat, long)))
                 .observeOn(rxSchedulersFacade.io())
                 .subscribeOn(rxSchedulersFacade.io())
                 .subscribe({ t: Int -> Timber.d("ID apartamentu: %s", t.toString());

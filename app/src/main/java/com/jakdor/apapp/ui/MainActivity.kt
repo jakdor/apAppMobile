@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,7 +24,6 @@ import pl.tajchert.nammu.Nammu
 import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import java.io.File
-import java.text.FieldPosition
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
@@ -151,20 +149,18 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     }
 
     fun openChooser(){
-        val isCameraAvailable = true//checkCameraFeaturesAvailability()
+        //val isCameraAvailable = checkCameraFeaturesAvailability()
 
-        if (isCameraAvailable) {
-            Pix.start(this,options)
-        }
+        Pix.start(this,options)
     }
 
-    fun checkCameraFeaturesAvailability(): Boolean {
+    /*fun checkCameraFeaturesAvailability(): Boolean {
         //device has no camera
         if (this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             return true
         }
         return false
-    }
+    }*/
 
     fun clearImages() {
         returnedImages.clear()

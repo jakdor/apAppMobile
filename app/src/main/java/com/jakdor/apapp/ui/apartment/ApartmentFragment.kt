@@ -1,6 +1,5 @@
 package com.jakdor.apapp.ui.apartment
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
@@ -201,6 +200,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
 
     fun handleNewApartmentId(apartmentId: Int){
         Toast.makeText(activity,apartmentId.toString(),Toast.LENGTH_SHORT).show()
+        (activity as MainActivity).switchToApartmentListFragment()
     }
 
     private fun observeApartmentNameStatus() {
