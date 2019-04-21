@@ -1,7 +1,11 @@
 package com.jakdor.apapp.ui.apartment
 
 import android.app.Application
+import android.location.Address
+import android.location.Geocoder
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.load.model.FileLoader
 import com.jakdor.apapp.arch.BaseViewModel
 import com.jakdor.apapp.common.repository.AddApartmentRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
@@ -26,8 +30,24 @@ class ApartmentViewModel
     val apartmentStreetStatus = MutableLiveData<Boolean>().apply { value = false }
     val apartmentNumberStatus = MutableLiveData<ApartmentNumberStatus>().apply { value = ApartmentNumberStatus.WRONG_PATTERN }
 
-    fun addApartment(name: String, city: String, street: String, apartmentNumber: String){
-        addApartmentRepository.addApartment(name,city,street,apartmentNumber)
+    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){
+        addApartmentRepository.addApartment(name,city,street,apartmentNumber, lat, long)
+    }
+
+    fun getLatLng(context: FragmentActivity?, address: String): LatLng?{
+
+        val geocoder = Geocoder(context)
+
+        val address: List<Address> = geocoder.getFromLocationName(address,1)
+
+        if(address.isNotEmpty()){
+            val longitude: Float = address[0].longitude.toFloat()
+            val latitude: Float = address[0].latitude.toFloat()
+
+            return LatLng(latitude, longitude)
+        }
+
+        return null
     }
 
     fun apartmentNameValidation(apartmentName: String){
@@ -93,9 +113,17 @@ class ApartmentViewModel
                 isApartmentNumberCorrect)
 
         val apartmentNumberPattern: Pattern = Pattern.compile("^([0-9]+)([/])([0-9]+\$)")
+        val apartmentNumberPattern2: Pattern = Pattern.compile("^([0-9]+\$)")
 
         if(apartmentNumber.trim().isNotEmpty()){
             if(!apartmentNumberPattern.matcher(apartmentNumber).find()){
+                if(apartmentNumberPattern2.matcher(apartmentNumber).find()){
+                    isApartmentNumberCorrect = true
+                    apartmentNumberStatus.postValue(ApartmentNumberStatus.OK)
+                    addApartmentPossibilty.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
+                            isApartmentNumberCorrect)
+                    return
+                }
                 isApartmentNumberCorrect = false
                 apartmentNumberStatus.postValue(ApartmentNumberStatus.WRONG_PATTERN)
                 return
@@ -117,4 +145,6 @@ class ApartmentViewModel
     enum class ApartmentNumberStatus {
         OK, EMPTY, WRONG_PATTERN
     }
+
+    data class LatLng(var latitude: Float, var longitude: Float)
 }

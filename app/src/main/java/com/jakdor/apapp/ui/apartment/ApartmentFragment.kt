@@ -8,13 +8,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.load.model.FileLoader
 import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
@@ -88,7 +89,16 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             val street = apartment_street_editText.text.toString()
             val apartmentNumber = apartment_number_editText.text.toString()
 
-            viewModel?.addApartment(name,city,street,apartmentNumber)
+            val fullAddress = "$street $apartmentNumber, $city"
+            val latLng: ApartmentViewModel.LatLng? = viewModel?.getLatLng(activity, fullAddress)
+            var lng = 0.0F
+            var lat = 0.0F
+            if(latLng != null) {
+                lng = latLng.longitude
+                lat = latLng.latitude
+            }
+
+            viewModel?.addApartment(name,city,street,apartmentNumber, lat, lng)
         }
 
         apartment_name_editText.addTextChangedListener(object: TextWatcher{
@@ -161,7 +171,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
-            photos.clear()
+        photos.clear()
             if(returnedPhotos.size > 0) {
                 for (image in returnedPhotos) {
                     photos.add(BitmapFactory.decodeFile(image))

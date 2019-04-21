@@ -15,7 +15,7 @@ interface BackendService {
     fun getApartments(@Body apartmentListRequest: ApartmentListRequest): Observable<ApartmentList?>
 
     @POST("apartments/add")
-    fun addApartment(@Body apartment: ApartmentAdd): Observable<Apartment?>
+    fun addApartment(@Body apartment: ApartmentAdd): Observable<Int>
 
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
