@@ -25,6 +25,7 @@ import pl.tajchert.nammu.Nammu
 import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import java.io.File
+import java.text.FieldPosition
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
@@ -167,5 +168,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun clearImages() {
         returnedImages.clear()
+    }
+
+    fun removeImageFromPosition(position: Int){
+        returnedImages.removeAt(position)
     }
 }

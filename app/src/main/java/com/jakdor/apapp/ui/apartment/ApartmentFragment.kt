@@ -34,7 +34,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
 
     private lateinit var recyclerViewAdapter: ApartmentImageAdapter
 
-    private var photos: ArrayList<Bitmap> = arrayListOf()
+    private var photos: ArrayList<Picture> = arrayListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (activity != null && activity is AppCompatActivity) {
@@ -54,6 +54,15 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
+
+        recyclerViewAdapter.setOnItemClickListener(object: RecyclerViewItemClickListener{
+            override fun onItemClick(view: View, position: Int) {
+                photos.removeAt(position)
+                (activity as MainActivity).removeImageFromPosition(position)
+                recyclerViewAdapter.notifyDataSetChanged()
+            }
+
+        })
 
         val addApartmentObserver = Observer<Boolean> { newStatus ->
             add_apartment_button.isEnabled = newStatus
@@ -177,7 +186,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         photos.clear()
             if(returnedPhotos.size > 0) {
                 for (image in returnedPhotos) {
-                    photos.add(BitmapFactory.decodeFile(image))
+                    photos.add(Picture(image, BitmapFactory.decodeFile(image)))
                 }
             }
             recyclerViewAdapter.notifyDataSetChanged()

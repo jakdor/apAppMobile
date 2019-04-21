@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.jakdor.apapp.R
 import java.util.*
 
-class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Bitmap>):
+class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
+
+    lateinit var recyclerViewItemClickListener: RecyclerViewItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,7 +28,8 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val item = imagesList[position]
+        holder.itemPosition = position
+        val item = imagesList[position].image
 
         glide.load(item)
             .apply(
@@ -37,9 +41,19 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
             .into(holder.imageView)
     }
 
-    class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun setOnItemClickListener(recyclerViewItemClickListener: RecyclerViewItemClickListener) {
+        this.recyclerViewItemClickListener = recyclerViewItemClickListener
+    }
+
+    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imageView: ImageView = itemView.findViewById(R.id.apartment_image)
+        var cardView: CardView = itemView.findViewById(R.id.image_cardView)
+        var itemPosition: Int = 0
+
+        init {
+            cardView.setOnClickListener { recyclerViewItemClickListener.onItemClick(itemView, itemPosition) }
+        }
 
 
     }
