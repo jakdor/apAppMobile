@@ -8,14 +8,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.load.model.FileLoader
 import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
@@ -60,7 +59,11 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             add_apartment_button.isEnabled = newStatus
         }
 
-        viewModel?.addApartmentPossibilty?.observe(this, addApartmentObserver)
+        viewModel?.addApartmentPossibility?.observe(this, addApartmentObserver)
+
+        observeApartmentIdLiveData()
+
+        viewModel?.observeApartmentIdSubject()
 
         observeApartmentNameStatus()
         observeApartmentCityStatus()
@@ -179,6 +182,16 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
             recyclerViewAdapter.notifyDataSetChanged()
             item_recycler.scrollToPosition(photos.size - 1)
+    }
+
+    fun observeApartmentIdLiveData(){
+        viewModel?.apartmentIdLiveData?.observe(this, Observer {
+            handleNewApartmentId(it)
+        })
+    }
+
+    fun handleNewApartmentId(apartmentId: Int){
+        Toast.makeText(activity,apartmentId.toString(),Toast.LENGTH_SHORT).show()
     }
 
     private fun observeApartmentNameStatus() {
