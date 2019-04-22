@@ -49,9 +49,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setCount(MAX_IMAGES_TO_UPLOAD)
                 .setPreSelectedUrls(returnedImages)
 
-        //switchToAddApartmentFragment()
         if(authRepository.isLoggedIn()){
-            switchToAddApartmentFragment()
+            switchToApartmentListFragment()
         }
         else{
             switchToLoginFragment()

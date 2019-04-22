@@ -209,7 +209,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         if(apartmentId > 0 && photos.size>0){
             viewModel?.addApartmentImage(apartmentId, photos)
         }
-        //(activity as MainActivity).switchToApartmentListFragment()
+        (activity as MainActivity).switchToApartmentListFragment()
     }
 
     private fun observeApartmentNameStatus() {
