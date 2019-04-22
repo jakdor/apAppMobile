@@ -18,7 +18,6 @@ project.ext {
     leakCanaryVersion = "1.6.3"
     supportDesign = "27.1.0"
     easyImageVersion = "3.0.1"
-    nammuVersion = "1.2.1"
     pixImagePickerVersion = "1.3.0"
 }
 
@@ -95,9 +94,6 @@ dependencies {
 
     //PixImagePicker
     implementation "com.fxn769:pix:$project.pixImagePickerVersion"
-
-    //Nammu - permission check/grant
-    implementation "com.github.tajchert:Nammu:$project.nammuVersion"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$project.leakCanaryVersion"

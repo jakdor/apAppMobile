@@ -3,10 +3,13 @@ package com.jakdor.apapp.ui
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
@@ -18,8 +21,6 @@ import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import pl.tajchert.nammu.Nammu
-import pl.tajchert.nammu.PermissionCallback
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -43,8 +44,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Nammu.init(this)
-
             options = Options.init()
                 .setRequestCode(GET_IMAGES_REQUEST_CODE)
                 .setCount(MAX_IMAGES_TO_UPLOAD)
@@ -59,6 +58,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         }
     }
 
+    @Suppress("DEPRECATED_IDENTITY_EQUALS")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -131,26 +131,16 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     fun openChooser(){
         //val isCameraAvailable = checkCameraFeaturesAvailability()
 
-        val externalStorageCheck = Nammu.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val cameraCheck = Nammu.checkPermission(Manifest.permission.CAMERA)
+        val externalStorageCheck = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val cameraCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
 
-        if (!externalStorageCheck || !cameraCheck) {
-                Nammu.askForPermission(this, arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA
-                ), object : PermissionCallback {
-                    override fun permissionGranted() {
-                        Pix.start(this@MainActivity, options)
-                    }
+        if (externalStorageCheck != PackageManager.PERMISSION_GRANTED ||
+            cameraCheck != PackageManager.PERMISSION_GRANTED) {
 
-                    override fun permissionRefused() {
-                        Toast.makeText(
-                            this@MainActivity,
-                            getString(R.string.camera_externalStorage_refused), Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                })
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                CAMERA_STORAGE_PERMISSION_CODE)
         }else{
             Pix.start(this,options)
         }
@@ -159,19 +149,17 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(permissions.contains(Manifest.permission.CAMERA) ||
-            permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == CAMERA_STORAGE_PERMISSION_CODE){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults [1] == PackageManager.PERMISSION_GRANTED){
+                Pix.start(this, options)
+            }else{
+                Toast.makeText(this, getString(R.string.camera_externalStorage_refused),
+                    Toast.LENGTH_LONG).show()
+            }
+            return
         }
     }
-
-    /*fun checkCameraFeaturesAvailability(): Boolean {
-        //device has no camera
-        if (this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            return true
-        }
-        return false
-    }*/
 
     fun clearImages() {
         returnedImages.clear()
@@ -184,5 +172,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     companion object {
         const val MAX_IMAGES_TO_UPLOAD = 8
         const val GET_IMAGES_REQUEST_CODE = 122
+        const val CAMERA_STORAGE_PERMISSION_CODE = 743
     }
 }
