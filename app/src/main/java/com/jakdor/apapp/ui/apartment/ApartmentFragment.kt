@@ -1,6 +1,7 @@
 package com.jakdor.apapp.ui.apartment
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +22,7 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
+import java.io.File
 import javax.inject.Inject
 
 
@@ -204,7 +206,10 @@ class ApartmentFragment: Fragment(), InjectableFragment {
 
     fun handleNewApartmentId(apartmentId: Int){
         Toast.makeText(activity,apartmentId.toString(),Toast.LENGTH_SHORT).show()
-        (activity as MainActivity).switchToApartmentListFragment()
+        if(apartmentId > 0 && photos.size>0){
+            viewModel?.addApartmentImage(apartmentId, photos)
+        }
+        //(activity as MainActivity).switchToApartmentListFragment()
     }
 
     private fun observeApartmentNameStatus() {

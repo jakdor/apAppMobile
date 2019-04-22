@@ -8,7 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
 import com.jakdor.apapp.common.repository.AddApartmentRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import timber.log.Timber
+import java.io.File
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -42,6 +46,18 @@ class ApartmentViewModel
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){
         addApartmentRepository.addApartment(name,city,street,apartmentNumber, lat, long)
+    }
+
+    fun addApartmentImage(apartmentId: Int, imageList: ArrayList<Picture>){
+        for(image in imageList){
+            val fileImage = File(image.picturePath)
+
+            val requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), fileImage)
+
+            val filePart = MultipartBody.Part.createFormData("image", fileImage.name, requestBody)
+
+            addApartmentRepository.addApartmentImage(1, filePart)
+        }
     }
 
     fun getLatLng(context: FragmentActivity?, address: String): LatLng?{

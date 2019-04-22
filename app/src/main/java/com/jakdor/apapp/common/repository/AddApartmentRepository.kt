@@ -8,6 +8,10 @@ import com.jakdor.apapp.utils.RxSchedulersFacade
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.Response
+import okhttp3.ResponseBody
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,6 +34,16 @@ class AddApartmentRepository
                 .subscribe({ t: Int -> Timber.d("ID apartamentu: %s", t.toString());
                                         if(t>0) apartmentIdSubject.onNext(t)},
                     { e -> Timber.e(e, "ERROR adding Apartment") })
+        )
+    }
+
+    fun addApartmentImage(apartmentId: Int, image: MultipartBody.Part){
+        rxDisposables.add(bearerAuthWrapper.wrapCall(
+            bearerAuthWrapper.apiAuthService.addApartmentImage(apartmentId,image))
+            .observeOn(rxSchedulersFacade.io())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({ t: ResponseBody -> Timber.d("Success: %s", t.toString())},
+                { e -> Timber.e(e, "ERROR adding Apartment image") })
         )
     }
 

@@ -1,13 +1,13 @@
 package com.jakdor.apapp.network
 
-import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
 import com.jakdor.apapp.common.model.auth.*
 import io.reactivex.Observable
-import retrofit2.http.Body
-import retrofit2.http.POST
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 interface BackendService {
 
@@ -16,6 +16,10 @@ interface BackendService {
 
     @POST("apartments/add")
     fun addApartment(@Body apartment: ApartmentAdd): Observable<Int>
+
+    @Multipart
+    @POST("Pictures/{idAp}")
+    fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part): Observable<ResponseBody>
 
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
