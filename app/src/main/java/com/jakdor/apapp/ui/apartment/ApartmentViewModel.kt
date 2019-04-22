@@ -29,12 +29,12 @@ class ApartmentViewModel
     private var isNameCorrect: Boolean = false
     private var isCityCorrect: Boolean = false
     private var isStreetCorrect: Boolean = false
-    private var isApartmentNumberCorrect: Boolean = true
+    private var isApartmentNumberCorrect: Boolean = false
 
-    val apartmentNameStatus = MutableLiveData<Boolean>().apply { value = false }
-    val apartmentCityStatus = MutableLiveData<Boolean>().apply { value = false }
-    val apartmentStreetStatus = MutableLiveData<Boolean>().apply { value = false }
-    val apartmentNumberStatus = MutableLiveData<ApartmentNumberStatus>().apply { value = ApartmentNumberStatus.WRONG_PATTERN }
+    val apartmentNameStatus = MutableLiveData<Boolean>().apply { value = true }
+    val apartmentCityStatus = MutableLiveData<Boolean>().apply { value = true }
+    val apartmentStreetStatus = MutableLiveData<Boolean>().apply { value = true }
+    val apartmentNumberStatus = MutableLiveData<ApartmentNumberStatus>().apply { value = ApartmentNumberStatus.OK }
 
     fun observeApartmentIdSubject(){
         disposable.add(addApartmentRepository.apartmentIdSubject

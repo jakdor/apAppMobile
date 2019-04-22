@@ -61,6 +61,9 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 photos.removeAt(position)
                 (activity as MainActivity).removeImageFromPosition(position)
                 recyclerViewAdapter.notifyDataSetChanged()
+                if(photos.size == 0){
+                    photosCheckbox.isChecked = false
+                }
             }
 
         })
@@ -95,6 +98,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 (activity as MainActivity).clearImages()
             }
             recyclerViewAdapter.notifyDataSetChanged()
+            photosCheckbox.isChecked = false
         }
         add_apartment_button.setOnClickListener {
             val name = apartment_name_editText.text.toString()
@@ -196,6 +200,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 }
             }
             item_recycler.scrollToPosition(photos.size - 1)
+            photosCheckbox.isChecked = true
     }
 
     fun observeApartmentIdLiveData(){

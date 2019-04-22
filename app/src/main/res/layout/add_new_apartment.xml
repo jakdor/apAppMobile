@@ -7,12 +7,23 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
+		<CheckBox
+				android:id="@+id/photosCheckbox"
+				android:text="Zrób lub wybierz do 8 zdjęć"
+				android:gravity="center"
+				android:clickable="false"
+				android:checked="false"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"/>
 		<LinearLayout
 				android:id="@+id/LinearLayout1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/photosCheckbox"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent">
 		<LinearLayout

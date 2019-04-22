@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setPreSelectedUrls(returnedImages)
 
         if(authRepository.isLoggedIn()){
-            switchToApartmentListFragment()
+            switchToAddApartmentFragment()
         }
         else{
             switchToLoginFragment()
