@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setRequestCode(100)
                 .setCount(8)
                 .setPreSelectedUrls(returnedImages)
-                .setPath("/DCIM/TrueHome")
 
         //switchToAddApartmentFragment()
         if(authRepository.isLoggedIn()){
