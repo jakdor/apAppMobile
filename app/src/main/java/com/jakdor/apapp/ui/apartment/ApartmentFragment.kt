@@ -54,7 +54,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
-        recyclerViewAdapter.setOnItemClickListener(object: RecyclerViewItemClickListener{
+        recyclerViewAdapter.setOnItemClickListener(object: ApartmentImageAdapter.RecyclerViewItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 photos.removeAt(position)
                 (activity as MainActivity).removeImageFromPosition(position)

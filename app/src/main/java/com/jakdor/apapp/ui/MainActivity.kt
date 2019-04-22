@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
+import com.google.android.material.snackbar.Snackbar
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
@@ -45,24 +46,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val externalStorageCheck = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val cameraCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-
-        if (externalStorageCheck != PackageManager.PERMISSION_GRANTED &&
-            cameraCheck != PackageManager.PERMISSION_GRANTED) {
-            Nammu.askForPermission(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA), object : PermissionCallback {
-                override fun permissionGranted() {
-
-                }
-
-                override fun permissionRefused() {
-                    finish()
-                }
-
-            })
-        }
+        Nammu.init(this)
 
             options = Options.init()
                 .setRequestCode(100)
@@ -151,7 +135,38 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     fun openChooser(){
         //val isCameraAvailable = checkCameraFeaturesAvailability()
 
-        Pix.start(this,options)
+        val externalStorageCheck = Nammu.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val cameraCheck = Nammu.checkPermission(Manifest.permission.CAMERA)
+
+        if (!externalStorageCheck || !cameraCheck) {
+                Nammu.askForPermission(this, arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+                ), object : PermissionCallback {
+                    override fun permissionGranted() {
+                        Pix.start(this@MainActivity, options)
+                    }
+
+                    override fun permissionRefused() {
+                        Toast.makeText(
+                            this@MainActivity,
+                            getString(R.string.camera_externalStorage_refused), Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                })
+        }else{
+            Pix.start(this,options)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(permissions.contains(Manifest.permission.CAMERA) ||
+            permissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
     /*fun checkCameraFeaturesAvailability(): Boolean {

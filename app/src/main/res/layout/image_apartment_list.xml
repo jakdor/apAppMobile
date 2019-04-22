@@ -22,7 +22,8 @@
 		<Button
 				android:id="@+id/delete_image"
 				android:text="@string/delete_apartment_image"
-				android:background="@drawable/button"
+				android:background="@drawable/background"
+				android:textColor="@color/white"
 				android:visibility="gone"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>

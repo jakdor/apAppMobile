@@ -40,4 +40,6 @@
 	<string name="add_apartment">Dodaj apartament</string>
 	<string name="delete_images_label">Usuń zdjęcia</string>
 	<string name="delete_apartment_image">Usuń zdjęcie</string>
+	<string name="camera_externalStorage_refused">Musisz zezwolić na dostęp do kamery oraz pamięci, żeby dodać zdjęcia
+	</string>
 </resources>
