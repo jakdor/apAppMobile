@@ -1,15 +1,17 @@
 package com.jakdor.apapp.ui.apartment
 
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.jakdor.apapp.R
-import java.util.*
+import com.jakdor.apapp.utils.diffCallback.ApartmentImageDiffCallback
 
 class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
@@ -37,7 +39,6 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
         var secondClick = false
 
         holder.cardView.setOnClickListener {
-            //recyclerViewItemClickListener.onItemClick(itemView, itemPosition)
             if(!secondClick) {
                 holder.deleteButton.visibility = View.VISIBLE
                 secondClick = true
@@ -50,6 +51,24 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
             holder.deleteButton.visibility = View.GONE
             recyclerViewItemClickListener.onItemClick(holder.itemView, position)
         }
+    }
+
+    fun updateItems(newImagesList: ArrayList<Picture>){
+        val oldImagesList = arrayListOf<Picture>()
+        oldImagesList.addAll(imagesList)
+
+        val handler = Handler()
+
+        Thread(Runnable {
+            val diffCallback = ApartmentImageDiffCallback(oldImagesList, newImagesList)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+            handler.post {
+                diffResult.dispatchUpdatesTo(this)
+                imagesList.clear()
+                imagesList.addAll(newImagesList)
+            }
+        }).start()
+
     }
 
     fun setOnItemClickListener(recyclerViewItemClickListener: RecyclerViewItemClickListener) {

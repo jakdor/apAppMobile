@@ -182,13 +182,17 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
-        photos.clear()
-            if(returnedPhotos.size > 0) {
+            if(photos.size > 0) {
+                val newPhotoList: ArrayList<Picture> = arrayListOf()
+                for (image in returnedPhotos) {
+                    newPhotoList.add(Picture(image, BitmapFactory.decodeFile(image)))
+                }
+                recyclerViewAdapter.updateItems(newPhotoList)
+            }else{
                 for (image in returnedPhotos) {
                     photos.add(Picture(image, BitmapFactory.decodeFile(image)))
                 }
             }
-            recyclerViewAdapter.notifyDataSetChanged()
             item_recycler.scrollToPosition(photos.size - 1)
     }
 

@@ -3,16 +3,13 @@ package com.jakdor.apapp.ui
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
-import com.google.android.material.snackbar.Snackbar
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
