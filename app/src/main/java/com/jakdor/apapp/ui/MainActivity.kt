@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Nammu.init(this)
 
             options = Options.init()
-                .setRequestCode(100)
-                .setCount(8)
+                .setRequestCode(GET_IMAGES_REQUEST_CODE)
+                .setCount(MAX_IMAGES_TO_UPLOAD)
                 .setPreSelectedUrls(returnedImages)
 
         //switchToAddApartmentFragment()
@@ -64,10 +64,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
-        if (resultCode === Activity.RESULT_OK && requestCode === 100) {
+        if (resultCode === Activity.RESULT_OK && requestCode === GET_IMAGES_REQUEST_CODE) {
             val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
             if(returnedImages.size > 0) {
-                if(returnedImages.size < 8) {
+                if(returnedImages.size < MAX_IMAGES_TO_UPLOAD) {
                     for (image in imagesList) {
                         sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(image))))
                         if (!returnedImages.contains(image)) {
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                         }
                     }
                 }else{
-                    Toast.makeText(this, getString(R.string.selection_limiter_pix, 8), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.selection_limiter_pix, MAX_IMAGES_TO_UPLOAD), Toast.LENGTH_SHORT).show()
                 }
             }else{
                 sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(imagesList[0]))))
@@ -179,5 +179,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun removeImageFromPosition(position: Int){
         returnedImages.removeAt(position)
+    }
+
+    companion object {
+        const val MAX_IMAGES_TO_UPLOAD = 8
+        const val GET_IMAGES_REQUEST_CODE = 122
     }
 }
