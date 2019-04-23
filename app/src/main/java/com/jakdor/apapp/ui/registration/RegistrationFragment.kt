@@ -1,11 +1,14 @@
 package com.jakdor.apapp.ui.registration
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -67,6 +70,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             val surname: String = surname_editText.text.toString()
 
             if(viewModel?.checkPasswords(password, rePassword) == true){
+                hideKeyboard(activity as MainActivity)
                 viewModel?.registerRequest(login, email, password, name, surname)
             }
         }
@@ -219,6 +223,16 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             RegistrationViewModel.LoginStatus.OK -> login_wrapper.isErrorEnabled = false
             RegistrationViewModel.LoginStatus.EMPTY -> login_wrapper.error = getString(R.string.noEmptyField)
             RegistrationViewModel.LoginStatus.TAKEN -> login_wrapper.error = getString(R.string.loginTaken)
+        }
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val inputManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        // check if no view has focus:
+        val currentFocusedView = activity.currentFocus
+        if (currentFocusedView != null) {
+            inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
 
