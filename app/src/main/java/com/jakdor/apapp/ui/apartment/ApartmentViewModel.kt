@@ -52,7 +52,7 @@ class ApartmentViewModel
         for(image in imageList){
             val fileImage = File(image.picturePath)
 
-            val requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), fileImage)
+            val requestBody = RequestBody.create(MediaType.parse("image/*"), fileImage)
 
             val filePart = MultipartBody.Part.createFormData("image", fileImage.name, requestBody)
 
