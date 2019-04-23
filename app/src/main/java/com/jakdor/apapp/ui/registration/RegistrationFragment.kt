@@ -1,12 +1,17 @@
 package com.jakdor.apapp.ui.registration
 
+import android.app.Activity
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +22,7 @@ import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import kotlinx.android.synthetic.main.registration.*
 import javax.inject.Inject
-import androidx.appcompat.app.AppCompatActivity
+
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -67,6 +72,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             val surname: String = surname_editText.text.toString()
 
             if(viewModel?.checkPasswords(password, rePassword) == true){
+                hideKeyboard(activity as MainActivity)
                 viewModel?.registerRequest(login, email, password, name, surname)
             }
         }
@@ -219,6 +225,16 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             RegistrationViewModel.LoginStatus.OK -> login_wrapper.isErrorEnabled = false
             RegistrationViewModel.LoginStatus.EMPTY -> login_wrapper.error = getString(R.string.noEmptyField)
             RegistrationViewModel.LoginStatus.TAKEN -> login_wrapper.error = getString(R.string.loginTaken)
+        }
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val inputManager = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+        // check if no view has focus:
+        val currentFocusedView = activity.currentFocus
+        if (currentFocusedView != null) {
+            inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken, HIDE_NOT_ALWAYS)
         }
     }
 
