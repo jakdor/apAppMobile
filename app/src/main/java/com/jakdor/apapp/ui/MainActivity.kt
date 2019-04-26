@@ -8,6 +8,7 @@ import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
+import com.jakdor.apapp.ui.userPanel.UserPanelFragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import timber.log.Timber
@@ -56,6 +57,13 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             .replace(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched RegistrationFragment")
+    }
+
+    fun switchToUserPanelFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Lunched UserPanelFragment")
     }
 
     override fun onBackPressed() {
