@@ -18,7 +18,7 @@ import com.jakdor.apapp.databinding.FragmentUserPanelBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentItemAdapter
 import com.jakdor.apapp.utils.GlideApp
-import kotlinx.android.synthetic.main.fragment_apartment_list.*
+import kotlinx.android.synthetic.main.fragment_user_panel.*
 import java.util.Vector
 import javax.inject.Inject
 
@@ -86,7 +86,7 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
     }
 
     companion object {
-        const val CLASS_TAG = "ApartmentListFragment"
+        const val CLASS_TAG = "UserPanel"
 
         fun getInstance(): UserPanelFragment {
             val bundle = Bundle()
