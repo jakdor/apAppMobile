@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         }
     }
 
-    @Suppress("DEPRECATED_IDENTITY_EQUALS")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
