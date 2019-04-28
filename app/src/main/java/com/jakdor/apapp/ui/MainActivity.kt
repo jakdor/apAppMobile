@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
         val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
 
-        if (resultCode === Activity.RESULT_OK && requestCode === GET_IMAGES_REQUEST_CODE && apartmentFragment != null) {
+        if (resultCode == Activity.RESULT_OK && requestCode == GET_IMAGES_REQUEST_CODE && apartmentFragment != null) {
             val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
             if(returnedImages.size > 0) {
                 if(returnedImages.size < MAX_IMAGES_TO_UPLOAD) {
