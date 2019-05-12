@@ -49,4 +49,8 @@
 	<string name="apartment_city_label">Miasto:</string>
 	<string name="apartment_desc_label">Opis:</string>
 	<string name="apartment_rating_label">Średnia ocen apartamentu:</string>
+	<string name="install_maps_dialog_no">nie</string>
+	<string name="install_maps_dialog_yes">otwórz google play</string>
+	<string name="install_maps_dialog_msg">Zainstalować teraz?</string>
+	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
 </resources>

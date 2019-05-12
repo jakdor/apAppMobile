@@ -2,6 +2,8 @@ package com.jakdor.apapp.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -189,6 +191,72 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun removeImageFromPosition(position: Int){
         returnedImages.removeAt(position)
+    }
+
+    /**
+     * Google Maps app navigation intent
+     */
+    fun openGoogleMaps(lat: Float, lng: Float, label: String)
+    {
+        if (isPackageInstalled("com.google.android.apps.maps", packageManager))
+        {
+            val uri = "geo:0,0?q=$lat,$lng(${label.replace(' ', '+')})"
+            val navigationIntentUri = Uri.parse(uri)
+            val mapIntent = Intent(Intent.ACTION_VIEW, navigationIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+
+            try
+            {
+                startActivity(mapIntent)
+            }
+            catch (e: ActivityNotFoundException)
+            {
+                Timber.e("Error launching Google Maps")
+            }
+        }
+        else
+        {
+            Timber.i("Google maps not installed, forcing maps into user face...")
+            googleMapsInstallIntent()
+        }
+    }
+
+    /**
+     * Check package available
+     */
+    fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean
+    {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            Timber.e("%s not installed", packageName)
+            false
+        }
+    }
+
+    /**
+     * Opens dialog with GoogleMaps Store
+     */
+    fun googleMapsInstallIntent()
+    {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.install_maps_dialog_title))
+            .setMessage(getString(R.string.install_maps_dialog_msg))
+            .setPositiveButton(getString(R.string.install_maps_dialog_yes)) { _, _ -> openMapsStore() }
+            .setNegativeButton(getString(R.string.install_maps_dialog_no), null)
+            .show()
+    }
+
+    /**
+     * Lunch PlayStore intent for Google Maps
+     */
+    private fun openMapsStore()
+    {
+        val url = "https://play.google.com/store/apps/details?id=com.google.android.apps.maps&hl=pl"
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
     }
 
     companion object {

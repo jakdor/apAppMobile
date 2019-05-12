@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.jakdor.apapp.R
 import com.jakdor.apapp.databinding.FragmentApartmentDetailsBinding
 import com.jakdor.apapp.di.InjectableFragment
+import com.jakdor.apapp.ui.MainActivity
+import kotlinx.android.synthetic.main.fragment_apartment_details.*
 import javax.inject.Inject
 
 class ApartmentDetailsFragment : Fragment(), InjectableFragment {
@@ -40,6 +42,15 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         }
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apartment_details, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        apartment_map_fab.setOnClickListener {
+            val apart = viewModel?.getApartment(apartmentId)
+            if(activity is MainActivity && apart != null)
+                (activity as MainActivity).openGoogleMaps(apart.lat, apart.long, apart.name)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
