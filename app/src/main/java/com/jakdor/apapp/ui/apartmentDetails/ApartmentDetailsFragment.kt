@@ -48,7 +48,10 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(ApartmentDetailsViewModel::class.java)
         }
 
-        binding.viewModel = viewModel
+        if(viewModel != null){
+            binding.viewModel = viewModel
+            binding.apartment = viewModel!!.getApartment(apartmentId)
+        }
     }
 
     companion object {

@@ -15,7 +15,7 @@ class ApartmentDetailsViewModel
 {
     fun getApartment(apartmentId: Int): Apartment?{
         return if(apartmentRepository.apartmentListCache != null){
-            apartmentRepository.apartmentListCache!![apartmentId]
+            apartmentRepository.apartmentListCache!!.find { apartment -> apartment.id == apartmentId }
         } else{
             null
         }
