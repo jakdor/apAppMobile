@@ -16,15 +16,11 @@ class UserPanelViewModel
 @Inject constructor(
     application: Application,
     rxSchedulersFacade: RxSchedulersFacade,
-    private val userDetailsRepository: UserDetailsRepository,
-    authRepository: AuthRepository
+    private val userDetailsRepository: UserDetailsRepository
 ) :
     BaseViewModel(application, rxSchedulersFacade) {
 
 
-    private val parsedJWT = JWT(authRepository.getBearerToken())
-    private val subscriptionMetaData = parsedJWT.getClaim("sub")
-    private val userID = subscriptionMetaData.asString()
 
     val userDetailsLiveData = MutableLiveData<UserDetails>()
 
@@ -41,6 +37,6 @@ class UserPanelViewModel
     fun requestApartmentsListUpdate() {
 
 
-        userDetailsRepository.requestUserDetails(userID)
+        userDetailsRepository.requestUserDetails()
     }
 }

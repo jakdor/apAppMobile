@@ -68,7 +68,7 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
         viewModel?.userDetailsLiveData?.observe(this, Observer {
             showNameTextView.text = it.personalData.firstName
             showSurnameTextView.text = it.personalData.lastName
-            ratingTextView.text = it.user.rate.toString()
+            showRatingTextView.text = it.user.rate.toString()
             showLoginTextView.text = it.user.login
             showEmailTextView.text = it.user.email
             handleNewApartmentList(it.apartments)

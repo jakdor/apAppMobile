@@ -1,7 +1,6 @@
 package com.jakdor.apapp.common.repository
 
 import com.jakdor.apapp.common.model.userDetails.UserDetails
-import com.jakdor.apapp.common.model.userDetails.UserDetailsRequest
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
@@ -24,9 +23,9 @@ class UserDetailsRepository
 
     val userDetailsSubject: BehaviorSubject<UserDetails> = BehaviorSubject.create()
 
-    fun requestUserDetails(userID: String?){
+    fun requestUserDetails(){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.getUserDetails(UserDetailsRequest(userID)))
+            bearerAuthWrapper.apiAuthService.getUserDetails())
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({ t: UserDetails? -> if(t != null) userDetailsSubject.onNext(t) },
