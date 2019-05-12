@@ -8,13 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="DefaultButton" parent="@android:style/Widget.Button">
-        <item name="android:minHeight">45dp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/button_bg</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:minWidth">200dp</item>
+    <style name="RegistrationTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

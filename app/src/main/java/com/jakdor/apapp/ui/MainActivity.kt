@@ -13,6 +13,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, LoginFragment.getInstance(), LoginFragment.CLASS_TAG)
             .commit()
-        Timber.i("Lunched LoginFragment")
+        Timber.i("Launched LoginFragment")
     }
 
     fun addRegistrationFragment(){
