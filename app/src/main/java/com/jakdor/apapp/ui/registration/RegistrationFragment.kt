@@ -29,6 +29,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     var viewModel: RegistrationViewModel? = null
+    private var initSubs = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,19 +45,23 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(RegistrationViewModel::class.java)
         }
 
-        val registerObserver = Observer<Boolean> { newStatus ->
-            register_button.isEnabled = newStatus
+        if(!initSubs) {
+            val registerObserver = Observer<Boolean> { newStatus ->
+                register_button.isEnabled = newStatus
+            }
+
+            viewModel?.registerPossibility?.observe(this, registerObserver)
+
+            observeRegisterRequestStatus()
+            observePasswordStatus()
+            observeRePasswordStatus()
+            observeEmailStatus()
+            observeLoginStatus()
+            observeNameStatus()
+            observeSurnameStatus()
+
+            initSubs = true
         }
-
-        viewModel?.registerPossibility?.observe(this, registerObserver)
-
-        observeRegisterRequestStatus()
-        observePasswordStatus()
-        observeRePasswordStatus()
-        observeEmailStatus()
-        observeLoginStatus()
-        observeNameStatus()
-        observeSurnameStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

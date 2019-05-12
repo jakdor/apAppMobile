@@ -25,6 +25,7 @@ class LoginFragment : Fragment(), InjectableFragment {
 
     var viewModel: LoginViewModel? = null
 
+    private var initSubs = false
     private var isLoginUnlocked = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,13 +68,17 @@ class LoginFragment : Fragment(), InjectableFragment {
         if (viewModel == null)
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
 
-        viewModel?.loginPossibility?.observe(this, Observer {
-            handleNewLoginPossibility(it)
-        })
+        if(!initSubs) {
+            viewModel?.loginPossibility?.observe(this, Observer {
+                handleNewLoginPossibility(it)
+            })
 
-        viewModel?.loginRequestStatus?.observe(this, Observer {
-            handleNewLoginRequestStatus(it)
-        })
+            viewModel?.loginRequestStatus?.observe(this, Observer {
+                handleNewLoginRequestStatus(it)
+            })
+
+            initSubs = true
+        }
     }
 
     fun handleNewLoginPossibility(status: Boolean){
@@ -85,7 +90,10 @@ class LoginFragment : Fragment(), InjectableFragment {
         when(status){
             LoginViewModel.LoginRequestStatus.Idle -> {}
             LoginViewModel.LoginRequestStatus.Pending -> {
-
+                loginButton.visibility = View.GONE
+                registerButton.visibility = View.GONE
+                login_progress.visibility = View.VISIBLE
+                login_progress.progress = 0
             }
             LoginViewModel.LoginRequestStatus.Success -> {
                 Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
@@ -93,9 +101,15 @@ class LoginFragment : Fragment(), InjectableFragment {
             }
             LoginViewModel.LoginRequestStatus.BadCardinals -> {
                 Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
             }
             LoginViewModel.LoginRequestStatus.Error -> {
-
+                Toast.makeText(activity, getString(R.string.login_error_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
             }
         }
     }

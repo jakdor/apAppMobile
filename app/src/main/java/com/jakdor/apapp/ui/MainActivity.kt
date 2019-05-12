@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
                 .setPreSelectedUrls(returnedImages)
 
         if(authRepository.isLoggedIn()){
-            switchToAddApartmentFragment()
+            switchToApartmentListFragment()
         }
         else{
             switchToLoginFragment()
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment
+        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
 
         if (resultCode == Activity.RESULT_OK && requestCode == GET_IMAGES_REQUEST_CODE && apartmentFragment != null) {
             val imagesList = data!!.getStringArrayListExtra(Pix.IMAGE_RESULTS)
@@ -84,14 +86,29 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         }
         if(resultCode == Activity.RESULT_CANCELED){
             returnedImages.clear()
-            apartmentFragment.onPhotosReturned(returnedImages)
+            apartmentFragment?.onPhotosReturned(returnedImages)
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item != null){
+            when(item.itemId){
+                R.id.action_add_apartment -> switchToAddApartmentFragment()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     fun switchToApartmentListFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentListFragment.getInstance(), ApartmentListFragment.CLASS_TAG)
+            .addToBackStack(ApartmentListFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched ApartmentListFragment")
     }
@@ -99,13 +116,18 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     fun switchToLoginFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, LoginFragment.getInstance(), LoginFragment.CLASS_TAG)
+            .addToBackStack(LoginFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched LoginFragment")
     }
 
     fun switchToAddApartmentFragment() {
+        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
+        if(apartmentFragment != null && apartmentFragment.isVisible) return
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
+            .addToBackStack(ApartmentFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched ApartmentFragment")
     }
@@ -113,17 +135,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     fun addRegistrationFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
+            .addToBackStack(RegistrationFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched RegistrationFragment")
-    }
-
-    override fun onBackPressed() {
-        if(supportFragmentManager.findFragmentByTag(RegistrationFragment.CLASS_TAG) != null){
-            switchToLoginFragment()
-        }
-        else{
-            super.onBackPressed()
-        }
     }
 
     fun openChooser(){
