@@ -81,13 +81,22 @@ class LoginFragment : Fragment(), InjectableFragment {
         loginButton.isEnabled = status
     }
 
-    fun handleNewLoginRequestStatus(status: Boolean){
-        if(status) {
-            Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
-            (activity as MainActivity).switchToApartmentListFragment()
-        }
-        else {
-            Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+    fun handleNewLoginRequestStatus(status: LoginViewModel.LoginRequestStatus){
+        when(status){
+            LoginViewModel.LoginRequestStatus.Idle -> {}
+            LoginViewModel.LoginRequestStatus.Pending -> {
+
+            }
+            LoginViewModel.LoginRequestStatus.Success -> {
+                Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
+                (activity as MainActivity).switchToApartmentListFragment()
+            }
+            LoginViewModel.LoginRequestStatus.BadCardinals -> {
+                Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+            }
+            LoginViewModel.LoginRequestStatus.Error -> {
+
+            }
         }
     }
 
