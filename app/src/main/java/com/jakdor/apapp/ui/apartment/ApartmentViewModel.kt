@@ -55,7 +55,7 @@ class ApartmentViewModel
 
             val requestBody = RequestBody.create(MediaType.parse("image/*"), fileImage)
 
-            val filePart = MultipartBody.Part.createFormData("image", fileImage.name, requestBody)
+            val filePart = MultipartBody.Part.createFormData("", fileImage.name, requestBody)
 
             addApartmentRepository.addApartmentImage(apartmentId, filePart)
         }
