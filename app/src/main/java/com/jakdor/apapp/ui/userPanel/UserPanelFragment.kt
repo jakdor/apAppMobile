@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,17 +15,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.model.apartment.Apartment
-import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.databinding.FragmentUserPanelBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentItemAdapter
 import com.jakdor.apapp.utils.GlideApp
-import kotlinx.android.synthetic.main.fragment_registration.*
 import kotlinx.android.synthetic.main.fragment_user_panel.*
+import timber.log.Timber
 import java.util.Vector
 import javax.inject.Inject
+import kotlin.Exception
 
-class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, InjectableFragment {
+class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, InjectableFragment {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -35,8 +36,10 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
     private lateinit var recyclerViewAdapter: ApartmentItemAdapter
     private var recyclerViewInit = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_panel, container, false)
         return binding.root
     }
@@ -48,23 +51,25 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(viewModel == null){
+        if (viewModel == null) {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserPanelViewModel::class.java)
         }
 
         binding.viewModel = viewModel
         observeStackQuestionsLiveData()
-
-        viewModel?.observeApartmentsListSubject()
+        viewModel?.observeUserDetailsSubject()
         viewModel?.requestApartmentsListUpdate()
+        viewModel?.downloadError?.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.data_download_error), Toast.LENGTH_LONG).show()
+        })
         swipe_refresh_layout.isRefreshing = true
     }
 
     override fun onRefresh() {
-        viewModel?.requestApartmentsListUpdate()
+            viewModel?.requestApartmentsListUpdate()
     }
 
-    fun observeStackQuestionsLiveData(){
+    fun observeStackQuestionsLiveData() {
         viewModel?.userDetailsLiveData?.observe(this, Observer {
             showNameTextView.text = it.personalData.firstName
             showSurnameTextView.text = it.personalData.lastName
@@ -72,19 +77,18 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
             showLoginTextView.text = it.user.login
             showEmailTextView.text = it.user.email
             handleNewApartmentList(it.apartments)
+
         })
     }
 
-    fun handleNewApartmentList(apartments : List<Apartment>?){
+    fun handleNewApartmentList(apartments: List<Apartment>?) {
         if (!recyclerViewInit) initRecyclerView()
-        if(apartments != null) recyclerViewAdapter.updateItems(apartments!!.toMutableList())
-
+        if (apartments != null) recyclerViewAdapter.updateItems(apartments!!.toMutableList())
         item_recycler.scrollToPosition(0)
-
         swipe_refresh_layout.isRefreshing = false
     }
 
-    fun initRecyclerView(){
+    fun initRecyclerView() {
         recyclerViewAdapter = ApartmentItemAdapter(Vector(), GlideApp.with(this))
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = RecyclerView.VERTICAL

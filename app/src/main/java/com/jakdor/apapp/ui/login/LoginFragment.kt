@@ -66,7 +66,6 @@ class LoginFragment : Fragment(), InjectableFragment {
         viewModel?.loginPossibility?.observe(this, Observer {
             handleNewLoginPossibility(it)
         })
-
         viewModel?.loginRequestStatus?.observe(this, Observer {
             handleNewLoginRequestStatus(it)
         })

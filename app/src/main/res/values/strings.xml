@@ -30,4 +30,5 @@
 	<string name="registerError">Nie można zarejestrować</string>
 	<string name="registerSuccess">Zarejestrowano</string>
 	<string name="apartment_list_icon_desc">apartment thumbnail</string>
+	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
 </resources>
