@@ -1,6 +1,7 @@
 package com.jakdor.apapp.common.repository
 
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
+import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
@@ -24,15 +25,14 @@ class AddApartmentRepository
 
     private val rxDisposables: CompositeDisposable = CompositeDisposable()
 
-    val apartmentIdSubject: BehaviorSubject<Int> = BehaviorSubject.create()
+    val apartmentIdSubject: BehaviorSubject<ApartmentAddResponse> = BehaviorSubject.create()
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
             bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, lat, long)))
                 .observeOn(rxSchedulersFacade.io())
                 .subscribeOn(rxSchedulersFacade.io())
-                .subscribe({ t: Int -> Timber.d("ID apartamentu: %s", t.toString());
-                                        if(t>0) apartmentIdSubject.onNext(t)},
+                .subscribe({ t: ApartmentAddResponse? -> if(t!=null) apartmentIdSubject.onNext(t)},
                     { e -> Timber.e(e, "ERROR adding Apartment") })
         )
     }

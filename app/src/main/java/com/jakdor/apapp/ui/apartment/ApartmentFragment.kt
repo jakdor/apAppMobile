@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
+import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
+import com.jakdor.apapp.common.model.auth.ApartmentAddStatusEnum
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
@@ -209,12 +211,15 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         })
     }
 
-    fun handleNewApartmentId(apartmentId: Int){
-        Toast.makeText(activity,apartmentId.toString(),Toast.LENGTH_SHORT).show()
-        if(apartmentId > 0 && photos.size>0){
-            viewModel?.addApartmentImage(apartmentId, photos)
+    fun handleNewApartmentId(apartmentStatus: ApartmentAddResponse){
+        if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.OK && photos.size>0){
+            viewModel?.addApartmentImage(apartmentStatus.id, photos)
+            (activity as MainActivity).switchToApartmentListFragment()
+        }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.ERROR){
+            Toast.makeText(activity, getString(R.string.error_adding_apartment), Toast.LENGTH_LONG).show()
+        }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.APARTMENT_EXISTS){
+            Toast.makeText(activity, getString(R.string.apartment_exists_info), Toast.LENGTH_LONG).show()
         }
-        (activity as MainActivity).switchToApartmentListFragment()
     }
 
     private fun observeApartmentNameStatus() {

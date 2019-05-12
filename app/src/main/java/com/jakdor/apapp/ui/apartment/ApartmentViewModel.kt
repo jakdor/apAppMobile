@@ -6,6 +6,7 @@ import android.location.Geocoder
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
+import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
 import com.jakdor.apapp.common.repository.AddApartmentRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import okhttp3.MediaType
@@ -24,7 +25,7 @@ class ApartmentViewModel
 
     val addApartmentPossibility = MutableLiveData<Boolean>().apply { value = false }
 
-    val apartmentIdLiveData = MutableLiveData<Int>()
+    val apartmentIdLiveData = MutableLiveData<ApartmentAddResponse>()
 
     private var isNameCorrect: Boolean = false
     private var isCityCorrect: Boolean = false
@@ -40,7 +41,7 @@ class ApartmentViewModel
         disposable.add(addApartmentRepository.apartmentIdSubject
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
-            .subscribe({ t: Int -> apartmentIdLiveData.postValue(t) },
+            .subscribe({ t: ApartmentAddResponse -> apartmentIdLiveData.postValue(t) },
                 {e ->  Timber.e(e, "ERROR observing ApartmentIdSubject")}))
     }
 

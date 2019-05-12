@@ -43,4 +43,6 @@
 	<string name="camera_externalStorage_refused">Musisz zezwolić na dostęp do kamery oraz pamięci, żeby dodać zdjęcia
 	</string>
 	<string name="choose_photos">Zrób lub wybierz do 8 zdjęć</string>
+	<string name="error_adding_apartment">Wystąpił błąd przy dodawaniu apartamentu</string>
+	<string name="apartment_exists_info">Podany apartament już istnieje</string>
 </resources>
