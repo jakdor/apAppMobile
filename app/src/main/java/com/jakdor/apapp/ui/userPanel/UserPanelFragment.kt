@@ -60,7 +60,8 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
         viewModel?.observeUserDetailsSubject()
         viewModel?.requestApartmentsListUpdate()
         viewModel?.downloadError?.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.data_download_error), Toast.LENGTH_LONG).show()
+            if(it)
+                Toast.makeText(activity, getString(R.string.data_download_error), Toast.LENGTH_LONG).show()
         })
         swipe_refresh_layout.isRefreshing = true
     }
