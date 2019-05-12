@@ -31,6 +31,8 @@ class BearerAuthWrapper
                         val refreshResponse = authRepository.refreshBearerToken().blockingFirst()
 
                         if(refreshResponse != null){
+                            apiAuthService = retrofitFactory.createService(
+                                BackendService.API_URL, BackendService::class.java, authRepository.getBearerToken())
                             callResponse = observableCall.blockingFirst()
                         }
 
