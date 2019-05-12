@@ -8,6 +8,7 @@ import com.jakdor.apapp.arch.ViewModelFactory
 import com.jakdor.apapp.common.repository.ApartmentRepository
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.common.repository.PreferencesRepository
+import com.jakdor.apapp.common.repository.UserDetailsRepository
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
@@ -57,4 +58,10 @@ class AppModule {
     fun provideBearerAuthWrapper(retrofitFactory: RetrofitFactory,
                                  authRepository: AuthRepository):
             BearerAuthWrapper = BearerAuthWrapper(retrofitFactory, authRepository)
+
+    @Provides
+    fun provideUserDetailsRepository(retrofitFactory: RetrofitFactory,
+                                   bearerAuthWrapper: BearerAuthWrapper,
+                                   rxSchedulersFacade: RxSchedulersFacade):
+            UserDetailsRepository = UserDetailsRepository(retrofitFactory, bearerAuthWrapper, rxSchedulersFacade)
 }

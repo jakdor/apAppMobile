@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakdor.apapp.R
+import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.databinding.FragmentUserPanelBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentItemAdapter
 import com.jakdor.apapp.utils.GlideApp
+import kotlinx.android.synthetic.main.fragment_registration.*
 import kotlinx.android.synthetic.main.fragment_user_panel.*
 import java.util.Vector
 import javax.inject.Inject
@@ -63,16 +65,22 @@ class UserPanelFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener, Injec
     }
 
     fun observeStackQuestionsLiveData(){
-        viewModel?.apartmentsListLiveData?.observe(this, Observer {
-            handleNewApartmentList(it)
+        viewModel?.userDetailsLiveData?.observe(this, Observer {
+            showNameTextView.text = it.personalData.firstName
+            showSurnameTextView.text = it.personalData.lastName
+            ratingTextView.text = it.user.rate.toString()
+            showLoginTextView.text = it.user.login
+            showEmailTextView.text = it.user.email
+            handleNewApartmentList(it.apartments)
         })
     }
 
-    fun handleNewApartmentList(model: ApartmentList){
+    fun handleNewApartmentList(apartments : List<Apartment>?){
         if (!recyclerViewInit) initRecyclerView()
-        if(model.apartments != null) recyclerViewAdapter.updateItems(model.apartments!!.toMutableList())
+        if(apartments != null) recyclerViewAdapter.updateItems(apartments!!.toMutableList())
 
         item_recycler.scrollToPosition(0)
+
         swipe_refresh_layout.isRefreshing = false
     }
 

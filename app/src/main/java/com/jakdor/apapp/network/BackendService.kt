@@ -3,11 +3,16 @@ package com.jakdor.apapp.network
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
 import com.jakdor.apapp.common.model.auth.*
+import com.jakdor.apapp.common.model.userDetails.UserDetailsRequest
+import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface BackendService {
+
+    @POST ("User/details")
+    fun getUserDetails(@Body userDetailsRequest : UserDetailsRequest) : Observable<UserDetails?>
 
     @POST("apartments")
     fun getApartments(@Body apartmentListRequest: ApartmentListRequest): Observable<ApartmentList?>
@@ -22,6 +27,6 @@ interface BackendService {
     fun postRegister(@Body registerRequest: RegisterRequest): Observable<RegisterResponse?>
 
     companion object {
-        const val API_URL = "http://159.65.168.123:50649/api/"
+        const val API_URL = "http://167.99.60.13:50649/api/"
     }
 }

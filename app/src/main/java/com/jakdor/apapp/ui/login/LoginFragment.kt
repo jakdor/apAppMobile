@@ -80,7 +80,7 @@ class LoginFragment : Fragment(), InjectableFragment {
     fun handleNewLoginRequestStatus(status: Boolean){
         if(status) {
             Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
-            (activity as MainActivity).switchToApartmentListFragment()
+            (activity as MainActivity).switchToUserPanelFragment()
         }
         else {
             Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
