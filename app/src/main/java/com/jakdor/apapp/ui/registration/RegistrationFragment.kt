@@ -181,13 +181,23 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     fun handleNewRegisterStatus(status: RegistrationViewModel.RegisterRequestStatus){
         when(status){
             RegistrationViewModel.RegisterRequestStatus.ERROR -> {
+                register_button.visibility = View.VISIBLE
+                register_progress.visibility = View.GONE
                 Toast.makeText(context, getString(R.string.registerError), Toast.LENGTH_SHORT).show()
             }
             RegistrationViewModel.RegisterRequestStatus.OK -> {
                 Toast.makeText(context, getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show()
                 (activity as MainActivity).switchToLoginFragment()
             }
-            RegistrationViewModel.RegisterRequestStatus.EDIT -> {}
+            RegistrationViewModel.RegisterRequestStatus.EDIT -> {
+                register_button.visibility = View.VISIBLE
+                register_progress.visibility = View.GONE
+            }
+            RegistrationViewModel.RegisterRequestStatus.LOADING -> {
+                register_button.visibility = View.GONE
+                register_progress.visibility = View.VISIBLE
+                register_progress.progress = 0
+            }
         }
     }
 

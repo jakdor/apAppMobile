@@ -34,11 +34,18 @@ class RegistrationViewModel
     val registerRequest = MutableLiveData<RegisterRequestStatus>()
 
     fun registerRequest(login: String, email: String, password: String, name: String, surname: String){
+        registerRequest.postValue(RegisterRequestStatus.LOADING)
+
         disposable.add(authRepository.register(login, email, password, name, surname)
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({t -> newRegisterStatus(t)},
-                {e -> Timber.e(e, "ERROR observing registerRequest")}))
+                {e ->
+                    run {
+                        Timber.e(e, "ERROR observing registerRequest")
+                        registerRequest.postValue(RegisterRequestStatus.ERROR)
+                    }
+                }))
     }
 
     fun newRegisterStatus(status: RegisterStatusEnum){
@@ -228,6 +235,6 @@ class RegistrationViewModel
     }
 
     enum class RegisterRequestStatus{
-        ERROR, OK, EDIT
+        ERROR, OK, EDIT, LOADING
     }
 }
