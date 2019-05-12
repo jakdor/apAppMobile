@@ -25,6 +25,7 @@ class LoginFragment : Fragment(), InjectableFragment {
 
     var viewModel: LoginViewModel? = null
 
+    private var initSubs = false
     private var isLoginUnlocked = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,13 +68,17 @@ class LoginFragment : Fragment(), InjectableFragment {
         if (viewModel == null)
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
 
-        viewModel?.loginPossibility?.observe(this, Observer {
-            handleNewLoginPossibility(it)
-        })
+        if(!initSubs) {
+            viewModel?.loginPossibility?.observe(this, Observer {
+                handleNewLoginPossibility(it)
+            })
 
-        viewModel?.loginRequestStatus?.observe(this, Observer {
-            handleNewLoginRequestStatus(it)
-        })
+            viewModel?.loginRequestStatus?.observe(this, Observer {
+                handleNewLoginRequestStatus(it)
+            })
+
+            initSubs = true
+        }
     }
 
     fun handleNewLoginPossibility(status: Boolean){
