@@ -7,6 +7,7 @@
 	<string name="sing_up_label">Zarejestruj</string>
 	<string name="singed_up">Zarejestrowano</string>
 	<string name="singed_in">Zalogowano</string>
+	<string name="login_error_toast">Wystąpił błąd podczas logowania</string>
 	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
 	<string name="nameLabel">Imię</string>
@@ -41,7 +42,7 @@
 	<string name="delete_images_label">Usuń zdjęcia</string>
 	<string name="delete_apartment_image">Usuń zdjęcie</string>
 	<string name="camera_externalStorage_refused">Musisz zezwolić na dostęp do kamery oraz pamięci, żeby dodać zdjęcia</string>
-	<string name="choosle_photos">Zrób lub wybierz do 8 zdjęć</string>
+	<string name="choose_photos">Zrób lub wybierz do 8 zdjęć</string>
 	<string name="error_adding_apartment">Wystąpił błąd przy dodawaniu apartamentu</string>
 	<string name="apartment_exists_info">Podany apartament już istnieje</string>
 </resources>

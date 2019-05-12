@@ -85,7 +85,10 @@ class LoginFragment : Fragment(), InjectableFragment {
         when(status){
             LoginViewModel.LoginRequestStatus.Idle -> {}
             LoginViewModel.LoginRequestStatus.Pending -> {
-
+                loginButton.visibility = View.GONE
+                registerButton.visibility = View.GONE
+                login_progress.visibility = View.VISIBLE
+                login_progress.progress = 0
             }
             LoginViewModel.LoginRequestStatus.Success -> {
                 Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
@@ -93,9 +96,15 @@ class LoginFragment : Fragment(), InjectableFragment {
             }
             LoginViewModel.LoginRequestStatus.BadCardinals -> {
                 Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
             }
             LoginViewModel.LoginRequestStatus.Error -> {
-
+                Toast.makeText(activity, getString(R.string.login_error_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
             }
         }
     }
