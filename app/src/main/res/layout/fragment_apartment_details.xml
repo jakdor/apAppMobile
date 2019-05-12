@@ -69,12 +69,47 @@
 					android:background="@color/materialGrey">
 
 				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_desc_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/ic_info}"
+				         app:title = "@{@string/apartment_desc_label}"
+				         app:details = "@{apartment.description}"/>
+
+				<include layout="@layout/item_details"
 				         android:id="@+id/apartment_city_details"
 				         android:layout_width="match_parent"
 				         android:layout_height="wrap_content"
-				         app:icon = "@{@drawable/ic_add}"
+				         app:icon = "@{@drawable/ic_city}"
 				         app:title = "@{@string/apartment_city_label}"
 				         app:details = "@{apartment.city}"/>
+
+				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_street_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/ic_map}"
+				         app:title = "@{apartment.street}"
+				         app:details = "@{apartment.apartmentNum}"/>
+
+				<TextView
+						android:id="@+id/apartment_rating_label"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="32dp"
+						android:text="@string/apartment_rating_label"
+						android:textSize="18sp"
+						android:textAlignment="center"
+						android:textColor="@color/black"/>
+
+				<RatingBar
+						android:id="@+id/apartment_rating_bar"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="8dp"
+						android:layout_gravity="center"
+						android:numStars="5"
+						android:rating="@{apartment.rating}"/>
 
 				<View
 						android:layout_width="match_parent"

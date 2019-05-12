@@ -11,4 +11,5 @@
 	<color name="colorPrimaryLightPix">#7535AD</color>
 	<color name="materialGrey">#fafafa</color>
 	<color name="shadow">#40000000</color>
+	<color name="shadow2">#80000000</color>
 </resources>
