@@ -4,5 +4,5 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class RefreshRequest
-constructor(@SerializedName("login") @Expose var login: String,
-            @SerializedName("refreshToken") @Expose var refreshToken: String)
+constructor(@SerializedName("Login") @Expose var login: String,
+            @SerializedName("RefreshToken") @Expose var refreshToken: String)
