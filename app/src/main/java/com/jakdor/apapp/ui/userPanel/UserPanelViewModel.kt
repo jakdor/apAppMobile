@@ -9,7 +9,6 @@ import com.jakdor.apapp.common.repository.UserDetailsRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import timber.log.Timber
 import javax.inject.Inject
-import com.auth0.android.jwt.JWT
 
 
 class UserPanelViewModel
