@@ -29,4 +29,19 @@
 	<string name="registerError">Nie można zarejestrować</string>
 	<string name="registerSuccess">Zarejestrowano</string>
 	<string name="apartment_list_icon_desc">apartment thumbnail</string>
+	<string name="apartment_number">Numer mieszkania</string>
+	<string name="apartment_street">Ulica</string>
+	<string name="apartment_city">Miasto</string>
+	<string name="apartment_name">Nazwa mieszkania</string>
+	<string name="apartment_photos_label">Zdjęcia</string>
+	<string name="selection_limiter_pix">Można wybrać maksymalnie %d zdjęć</string>
+	<string name="pix_selected">Wybrano</string>
+	<string name="apartmentNumberPatternInfo">Numer budynku/numer mieszkania lub numer budynku</string>
+	<string name="add_apartment">Dodaj apartament</string>
+	<string name="delete_images_label">Usuń zdjęcia</string>
+	<string name="delete_apartment_image">Usuń zdjęcie</string>
+	<string name="camera_externalStorage_refused">Musisz zezwolić na dostęp do kamery oraz pamięci, żeby dodać zdjęcia</string>
+	<string name="choosle_photos">Zrób lub wybierz do 8 zdjęć</string>
+	<string name="error_adding_apartment">Wystąpił błąd przy dodawaniu apartamentu</string>
+	<string name="apartment_exists_info">Podany apartament już istnieje</string>
 </resources>

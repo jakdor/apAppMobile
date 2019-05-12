@@ -1,7 +1,7 @@
 package com.jakdor.apapp.ui.registration
 
 import android.app.Activity
-import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,7 +22,6 @@ import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import kotlinx.android.synthetic.main.registration.*
 import javax.inject.Inject
-import androidx.appcompat.app.AppCompatActivity
 
 class RegistrationFragment : Fragment(), InjectableFragment {
 
@@ -237,12 +238,12 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     }
 
     fun hideKeyboard(activity: Activity) {
-        val inputManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputManager = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         // check if no view has focus:
         val currentFocusedView = activity.currentFocus
         if (currentFocusedView != null) {
-            inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken, HIDE_NOT_ALWAYS)
         }
     }
 

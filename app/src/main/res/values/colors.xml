@@ -7,4 +7,6 @@
 	<color name="blueBackground">#285FBA</color>
 	<color name="purpleBackground">#7535AD</color>
 	<color name="black">#FF000000</color>
+	<color name="colorPrimaryPix">#285FBA</color>
+	<color name="colorPrimaryLightPix">#7535AD</color>
 </resources>
