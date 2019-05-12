@@ -18,6 +18,7 @@ import com.fxn.pix.Pix
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
+import com.jakdor.apapp.ui.apartmentDetails.ApartmentDetailsFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
@@ -132,12 +133,21 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Launched ApartmentFragment")
     }
 
-    fun addRegistrationFragment(){
+    fun switchToRegistrationFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
             .addToBackStack(RegistrationFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched RegistrationFragment")
+    }
+
+    fun swichToApartmentDetailsFragment(apartmentId: Int){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
+                ApartmentDetailsFragment.CLASS_TAG)
+            .addToBackStack(ApartmentDetailsFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Launched ApartmentDetailsFragment")
     }
 
     fun openChooser(){

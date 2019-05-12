@@ -59,7 +59,7 @@ class LoginFragment : Fragment(), InjectableFragment {
         }
 
         registerButton.setOnClickListener {
-            (activity as MainActivity).addRegistrationFragment()
+            (activity as MainActivity).switchToRegistrationFragment()
         }
     }
 

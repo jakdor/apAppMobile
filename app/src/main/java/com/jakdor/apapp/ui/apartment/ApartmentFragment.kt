@@ -58,7 +58,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
-        recyclerViewAdapter.setOnItemClickListener(object: ApartmentImageAdapter.RecyclerViewItemClickListener {
+        recyclerViewAdapter.recyclerViewItemClickListener = object: ApartmentImageAdapter.RecyclerViewItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 photos.removeAt(position)
                 (activity as MainActivity).removeImageFromPosition(position)
@@ -68,7 +68,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 }
             }
 
-        })
+        }
 
         val addApartmentObserver = Observer<Boolean> { newStatus ->
             add_apartment_button.isEnabled = newStatus
