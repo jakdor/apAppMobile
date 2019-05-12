@@ -22,6 +22,6 @@ interface BackendService {
     fun postRegister(@Body registerRequest: RegisterRequest): Observable<RegisterResponse?>
 
     companion object {
-        const val API_URL = "http://159.65.168.123:50649/api/"
+        const val API_URL = "http://167.99.60.13:50649/api/"
     }
 }
