@@ -13,4 +13,5 @@ constructor(@SerializedName("ID_Ap") @Expose var id: Int,
             @SerializedName("ImgThumb") @Expose var imgThumb: String,
             @SerializedName("Lat") @Expose var lat: Float,
             @SerializedName("Long") @Expose var long: Float,
-            @SerializedName("Rate") @Expose var rating: Float)
+            @SerializedName("Rate") @Expose var rating: Float?,
+            @SerializedName("Description") @Expose var description: String)
