@@ -86,9 +86,10 @@ class LoginFragment : Fragment(), InjectableFragment {
         loginButton.isEnabled = status
     }
 
-    fun handleNewLoginRequestStatus(status: LoginViewModel.LoginRequestStatus){
-        when(status){
-            LoginViewModel.LoginRequestStatus.Idle -> {}
+    fun handleNewLoginRequestStatus(status: LoginViewModel.LoginRequestStatus) {
+        when (status) {
+            LoginViewModel.LoginRequestStatus.Idle -> {
+            }
             LoginViewModel.LoginRequestStatus.Pending -> {
                 loginButton.visibility = View.GONE
                 registerButton.visibility = View.GONE

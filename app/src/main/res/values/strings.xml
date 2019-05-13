@@ -10,6 +10,7 @@
 	<string name="login_error_toast">Wystąpił błąd podczas logowania</string>
 	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
+	<string name="rating_label">Ocena</string>
 	<string name="nameLabel">Imię</string>
 	<string name="surnameLabel">Nazwisko</string>
 	<string name="emailLabel">E-mail</string>
@@ -53,4 +54,5 @@
 	<string name="install_maps_dialog_yes">otwórz google play</string>
 	<string name="install_maps_dialog_msg">Zainstalować teraz?</string>
 	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
+	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
 </resources>

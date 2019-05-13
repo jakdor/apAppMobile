@@ -4,12 +4,16 @@ import com.jakdor.apapp.common.model.apartment.ApartmentAdd
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
 import com.jakdor.apapp.common.model.auth.*
+import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface BackendService {
+
+    @GET("User/details")
+    fun getUserDetails() : Observable<UserDetails?>
 
     @POST("apartments")
     fun getApartments(@Body apartmentListRequest: ApartmentListRequest): Observable<ApartmentList?>

@@ -9,6 +9,7 @@ import com.jakdor.apapp.ui.apartmentDetails.ApartmentDetailsViewModel
 import com.jakdor.apapp.ui.registration.RegistrationViewModel
 import com.jakdor.apapp.ui.apartmentList.ApartmentListViewModel
 import com.jakdor.apapp.ui.login.LoginViewModel
+import com.jakdor.apapp.ui.userPanel.UserPanelViewModel
 import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +35,7 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
         creators[RegistrationViewModel::class.java] = Callable { viewModelSubComponent.registrationViewModel() }
         creators[ApartmentViewModel::class.java] = Callable { viewModelSubComponent.apartmentViewModel() }
         creators[ApartmentDetailsViewModel::class.java] = Callable { viewModelSubComponent.apartmentDetailsViewModel() }
+        creators[UserPanelViewModel::class.java] = Callable { viewModelSubComponent.userPanelViewModel() }
     }
 
     /**

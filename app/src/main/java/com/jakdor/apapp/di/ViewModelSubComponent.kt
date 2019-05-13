@@ -5,6 +5,7 @@ import com.jakdor.apapp.ui.apartmentDetails.ApartmentDetailsViewModel
 import com.jakdor.apapp.ui.apartmentList.ApartmentListViewModel
 import com.jakdor.apapp.ui.login.LoginViewModel
 import com.jakdor.apapp.ui.registration.RegistrationViewModel
+import com.jakdor.apapp.ui.userPanel.UserPanelViewModel
 import dagger.Subcomponent
 
 /**
@@ -23,4 +24,5 @@ interface ViewModelSubComponent {
     fun registrationViewModel(): RegistrationViewModel
     fun apartmentViewModel(): ApartmentViewModel
     fun apartmentDetailsViewModel(): ApartmentDetailsViewModel
+    fun userPanelViewModel() : UserPanelViewModel
 }
