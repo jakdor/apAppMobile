@@ -46,7 +46,7 @@
 	<string name="choose_photos">Zrób lub wybierz do 8 zdjęć</string>
 	<string name="error_adding_apartment">Wystąpił błąd przy dodawaniu apartamentu</string>
 	<string name="apartment_exists_info">Podany apartament już istnieje</string>
-	<string name="add_apartment_button">add apartment</string>
+	<string name="add_apartment_button">dodaj apartment</string>
 	<string name="apartment_city_label">Miasto:</string>
 	<string name="apartment_desc_label">Opis:</string>
 	<string name="apartment_rating_label">Średnia ocen apartamentu:</string>
@@ -55,4 +55,5 @@
 	<string name="install_maps_dialog_msg">Zainstalować teraz?</string>
 	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
 	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
+	<string name="user_details_button">profil użytkownika</string>
 </resources>

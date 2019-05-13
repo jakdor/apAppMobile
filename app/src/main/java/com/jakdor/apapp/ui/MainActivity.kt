@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         if(item != null){
             when(item.itemId){
                 R.id.action_add_apartment -> switchToAddApartmentFragment()
+                R.id.action_user_details -> switchToUserPanelFragment()
             }
         }
 

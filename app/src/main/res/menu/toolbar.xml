@@ -10,4 +10,10 @@
 			android:icon="@drawable/ic_add"
 			app:showAsAction="ifRoom"/>
 
+	<item
+			android:id="@+id/action_user_details"
+			android:title="@string/user_details_button"
+			android:icon="@drawable/ic_user"
+			app:showAsAction="ifRoom"/>
+
 </menu>
