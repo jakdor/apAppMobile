@@ -84,7 +84,7 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
 
     fun handleNewApartmentList(apartments: List<Apartment>?) {
         if (!recyclerViewInit) initRecyclerView()
-        if (apartments != null) recyclerViewAdapter.updateItems(apartments!!.toMutableList())
+        if (apartments != null) recyclerViewAdapter.updateItems(apartments.toMutableList())
         item_recycler.scrollToPosition(0)
         swipe_refresh_layout.isRefreshing = false
     }

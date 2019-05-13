@@ -11,7 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.jakdor.apapp.R
 
 class ApartmentImgPagerAdapter
-constructor(private val imgList: List <String>,
+constructor(private val imgList: List <String>?,
             private val glide: RequestManager,
             context: Context) : PagerAdapter() {
 
@@ -22,11 +22,15 @@ constructor(private val imgList: List <String>,
 
         val imageView = view.findViewById<ImageView>(R.id.item_apartment_image)
 
-        glide.load(imgList[position])
-            .apply(
-                RequestOptions().centerCrop()
-            )
-            .into(imageView)
+        val url = imgList?.get(position)
+
+        if(url != null) {
+            glide.load(url)
+                .apply(
+                    RequestOptions().centerCrop()
+                )
+                .into(imageView)
+        }
 
         container.addView(view)
         return view
@@ -37,7 +41,7 @@ constructor(private val imgList: List <String>,
     }
 
     override fun getCount(): Int {
-        return imgList.count()
+        return imgList?.count() ?: 0
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {

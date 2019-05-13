@@ -65,11 +65,11 @@ class ApartmentViewModel
 
         val geocoder = Geocoder(context)
 
-        val address: List<Address> = geocoder.getFromLocationName(address,1)
+        val addressList: List<Address> = geocoder.getFromLocationName(address,1)
 
-        if(address.isNotEmpty()){
-            val longitude: Float = address[0].longitude.toFloat()
-            val latitude: Float = address[0].latitude.toFloat()
+        if(addressList.isNotEmpty()){
+            val longitude: Float = addressList[0].longitude.toFloat()
+            val latitude: Float = addressList[0].latitude.toFloat()
 
             return LatLng(latitude, longitude)
         }
