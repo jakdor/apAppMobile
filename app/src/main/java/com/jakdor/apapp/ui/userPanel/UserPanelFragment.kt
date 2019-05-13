@@ -12,20 +12,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.databinding.FragmentUserPanelBinding
 import com.jakdor.apapp.di.InjectableFragment
+import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.ui.apartmentList.ApartmentItemAdapter
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_user_panel.*
-import timber.log.Timber
-import java.util.Vector
+import java.util.*
 import javax.inject.Inject
-import kotlin.Exception
 
-class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, InjectableFragment {
+class UserPanelFragment : Fragment(), InjectableFragment {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -35,6 +33,7 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
 
     private lateinit var recyclerViewAdapter: ApartmentItemAdapter
     private var recyclerViewInit = false
+    private var initSubs = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +45,10 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        swipe_refresh_layout.setOnRefreshListener(this)
+        recyclerViewInit = false
+        swipe_refresh_layout.setOnRefreshListener {
+            viewModel?.requestApartmentsListUpdate()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,18 +58,19 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
         }
 
         binding.viewModel = viewModel
-        observeStackQuestionsLiveData()
-        viewModel?.observeUserDetailsSubject()
-        viewModel?.requestApartmentsListUpdate()
-        viewModel?.downloadError?.observe(this, Observer {
-            if(it)
-                Toast.makeText(activity, getString(R.string.data_download_error), Toast.LENGTH_LONG).show()
-        })
-        swipe_refresh_layout.isRefreshing = true
-    }
 
-    override fun onRefresh() {
-            viewModel?.requestApartmentsListUpdate()
+        if(!initSubs) {
+            observeStackQuestionsLiveData()
+            viewModel?.observeUserDetailsSubject()
+            viewModel?.downloadError?.observe(this, Observer {
+                if (it) Toast.makeText(activity, getString(R.string.data_download_error), Toast.LENGTH_LONG).show()
+            })
+            initSubs = true
+        }
+
+        viewModel?.requestApartmentsListUpdate()
+
+        swipe_refresh_layout.isRefreshing = true
     }
 
     fun observeStackQuestionsLiveData() {
@@ -91,6 +94,11 @@ class UserPanelFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, Inje
 
     fun initRecyclerView() {
         recyclerViewAdapter = ApartmentItemAdapter(Vector(), GlideApp.with(this))
+        recyclerViewAdapter.recyclerViewItemClickListener = object : ApartmentItemAdapter.RecyclerViewItemClickListener{
+            override fun onItemClick(apartmentId: Int) {
+                if(activity is MainActivity) (activity as MainActivity).switchToApartmentDetailsFragment(apartmentId)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         item_recycler.layoutManager = linearLayoutManager
