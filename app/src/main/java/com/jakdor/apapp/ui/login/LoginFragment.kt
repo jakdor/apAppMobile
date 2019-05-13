@@ -6,16 +6,17 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
-import kotlinx.android.synthetic.main.fragment_login.*
-import javax.inject.Inject
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import com.jakdor.apapp.ui.MainActivity
+import kotlinx.android.synthetic.main.login.*
+import javax.inject.Inject
 
 class LoginFragment : Fragment(), InjectableFragment {
 
@@ -24,9 +25,13 @@ class LoginFragment : Fragment(), InjectableFragment {
 
     var viewModel: LoginViewModel? = null
 
+    private var initSubs = false
     private var isLoginUnlocked = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if(activity != null && activity is AppCompatActivity) {
+            (activity as AppCompatActivity).supportActionBar!!.hide()
+        }
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -54,7 +59,7 @@ class LoginFragment : Fragment(), InjectableFragment {
         }
 
         registerButton.setOnClickListener {
-            (activity as MainActivity).addRegistrationFragment()
+            (activity as MainActivity).switchToRegistrationFragment()
         }
     }
 
@@ -63,13 +68,17 @@ class LoginFragment : Fragment(), InjectableFragment {
         if (viewModel == null)
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
 
-        viewModel?.loginPossibility?.observe(this, Observer {
-            handleNewLoginPossibility(it)
-        })
+        if(!initSubs) {
+            viewModel?.loginPossibility?.observe(this, Observer {
+                handleNewLoginPossibility(it)
+            })
 
-        viewModel?.loginRequestStatus?.observe(this, Observer {
-            handleNewLoginRequestStatus(it)
-        })
+            viewModel?.loginRequestStatus?.observe(this, Observer {
+                handleNewLoginRequestStatus(it)
+            })
+
+            initSubs = true
+        }
     }
 
     fun handleNewLoginPossibility(status: Boolean){
@@ -77,13 +86,32 @@ class LoginFragment : Fragment(), InjectableFragment {
         loginButton.isEnabled = status
     }
 
-    fun handleNewLoginRequestStatus(status: Boolean){
-        if(status) {
-            Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
-            (activity as MainActivity).switchToApartmentListFragment()
-        }
-        else {
-            Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+    fun handleNewLoginRequestStatus(status: LoginViewModel.LoginRequestStatus) {
+        when (status) {
+            LoginViewModel.LoginRequestStatus.Idle -> {
+            }
+            LoginViewModel.LoginRequestStatus.Pending -> {
+                loginButton.visibility = View.GONE
+                registerButton.visibility = View.GONE
+                login_progress.visibility = View.VISIBLE
+                login_progress.progress = 0
+            }
+            LoginViewModel.LoginRequestStatus.Success -> {
+                Toast.makeText(activity, getString(R.string.singed_in), Toast.LENGTH_LONG).show()
+                (activity as MainActivity).switchToApartmentListFragment()
+            }
+            LoginViewModel.LoginRequestStatus.BadCardinals -> {
+                Toast.makeText(activity, getString(R.string.invalid_login_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
+            }
+            LoginViewModel.LoginRequestStatus.Error -> {
+                Toast.makeText(activity, getString(R.string.login_error_toast), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+                login_progress.visibility = View.GONE
+            }
         }
     }
 

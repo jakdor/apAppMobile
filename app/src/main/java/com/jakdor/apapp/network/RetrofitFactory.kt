@@ -15,7 +15,7 @@ class RetrofitFactory {
 
     private lateinit var retrofit: Retrofit
 
-    private val authenticationInterceptor = AuthenticationInterceptor()
+    val authenticationInterceptor = AuthenticationInterceptor()
 
     private val retrofitBuilder = Retrofit.Builder()
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

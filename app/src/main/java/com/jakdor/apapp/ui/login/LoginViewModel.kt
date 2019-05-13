@@ -15,7 +15,7 @@ class LoginViewModel
     BaseViewModel(application, rxSchedulersFacade){
 
     val loginPossibility = MutableLiveData<Boolean>().apply { postValue(false) }
-    val loginRequestStatus = MutableLiveData<Boolean>()
+    val loginRequestStatus = MutableLiveData<LoginRequestStatus>()
 
     var isLoginFilled: Boolean = false
     var isPasswordFilled: Boolean = false
@@ -31,11 +31,22 @@ class LoginViewModel
     }
 
     fun login(login: String, password: String){
+        loginRequestStatus.postValue(LoginRequestStatus.Pending)
+
         disposable.add(authRepository.login(login, password)
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
-            .subscribe({t -> loginRequestStatus.postValue(t)},
-                {e -> Timber.e(e, "ERROR observing loginRequest")}))
+            .subscribe({t ->
+                run {
+                    loginRequestStatus.postValue(if(t) LoginRequestStatus.Success else LoginRequestStatus.BadCardinals)
+                }}, {e ->
+                run {
+                    Timber.e(e, "ERROR observing loginRequest")
+                    loginRequestStatus.postValue(LoginRequestStatus.Error)
+            }}))
     }
 
+    enum class LoginRequestStatus {
+        Idle, Pending, Success, BadCardinals, Error
+    }
 }

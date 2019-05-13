@@ -1,12 +1,17 @@
 package com.jakdor.apapp.ui.registration
 
+import android.app.Activity
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +20,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
-import kotlinx.android.synthetic.main.fragment_registration.*
+import kotlinx.android.synthetic.main.registration.*
 import javax.inject.Inject
 
 class RegistrationFragment : Fragment(), InjectableFragment {
@@ -24,9 +29,13 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     var viewModel: RegistrationViewModel? = null
+    private var initSubs = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        if(activity != null && activity is AppCompatActivity) {
+            (activity as AppCompatActivity).supportActionBar!!.hide()
+        }
         return inflater.inflate(R.layout.fragment_registration, container, false)
     }
 
@@ -36,19 +45,23 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(RegistrationViewModel::class.java)
         }
 
-        val registerObserver = Observer<Boolean> { newStatus ->
-            register_button.isEnabled = newStatus
+        if(!initSubs) {
+            val registerObserver = Observer<Boolean> { newStatus ->
+                register_button.isEnabled = newStatus
+            }
+
+            viewModel?.registerPossibility?.observe(this, registerObserver)
+
+            observeRegisterRequestStatus()
+            observePasswordStatus()
+            observeRePasswordStatus()
+            observeEmailStatus()
+            observeLoginStatus()
+            observeNameStatus()
+            observeSurnameStatus()
+
+            initSubs = true
         }
-
-        viewModel?.registerPossibility?.observe(this, registerObserver)
-
-        observeRegisterRequestStatus()
-        observePasswordStatus()
-        observeRePasswordStatus()
-        observeEmailStatus()
-        observeLoginStatus()
-        observeNameStatus()
-        observeSurnameStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +76,7 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             val surname: String = surname_editText.text.toString()
 
             if(viewModel?.checkPasswords(password, rePassword) == true){
+                hideKeyboard(activity as MainActivity)
                 viewModel?.registerRequest(login, email, password, name, surname)
             }
         }
@@ -173,13 +187,23 @@ class RegistrationFragment : Fragment(), InjectableFragment {
     fun handleNewRegisterStatus(status: RegistrationViewModel.RegisterRequestStatus){
         when(status){
             RegistrationViewModel.RegisterRequestStatus.ERROR -> {
+                register_button.visibility = View.VISIBLE
+                register_progress.visibility = View.GONE
                 Toast.makeText(context, getString(R.string.registerError), Toast.LENGTH_SHORT).show()
             }
             RegistrationViewModel.RegisterRequestStatus.OK -> {
                 Toast.makeText(context, getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show()
                 (activity as MainActivity).switchToLoginFragment()
             }
-            RegistrationViewModel.RegisterRequestStatus.EDIT -> {}
+            RegistrationViewModel.RegisterRequestStatus.EDIT -> {
+                register_button.visibility = View.VISIBLE
+                register_progress.visibility = View.GONE
+            }
+            RegistrationViewModel.RegisterRequestStatus.LOADING -> {
+                register_button.visibility = View.GONE
+                register_progress.visibility = View.VISIBLE
+                register_progress.progress = 0
+            }
         }
     }
 
@@ -215,6 +239,16 @@ class RegistrationFragment : Fragment(), InjectableFragment {
             RegistrationViewModel.LoginStatus.OK -> login_wrapper.isErrorEnabled = false
             RegistrationViewModel.LoginStatus.EMPTY -> login_wrapper.error = getString(R.string.noEmptyField)
             RegistrationViewModel.LoginStatus.TAKEN -> login_wrapper.error = getString(R.string.loginTaken)
+        }
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val inputManager = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+        // check if no view has focus:
+        val currentFocusedView = activity.currentFocus
+        if (currentFocusedView != null) {
+            inputManager.hideSoftInputFromWindow(currentFocusedView.windowToken, HIDE_NOT_ALWAYS)
         }
     }
 

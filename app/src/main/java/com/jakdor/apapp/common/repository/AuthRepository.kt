@@ -53,7 +53,7 @@ class AuthRepository
     }
 
     fun refreshBearerToken(): Observable<String?> {
-        return apiService.postRefresh(RefreshRequest(loginStr, bearerToken))
+        return apiService.postRefresh(RefreshRequest(loginStr, refreshToken))
             .doOnNext {
                 if(it != null){
                     bearerToken = it.accessToken
