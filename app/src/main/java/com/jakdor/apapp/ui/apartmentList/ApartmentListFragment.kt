@@ -16,6 +16,7 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.databinding.FragmentApartmentListBinding
 import com.jakdor.apapp.di.InjectableFragment
+import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_list.*
 import java.util.*
@@ -85,6 +86,11 @@ class ApartmentListFragment: Fragment(), InjectableFragment {
 
     fun initRecyclerView(){
         recyclerViewAdapter = ApartmentItemAdapter(Vector(), GlideApp.with(this))
+        recyclerViewAdapter.recyclerViewItemClickListener = object : ApartmentItemAdapter.RecyclerViewItemClickListener{
+            override fun onItemClick(apartmentId: Int) {
+                if(activity is MainActivity) (activity as MainActivity).switchToApartmentDetailsFragment(apartmentId)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         item_recycler.layoutManager = linearLayoutManager

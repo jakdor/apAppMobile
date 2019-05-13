@@ -46,4 +46,11 @@
 	<string name="error_adding_apartment">Wystąpił błąd przy dodawaniu apartamentu</string>
 	<string name="apartment_exists_info">Podany apartament już istnieje</string>
 	<string name="add_apartment_button">add apartment</string>
+	<string name="apartment_city_label">Miasto:</string>
+	<string name="apartment_desc_label">Opis:</string>
+	<string name="apartment_rating_label">Średnia ocen apartamentu:</string>
+	<string name="install_maps_dialog_no">nie</string>
+	<string name="install_maps_dialog_yes">otwórz google play</string>
+	<string name="install_maps_dialog_msg">Zainstalować teraz?</string>
+	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
 </resources>

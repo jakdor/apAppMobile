@@ -47,11 +47,11 @@ class AppModule {
     @Provides
     fun provideRxSchedulersFacade(): RxSchedulersFacade = RxSchedulersFacade()
 
+    @Singleton
     @Provides
-    fun provideApartmentRepository(retrofitFactory: RetrofitFactory,
-                                   bearerAuthWrapper: BearerAuthWrapper,
+    fun provideApartmentRepository(bearerAuthWrapper: BearerAuthWrapper,
                                    rxSchedulersFacade: RxSchedulersFacade):
-            ApartmentRepository = ApartmentRepository(retrofitFactory, bearerAuthWrapper, rxSchedulersFacade)
+            ApartmentRepository = ApartmentRepository(bearerAuthWrapper, rxSchedulersFacade)
 
     @Provides
     fun provideBearerAuthWrapper(retrofitFactory: RetrofitFactory,

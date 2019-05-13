@@ -71,10 +71,6 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
 
     }
 
-    fun setOnItemClickListener(recyclerViewItemClickListener: RecyclerViewItemClickListener) {
-        this.recyclerViewItemClickListener = recyclerViewItemClickListener
-    }
-
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imageView: ImageView = itemView.findViewById(R.id.apartment_image)

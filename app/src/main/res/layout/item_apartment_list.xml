@@ -7,6 +7,7 @@
 	</data>
 
 	<FrameLayout
+			android:id="@+id/apartment_item"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:clickable="true"
@@ -67,7 +68,7 @@
 					android:id="@+id/apartment_separator"
 					android:layout_width="0dp"
 					android:layout_height="1px"
-					android:background="@color/black"
+					android:background="@color/shadow"
 					android:layout_marginTop="8dp"
 					android:layout_marginStart="16dp"
 					android:layout_marginEnd="16dp"
