@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Launched RegistrationFragment")
     }
 
-    fun swichToApartmentDetailsFragment(apartmentId: Int){
+    fun switchToApartmentDetailsFragment(apartmentId: Int){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
                 ApartmentDetailsFragment.CLASS_TAG)

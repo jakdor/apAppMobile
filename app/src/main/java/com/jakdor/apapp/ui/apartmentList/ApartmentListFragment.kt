@@ -88,7 +88,7 @@ class ApartmentListFragment: Fragment(), InjectableFragment {
         recyclerViewAdapter = ApartmentItemAdapter(Vector(), GlideApp.with(this))
         recyclerViewAdapter.recyclerViewItemClickListener = object : ApartmentItemAdapter.RecyclerViewItemClickListener{
             override fun onItemClick(apartmentId: Int) {
-                if(activity is MainActivity) (activity as MainActivity).swichToApartmentDetailsFragment(apartmentId)
+                if(activity is MainActivity) (activity as MainActivity).switchToApartmentDetailsFragment(apartmentId)
             }
         }
         val linearLayoutManager = LinearLayoutManager(context)
