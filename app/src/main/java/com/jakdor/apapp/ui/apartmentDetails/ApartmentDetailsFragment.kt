@@ -13,6 +13,7 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.databinding.FragmentApartmentDetailsBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
+import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_details.*
 import javax.inject.Inject
 
@@ -62,6 +63,12 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         if(viewModel != null){
             binding.viewModel = viewModel
             binding.apartment = viewModel!!.getApartment(apartmentId)
+        }
+
+        val apart = viewModel?.getApartment(apartmentId)
+        if(apart != null){
+            apartment_img_pager.adapter = ApartmentImgPagerAdapter(
+                apart.imgList, GlideApp.with(this), context!!)
         }
     }
 
