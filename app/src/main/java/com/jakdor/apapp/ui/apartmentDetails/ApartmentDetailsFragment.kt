@@ -47,11 +47,14 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         apartment_map_fab.setOnClickListener {
             val apart = viewModel?.getApartment(apartmentId)
             if(activity is MainActivity && apart != null)
                 (activity as MainActivity).openGoogleMaps(apart.lat, apart.long, apart.name)
         }
+
+        apartment_title_bar.setNavigationOnClickListener { activity?.onBackPressed() }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
