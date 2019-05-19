@@ -1,7 +1,6 @@
 package com.jakdor.apapp.ui.apartment
 
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,7 +23,6 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
-import java.io.File
 import javax.inject.Inject
 
 
@@ -38,6 +36,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     private lateinit var recyclerViewAdapter: ApartmentImageAdapter
 
     private var photos: ArrayList<Picture> = arrayListOf()
+    private var sentImagesCount = 0;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (activity != null && activity is AppCompatActivity) {
@@ -77,8 +76,10 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         viewModel?.addApartmentPossibility?.observe(this, addApartmentObserver)
 
         observeApartmentIdLiveData()
+        observeSentImagesLiveData()
 
         viewModel?.observeApartmentIdSubject()
+        viewModel?.observeSendingImages()
 
         observeApartmentNameStatus()
         observeApartmentCityStatus()
@@ -213,12 +214,35 @@ class ApartmentFragment: Fragment(), InjectableFragment {
 
     fun handleNewApartmentId(apartmentStatus: ApartmentAddResponse){
         if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.OK && photos.size>0){
+            add_apartment_button.visibility = View.GONE
+            progress_vertical.visibility = View.VISIBLE
             viewModel?.addApartmentImage(apartmentStatus.id, photos)
-            (activity as MainActivity).switchToApartmentListFragment()
         }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.ERROR){
             Toast.makeText(activity, getString(R.string.error_adding_apartment), Toast.LENGTH_LONG).show()
         }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.APARTMENT_EXISTS){
             Toast.makeText(activity, getString(R.string.apartment_exists_info), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun observeSentImagesLiveData() {
+        viewModel?.sentImagesLiveData?.observe(this, Observer {
+            handleSendingImagesResponse(it)
+        })
+    }
+
+    private fun handleSendingImagesResponse(sent: Boolean) {
+        if(sent){
+            uploading_images.max = photos.size
+            sentImagesCount++
+            uploading_images.progress = sentImagesCount
+            progress_textView.text = (sentImagesCount.toString() + "/" + photos.size.toString())
+
+            if(sentImagesCount==photos.size) {
+                sentImagesCount = 0
+                uploading_images.progress = 0
+                (activity as MainActivity).clearImages()
+                (activity as MainActivity).switchToApartmentListFragment()
+            }
         }
     }
 

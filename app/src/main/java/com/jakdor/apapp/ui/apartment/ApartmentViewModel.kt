@@ -26,6 +26,7 @@ class ApartmentViewModel
     val addApartmentPossibility = MutableLiveData<Boolean>().apply { value = false }
 
     val apartmentIdLiveData = MutableLiveData<ApartmentAddResponse>()
+    val sentImagesLiveData = MutableLiveData<Boolean>()
 
     private var isNameCorrect: Boolean = false
     private var isCityCorrect: Boolean = false
@@ -43,6 +44,14 @@ class ApartmentViewModel
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({ t: ApartmentAddResponse -> apartmentIdLiveData.postValue(t) },
                 {e ->  Timber.e(e, "ERROR observing ApartmentIdSubject")}))
+    }
+
+    fun observeSendingImages(){
+        disposable.add(addApartmentRepository.sendingImages
+            .observeOn(rxSchedulersFacade.io())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({t: Boolean -> sentImagesLiveData.postValue(t)},
+                {e-> Timber.e(e,"ERROR observing sending images")}))
     }
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){

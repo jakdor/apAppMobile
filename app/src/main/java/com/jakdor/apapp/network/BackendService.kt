@@ -7,6 +7,7 @@ import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import okhttp3.MultipartBody
+import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
