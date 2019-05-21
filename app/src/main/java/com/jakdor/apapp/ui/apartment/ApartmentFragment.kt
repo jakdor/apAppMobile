@@ -85,6 +85,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         observeApartmentCityStatus()
         observeApartmentStreetStatus()
         observeApartmentNumberStatus()
+        observeUserPhoneNumberStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,10 +105,11 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             photosCheckbox.isChecked = false
         }
         add_apartment_button.setOnClickListener {
-            val name = apartment_name_editText.text.toString()
-            val city = apartment_city_editText.text.toString()
-            val street = apartment_street_editText.text.toString()
+            val name = apartment_name_editText.text.toString().trim()
+            val city = apartment_city_editText.text.toString().trim()
+            val street = apartment_street_editText.text.toString().trim()
             val apartmentNumber = apartment_number_editText.text.toString()
+            val phoneNumber = user_phoneNumber_editText.text.toString().trim()
 
             val fullAddress = "$street $apartmentNumber, $city"
             val latLng: ApartmentViewModel.LatLng? = viewModel?.getLatLng(activity, fullAddress)
@@ -118,7 +120,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 lat = latLng.latitude
             }
 
-            viewModel?.addApartment(name,city,street,apartmentNumber, lat, lng)
+            viewModel?.addApartment(name,city,street,apartmentNumber, phoneNumber, lat, lng)
         }
 
         apartment_name_editText.addTextChangedListener(object: TextWatcher{
@@ -188,6 +190,23 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
 
         })
+
+        user_phoneNumber_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val phoneNumber = user_phoneNumber_editText.text.toString()
+
+                viewModel?.userPhoneNumberValidation(phoneNumber)
+            }
+
+        })
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
@@ -217,7 +236,10 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             add_apartment_button.visibility = View.GONE
             progress_vertical.visibility = View.VISIBLE
             viewModel?.addApartmentImage(apartmentStatus.id, photos)
-        }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.ERROR){
+        }else if(photos.size == 0){
+            (activity as MainActivity).switchToApartmentListFragment()
+        }
+        else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.ERROR){
             Toast.makeText(activity, getString(R.string.error_adding_apartment), Toast.LENGTH_LONG).show()
         }else if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.APARTMENT_EXISTS){
             Toast.makeText(activity, getString(R.string.apartment_exists_info), Toast.LENGTH_LONG).show()
@@ -270,6 +292,22 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         })
     }
 
+    private fun observeUserPhoneNumberStatus() {
+        viewModel?.userPhoneNumber?.observe(this, Observer {
+            handleNewPhoneNumber(it)
+        })
+    }
+
+    private fun handleNewPhoneNumber(status: ApartmentViewModel.Status) {
+        when(status){
+            ApartmentViewModel.Status.OK -> user_phoneNumber_wrapper.isErrorEnabled = false
+            ApartmentViewModel.Status.EMPTY ->
+                user_phoneNumber_wrapper.error = getString(R.string.noEmptyField)
+            ApartmentViewModel.Status.WRONG_PATTERN ->
+                user_phoneNumber_wrapper.error = getString(R.string.wrong_phone_number)
+        }
+    }
+
     private fun handleApartmentStatus(status: Boolean, input: TextInputLayout) {
         if(status){
             input.isErrorEnabled = false
@@ -278,12 +316,12 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         }
     }
 
-    private fun handleNewNumberStatus(status: ApartmentViewModel.ApartmentNumberStatus) {
+    private fun handleNewNumberStatus(status: ApartmentViewModel.Status) {
         when(status){
-            ApartmentViewModel.ApartmentNumberStatus.OK -> apartment_number_wrapper.isErrorEnabled = false
-            ApartmentViewModel.ApartmentNumberStatus.EMPTY ->
+            ApartmentViewModel.Status.OK -> apartment_number_wrapper.isErrorEnabled = false
+            ApartmentViewModel.Status.EMPTY ->
                 apartment_number_wrapper.error = getString(R.string.noEmptyField)
-            ApartmentViewModel.ApartmentNumberStatus.WRONG_PATTERN ->
+            ApartmentViewModel.Status.WRONG_PATTERN ->
                 apartment_number_wrapper.error = getString(R.string.apartmentNumberPatternInfo)
         }
     }

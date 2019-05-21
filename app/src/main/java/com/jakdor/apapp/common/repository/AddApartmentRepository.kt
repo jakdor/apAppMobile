@@ -21,7 +21,8 @@ class AddApartmentRepository
                     private val bearerAuthWrapper: BearerAuthWrapper,
                     private val rxSchedulersFacade: RxSchedulersFacade) {
 
-    private val apiService: BackendService = retrofitFactory.createService(BackendService.API_URL, BackendService::class.java)
+    private val apiService: BackendService = retrofitFactory.createService(BackendService.API_URL,
+        BackendService::class.java)
 
     private val rxDisposables: CompositeDisposable = CompositeDisposable()
 
@@ -29,9 +30,11 @@ class AddApartmentRepository
 
     val sendingImages: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
-    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, lat: Float, long: Float){
+    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, phoneNumber: String,
+                     lat: Float, long: Float){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, lat, long)))
+            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, phoneNumber,
+                lat, long)))
                 .observeOn(rxSchedulersFacade.io())
                 .subscribeOn(rxSchedulersFacade.io())
                 .subscribe({ t: ApartmentAddResponse? -> if(t!=null) apartmentIdSubject.onNext(t)},

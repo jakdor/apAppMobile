@@ -56,4 +56,6 @@
 	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
 	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
 	<string name="user_details_button">profil użytkownika</string>
+	<string name="user_phoneNumber_label">Numer telefonu</string>
+	<string name="wrong_phone_number">Podaj prawidłowy numer telefonu</string>
 </resources>
