@@ -7,7 +7,7 @@ project.ext {
     androidxVersion = "1.0.0"
     androidxAppcompatVersion = "1.0.2"
     archVersion = "2.0.0"
-    constraintLayoutVersion = "2.0.0-alpha3"
+    constraintLayoutVersion = "2.0.0-beta1"
     daggerVersion = "2.21"
     rxKotlinVersion = "2.3.0"
     rxAndroidVersion = "2.1.1"
@@ -62,7 +62,6 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$project.archVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$project.archVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$project.archVersion"
-    implementation "androidx.arch.core:core-testing:$project.archVersion"
 
     //Dagger core
     kapt "com.google.dagger:dagger-compiler:$project.daggerVersion"
