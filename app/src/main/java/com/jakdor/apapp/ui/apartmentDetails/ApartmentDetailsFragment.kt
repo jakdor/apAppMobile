@@ -72,6 +72,7 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         if(apart != null){
             apartment_img_pager.adapter = ApartmentImgPagerAdapter(
                 apart.imgList, GlideApp.with(this), context!!)
+            apartment_img_pager_tab_indicator.setupWithViewPager(apartment_img_pager, true)
         }
     }
 
