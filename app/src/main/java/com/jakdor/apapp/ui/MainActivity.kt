@@ -113,7 +113,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     fun switchToApartmentListFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentListFragment.getInstance(), ApartmentListFragment.CLASS_TAG)
-            .addToBackStack(ApartmentListFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched ApartmentListFragment")
     }
@@ -147,7 +146,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun switchToApartmentDetailsFragment(apartmentId: Int){
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
+            .add(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
                 ApartmentDetailsFragment.CLASS_TAG)
             .addToBackStack(ApartmentDetailsFragment.CLASS_TAG)
             .commit()
