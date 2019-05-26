@@ -75,7 +75,7 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             adapter.setOnItemClickListener(object : ApartmentImgPagerAdapter.OnItemClickListener{
                 override fun onItemClick(view: View, position: Int) {
                     if(activity is MainActivity && apartment.imgList != null)
-                        (activity as MainActivity).switchToImageFragment(apartment.imgList!![position])
+                        (activity as MainActivity).switchToImageActivity(apartment.imgList!![position])
                 }
             })
 

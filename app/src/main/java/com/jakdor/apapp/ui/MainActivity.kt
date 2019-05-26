@@ -125,16 +125,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Launched LoginFragment")
     }
 
-    fun switchToAddApartmentFragment() {
-        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
-        if(apartmentFragment != null && apartmentFragment.isVisible) return
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
-            .addToBackStack(ApartmentFragment.CLASS_TAG)
-            .commit()
-        Timber.i("Launched ApartmentFragment")
-    }
 
     fun switchToRegistrationFragment(){
         supportFragmentManager.beginTransaction()
@@ -153,7 +144,25 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Launched ApartmentDetailsFragment")
     }
 
-    fun switchToUserPanelFragment() {
+    private fun switchToAddApartmentFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
+        if(fragment != null && fragment.isVisible) return
+
+        popFragmentsRecursively()
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
+            .addToBackStack(ApartmentFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Launched ApartmentFragment")
+    }
+
+    private fun switchToUserPanelFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(UserPanelFragment.CLASS_TAG) as UserPanelFragment?
+        if(fragment != null && fragment.isVisible) return
+
+        popFragmentsRecursively()
+
         supportFragmentManager.beginTransaction()
             .add(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
             .addToBackStack(UserPanelFragment.CLASS_TAG)
@@ -161,7 +170,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Lunched UserPanelFragment")
     }
 
-    fun switchToImageFragment(imgUrl: String) {
+    private fun popFragmentsRecursively(){
+        val fragments = supportFragmentManager.fragments.count()
+
+        for (i in 0 until fragments){
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    fun switchToImageActivity(imgUrl: String) {
         val intent = Intent(this, ImageActivity::class.java)
         intent.putExtra(ImageActivity.IMAGE_URL_BUNDLE_KEY, imgUrl)
         startActivity(intent)
