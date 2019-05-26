@@ -17,6 +17,12 @@ constructor(private val imgList: List <String>?,
 
     private val inflater = LayoutInflater.from(context)
 
+    private var onItemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener){
+        onItemClickListener = listener
+    }
+
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = inflater.inflate(R.layout.item_apertment_img, container, false)
 
@@ -30,6 +36,10 @@ constructor(private val imgList: List <String>?,
                     RequestOptions().centerCrop()
                 )
                 .into(imageView)
+        }
+
+        imageView.setOnClickListener{
+            v -> onItemClickListener?.onItemClick(v, position)
         }
 
         container.addView(view)
@@ -48,4 +58,7 @@ constructor(private val imgList: List <String>?,
         return view == `object`
     }
 
+    interface OnItemClickListener {
+        fun onItemClick(view: View, position: Int)
+    }
 }

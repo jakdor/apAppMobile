@@ -16,7 +16,7 @@
 		<com.google.android.material.appbar.AppBarLayout
 				android:id="@+id/apartment_appbar_container"
 				android:layout_width="match_parent"
-				android:layout_height="200dp"
+				android:layout_height="220dp"
 				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 				android:fitsSystemWindows="true">
 
@@ -29,11 +29,26 @@
 					app:layout_scrollFlags="scroll|exitUntilCollapsed"
 					app:title="@{apartment.name}">
 
-				<androidx.viewpager.widget.ViewPager
-						android:id="@+id/apartment_img_pager"
+				<FrameLayout
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						app:layout_collapseMode="parallax" />
+						android:layout_height="match_parent">
+
+					<androidx.viewpager.widget.ViewPager
+							android:id="@+id/apartment_img_pager"
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							app:layout_collapseMode="parallax" />
+
+					<com.google.android.material.tabs.TabLayout
+							android:id="@+id/apartment_img_pager_tab_indicator"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="-4dp"
+							android:layout_gravity="center|bottom"
+							app:tabBackground="@drawable/tab_selector"
+							app:tabIndicatorHeight="0dp" />
+
+				</FrameLayout>
 
 				<androidx.appcompat.widget.Toolbar
 						android:id="@+id/apartment_title_bar"
