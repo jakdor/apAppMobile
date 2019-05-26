@@ -1,7 +1,6 @@
 package com.jakdor.apapp.ui.apartment
 
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,7 +23,6 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
-import java.io.File
 import javax.inject.Inject
 
 
@@ -58,7 +56,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
-        recyclerViewAdapter.recyclerViewItemClickListener = object: ApartmentImageAdapter.RecyclerViewItemClickListener {
+        recyclerViewAdapter.setRecyclerViewItemClickListener(object: ApartmentImageAdapter.RecyclerViewItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 photos.removeAt(position)
                 (activity as MainActivity).removeImageFromPosition(position)
@@ -67,8 +65,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                     photosCheckbox.isChecked = false
                 }
             }
-
-        }
+        })
 
         val addApartmentObserver = Observer<Boolean> { newStatus ->
             add_apartment_button.isEnabled = newStatus

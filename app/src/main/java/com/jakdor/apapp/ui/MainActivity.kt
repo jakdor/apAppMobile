@@ -21,6 +21,7 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
 import com.jakdor.apapp.ui.apartmentDetails.ApartmentDetailsFragment
+import com.jakdor.apapp.ui.apartmentDetails.ImageFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
@@ -161,9 +162,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Lunched UserPanelFragment")
     }
 
-    fun openChooser(){
-        //val isCameraAvailable = checkCameraFeaturesAvailability()
+    fun switchToImageFragment(imgUrl: String) {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.mainFragmentLayout, ImageFragment.getInstance(imgUrl), ImageFragment.CLASS_TAG)
+            .addToBackStack(ImageFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Lunched ImageFragment")
+    }
 
+    fun openChooser(){
         val externalStorageCheck = ContextCompat.checkSelfPermission(this,
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val cameraCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
