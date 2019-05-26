@@ -19,6 +19,7 @@ project.ext {
     supportDesign = "27.1.0"
     easyImageVersion = "3.0.1"
     pixImagePickerVersion = "1.3.0"
+    zoomImageVersion = "1.2.0"
 }
 
 android {
@@ -93,6 +94,9 @@ dependencies {
 
     //PixImagePicker
     implementation "com.fxn769:pix:$project.pixImagePickerVersion"
+
+    //ZoomImage
+    implementation "com.jsibbold:zoomage:$project.zoomImageVersion"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$project.leakCanaryVersion"

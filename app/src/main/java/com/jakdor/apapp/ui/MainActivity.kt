@@ -21,7 +21,6 @@ import com.jakdor.apapp.R
 import com.jakdor.apapp.common.repository.AuthRepository
 import com.jakdor.apapp.ui.apartment.ApartmentFragment
 import com.jakdor.apapp.ui.apartmentDetails.ApartmentDetailsFragment
-import com.jakdor.apapp.ui.apartmentDetails.ImageFragment
 import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
@@ -51,10 +50,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-            options = Options.init()
-                .setRequestCode(GET_IMAGES_REQUEST_CODE)
-                .setCount(MAX_IMAGES_TO_UPLOAD)
-                .setPreSelectedUrls(returnedImages)
+        options = Options.init()
+            .setRequestCode(GET_IMAGES_REQUEST_CODE)
+            .setCount(MAX_IMAGES_TO_UPLOAD)
+            .setPreSelectedUrls(returnedImages)
 
         if(authRepository.isLoggedIn()){
             switchToApartmentListFragment()
@@ -163,11 +162,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     }
 
     fun switchToImageFragment(imgUrl: String) {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.mainFragmentLayout, ImageFragment.getInstance(imgUrl), ImageFragment.CLASS_TAG)
-            .addToBackStack(ImageFragment.CLASS_TAG)
-            .commit()
-        Timber.i("Lunched ImageFragment")
+        val intent = Intent(this, ImageActivity::class.java)
+        intent.putExtra(ImageActivity.IMAGE_URL_BUNDLE_KEY, imgUrl)
+        startActivity(intent)
+
+        Timber.i("Lunched ImageActivity")
     }
 
     fun openChooser(){

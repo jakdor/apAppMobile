@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:orientation="vertical"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/materialGrey">
+             android:background="@color/black"
+             android:fitsSystemWindows="false" >
 
 	<ProgressBar
+			android:id="@+id/image_progress"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
 			android:layout_gravity="center" />
 
-	<ImageView
+	<com.jsibbold.zoomage.ZoomageView
 			android:id="@+id/image_big"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:contentDescription="@string/enlarged_image_desc" />
+			android:contentDescription="@string/enlarged_image_desc"
+			app:zoomage_autoCenter="true" />
 
 </FrameLayout>

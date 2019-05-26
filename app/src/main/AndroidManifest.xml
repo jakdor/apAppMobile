@@ -19,6 +19,7 @@
 		    android:fullBackupContent="@xml/backup_rules"
 		    android:networkSecurityConfig="@xml/network_security_config"
 		    tools:ignore="GoogleAppIndexingWarning, UnusedAttribute">
+
         <activity android:name=".ui.MainActivity"
                   android:screenOrientation="portrait">
             <intent-filter>
@@ -27,6 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+	    <activity android:name=".ui.ImageActivity"
+	            android:theme="@style/fullscreen"/>
 
 	    <provider
 			    android:name="androidx.core.content.FileProvider"
