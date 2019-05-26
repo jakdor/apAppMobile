@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         if(apartmentFragment != null && apartmentFragment.isVisible) return
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
+            .add(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
             .addToBackStack(ApartmentFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched ApartmentFragment")
@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun switchToUserPanelFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
+            .add(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
             .addToBackStack(UserPanelFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched UserPanelFragment")
