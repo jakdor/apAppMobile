@@ -25,8 +25,10 @@ import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import com.jakdor.apapp.ui.userPanel.UserPanelFragment
+import com.jakdor.apapp.utils.RxSchedulersFacade
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.io.File
 import java.util.*
@@ -39,10 +41,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     lateinit var authRepository: AuthRepository
 
     @Inject
+    lateinit var rxSchedulersFacade: RxSchedulersFacade
+
+    @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var options: Options
     private var returnedImages: ArrayList<String> = arrayListOf()
+
+    private val rxDisposables = CompositeDisposable()
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
         return dispatchingAndroidInjector
@@ -63,6 +70,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         else{
             switchToLoginFragment()
         }
+
+        rxDisposables.add(authRepository.authStatusSubject
+            .observeOn(rxSchedulersFacade.ui())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({t -> onNewAuthStatus(t)}, {Timber.e("Error observing auth status")}))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -112,6 +124,39 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!rxDisposables.isDisposed) rxDisposables.dispose()
+    }
+
+    private fun onNewAuthStatus(status: AuthRepository.AuthStatusEnum){
+        when(status){
+            AuthRepository.AuthStatusEnum.IDLE -> {}
+            AuthRepository.AuthStatusEnum.LOGGED_IN -> {}
+            AuthRepository.AuthStatusEnum.NO_INTERNET -> {
+                Toast.makeText(this, getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+            }
+            AuthRepository.AuthStatusEnum.REQUEST_FAILED -> {
+                Toast.makeText(this, getString(R.string.no_api_response_toast), Toast.LENGTH_SHORT).show()
+            }
+            AuthRepository.AuthStatusEnum.LOGOUT_USER -> logout()
+            AuthRepository.AuthStatusEnum.LOGOUT_FORCED -> {
+                logout()
+                Toast.makeText(this, getString(R.string.session_expired_toast), Toast.LENGTH_LONG).show()
+            }
+
+        }
+    }
+
+    private fun logout(){
+        val fragments = supportFragmentManager.fragments.count()
+        for (i in 0 .. fragments){
+            supportFragmentManager.popBackStack()
+        }
+
+        switchToLoginFragment()
+    }
+
     fun switchToApartmentListFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentListFragment.getInstance(), ApartmentListFragment.CLASS_TAG)
@@ -126,8 +171,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
             .commit()
         Timber.i("Launched LoginFragment")
     }
-
-
 
     fun switchToRegistrationFragment(){
         supportFragmentManager.beginTransaction()
@@ -262,7 +305,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     /**
      * Check package available
      */
-    fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean
+    private fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean
     {
         return try {
             packageManager.getPackageInfo(packageName, 0)
@@ -276,7 +319,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     /**
      * Opens dialog with GoogleMaps Store
      */
-    fun googleMapsInstallIntent()
+    private fun googleMapsInstallIntent()
     {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.install_maps_dialog_title))
