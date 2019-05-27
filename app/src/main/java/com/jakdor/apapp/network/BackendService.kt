@@ -28,7 +28,7 @@ interface BackendService {
                           @Query("isThumb") isThumb: Boolean): Observable<ResponseBody>
 
     @GET("User/phoneNumber")
-    fun getUserPhoneNumber(): Observable<String>
+    fun getUserPhoneNumber(): Observable<UserPhoneNumberResponse>
 
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
