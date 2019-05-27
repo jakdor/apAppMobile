@@ -64,6 +64,7 @@
 	<string name="wrong_number_label">Podaj prawidłową liczbę</string>
 	<string name="set_as_thumbnail_label">Ustaw miniaturkę</string>
 	<string name="enlarged_image_desc">enlarged image</string>
+	<string name="area_with_square_meters">%1$s m\u00B2</string>
 	<string name="session_expired_toast">Sesja wygasła</string>
 	<string name="no_api_response_toast">Serwer nie odpowiada - sprawdź połączenie</string>
 	<string name="no_internet_toast">Wymagane połączenie z Internetem</string>

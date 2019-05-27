@@ -81,6 +81,16 @@
 					android:orientation="vertical"
 					android:background="@color/materialGrey">
 
+				<TextView
+					android:id="@+id/apartment_price_label"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@{viewModel.convert(apartment.price)}"
+					android:layout_marginStart="30dp"
+					android:layout_marginBottom="20dp"
+					android:textSize="30sp"
+					android:textColor="@color/black"/>
+
 				<include layout="@layout/item_details"
 				         android:id="@+id/apartment_desc_details"
 				         android:layout_width="match_parent"
@@ -109,9 +119,17 @@
 				         android:id="@+id/apartment_maxPeople_details"
 				         android:layout_width="match_parent"
 				         android:layout_height="wrap_content"
-				         app:icon = "@{@drawable/person}"
+				         app:icon = "@{@drawable/ic_people}"
 				         app:title = "@{@string/max_people_label}"
-				         app:details = "@{apartment.maxPeople.toString()}"/>
+				         app:details = "@{Integer.toString(apartment.maxPeople)}"/>
+
+				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_area_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/ic_area}"
+				         app:title = "@{@string/area_label}"
+				         app:details = "@{@string/area_with_square_meters(Integer.toString(apartment.area))}"/>
 
 				<TextView
 						android:id="@+id/apartment_rating_label"

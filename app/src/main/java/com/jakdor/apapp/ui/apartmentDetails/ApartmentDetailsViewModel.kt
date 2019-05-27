@@ -20,4 +20,15 @@ class ApartmentDetailsViewModel
             null
         }
     }
+
+    fun convert(number: Int) : String{
+
+        var numberAsString = String.format("%.2f",(number/100.0))
+
+        numberAsString = numberAsString.replace('.',',')
+
+        numberAsString += " zł"
+
+        return numberAsString
+    }
 }
