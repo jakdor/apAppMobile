@@ -33,7 +33,7 @@ class ApartmentRepository
                 apartmentListCache = t.apartments
             }},{e -> run {
                 apartmentsListSubject.onNext(ApartmentList(null, false))
-                Timber.e(e, "ERROR observing ApartmentsListSubject")
+                Timber.e(e, "ERROR observing getApartments")
             }}))
     }
 
