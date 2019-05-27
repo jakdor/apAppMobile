@@ -57,18 +57,9 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         super.onViewCreated(view, savedInstanceState)
 
         call_button.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(activity as MainActivity, Manifest.permission.CALL_PHONE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(activity as MainActivity, arrayOf(Manifest.permission.CALL_PHONE),
-                    10
-                )
-            }else{
-                val callIntent = Intent(Intent.ACTION_CALL)
+                val callIntent = Intent(Intent.ACTION_DIAL)
                 callIntent.data = Uri.parse("tel:$phoneNumber")
                 startActivity(callIntent)
-            }
-
         }
 
         apartment_map_fab.setOnClickListener {
