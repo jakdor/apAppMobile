@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -76,9 +77,20 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
         })
 
+        viewModel?.getUserPhoneNumber()
+
         val addApartmentObserver = Observer<Boolean> { newStatus ->
             add_apartment_button.isEnabled = newStatus
         }
+
+        val userPhoneNumberObserver = Observer<String> { phoneNumber ->
+            if(phoneNumber!= null && phoneNumber.trim().isNotEmpty()){
+                user_phoneNumber_editText.setText(phoneNumber)
+                user_phoneNumber_editText.isEnabled = false
+            }
+        }
+
+        viewModel?.userPhoneNumberLiveData?.observe(this, userPhoneNumberObserver)
 
         viewModel?.addApartmentPossibility?.observe(this, addApartmentObserver)
 
