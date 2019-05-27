@@ -160,6 +160,18 @@
 		</androidx.core.widget.NestedScrollView>
 
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/call_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="90dp"
+				android:src="@drawable/ic_phone"
+				android:focusable="false"
+				android:clickable="false"
+				app:borderWidth="0dp"
+				app:layout_anchor="@id/apartment_appbar_container"
+				app:layout_anchorGravity="bottom|right|end"/>
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
 				android:id="@+id/apartment_map_fab"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

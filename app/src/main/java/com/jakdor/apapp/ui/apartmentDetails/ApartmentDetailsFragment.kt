@@ -1,5 +1,6 @@
 package com.jakdor.apapp.ui.apartmentDetails
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.jakdor.apapp.R
@@ -16,6 +18,11 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_details.*
 import javax.inject.Inject
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import androidx.core.app.ActivityCompat
+
 
 class ApartmentDetailsFragment : Fragment(), InjectableFragment {
 
@@ -25,6 +32,7 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
     var viewModel: ApartmentDetailsViewModel? = null
     private lateinit var binding: FragmentApartmentDetailsBinding
     private var apartmentId: Int = -1
+    private var phoneNumber: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +55,21 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        call_button.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(activity as MainActivity, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(activity as MainActivity, arrayOf(Manifest.permission.CALL_PHONE),
+                    10
+                )
+            }else{
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.data = Uri.parse("tel:$phoneNumber")
+                startActivity(callIntent)
+            }
+
+        }
 
         apartment_map_fab.setOnClickListener {
             val apart = viewModel?.getApartment(apartmentId)
@@ -82,6 +105,20 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             apartment_img_pager.adapter = adapter
             apartment_img_pager_tab_indicator.setupWithViewPager(apartment_img_pager, true)
         }
+
+        viewModel?.getApartmentPhoneNumber(apartmentId)
+
+        val userPhoneNumberObserver = Observer<String> { phoneNumber ->
+            if(phoneNumber!= null && phoneNumber.trim().isNotEmpty()){
+                this.phoneNumber = phoneNumber
+                call_button.isEnabled = true
+                call_button.isFocusable = true
+                call_button.isClickable = true
+
+            }
+        }
+
+        viewModel?.apartPhoneNumberLiveData?.observe(this, userPhoneNumberObserver)
     }
 
     companion object {

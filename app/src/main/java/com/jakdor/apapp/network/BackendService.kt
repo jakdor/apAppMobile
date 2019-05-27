@@ -7,7 +7,6 @@ import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import okhttp3.MultipartBody
-import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
@@ -19,6 +18,9 @@ interface BackendService {
     @POST("apartments")
     fun getApartments(@Body apartmentListRequest: ApartmentListRequest): Observable<ApartmentList?>
 
+    @GET("apartments/phoneNumber")
+    fun getApartmentPhoneNumber(@Query("id") id: Int): Observable<PhoneNumberResponse>
+
     @POST("apartments/add")
     fun addApartment(@Body apartment: ApartmentAdd): Observable<ApartmentAddResponse?>
 
@@ -28,7 +30,7 @@ interface BackendService {
                           @Query("isThumb") isThumb: Boolean): Observable<ResponseBody>
 
     @GET("User/phoneNumber")
-    fun getUserPhoneNumber(): Observable<UserPhoneNumberResponse>
+    fun getUserPhoneNumber(): Observable<PhoneNumberResponse>
 
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
