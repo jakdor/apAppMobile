@@ -77,7 +77,7 @@ class UserPanelFragment : Fragment(), InjectableFragment {
         viewModel?.userDetailsLiveData?.observe(this, Observer {
             showNameTextView.text = it.personalData.firstName
             showSurnameTextView.text = it.personalData.lastName
-            showRatingTextView.text = it.user.rate.toString()
+            apartment_rating_bar.rating = it.user.rate.toFloat()
             showLoginTextView.text = it.user.login
             showEmailTextView.text = it.user.email
             handleNewApartmentList(it.apartments)

@@ -17,11 +17,14 @@ import com.jakdor.apapp.utils.diffCallback.ApartmentImageDiffCallback
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>,
-                            val context: Context):
+class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
 
-    lateinit var recyclerViewItemClickListener: RecyclerViewItemClickListener
+    private var recyclerViewItemClickListener: RecyclerViewItemClickListener? = null
+
+    fun setRecyclerViewItemClickListener(listener: RecyclerViewItemClickListener){
+        recyclerViewItemClickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -58,12 +61,13 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
                 secondClick = false
             }
         }
+
         holder.deleteButton.setOnClickListener{
             holder.deleteButton.visibility = View.GONE
             if(position != 0) {
                 holder.thumbnailButton.visibility = View.GONE
             }
-            recyclerViewItemClickListener.onItemClick(holder.itemView, position)
+            recyclerViewItemClickListener?.onItemClick(holder.itemView, position)
         }
 
         holder.thumbnailButton.setOnClickListener{
@@ -71,7 +75,7 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
             if(position != 0) {
                 holder.thumbnailButton.visibility = View.GONE
             }
-            recyclerViewItemClickListener.changeThumbnail(position)
+            recyclerViewItemClickListener?.changeThumbnail(position)
         }
     }
 
@@ -90,7 +94,6 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
                 imagesList.addAll(newImagesList)
             }
         }).start()
-
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {

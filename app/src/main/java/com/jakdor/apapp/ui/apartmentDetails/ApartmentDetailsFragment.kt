@@ -68,10 +68,19 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             binding.apartment = viewModel!!.getApartment(apartmentId)
         }
 
-        val apart = viewModel?.getApartment(apartmentId)
-        if(apart != null){
-            apartment_img_pager.adapter = ApartmentImgPagerAdapter(
-                apart.imgList, GlideApp.with(this), context!!)
+        val apartment = viewModel?.getApartment(apartmentId)
+        if(apartment != null){
+            val adapter = ApartmentImgPagerAdapter(apartment.imgList, GlideApp.with(this), context!!)
+
+            adapter.setOnItemClickListener(object : ApartmentImgPagerAdapter.OnItemClickListener{
+                override fun onItemClick(view: View, position: Int) {
+                    if(activity is MainActivity && apartment.imgList != null)
+                        (activity as MainActivity).switchToImageActivity(apartment.imgList!![position])
+                }
+            })
+
+            apartment_img_pager.adapter = adapter
+            apartment_img_pager_tab_indicator.setupWithViewPager(apartment_img_pager, true)
         }
     }
 

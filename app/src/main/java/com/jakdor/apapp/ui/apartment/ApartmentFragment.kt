@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -24,7 +23,6 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
-import org.w3c.dom.Text
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -56,12 +54,12 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(ApartmentViewModel::class.java)
         }
 
-        recyclerViewAdapter = ApartmentImageAdapter(GlideApp.with(this),photos, context!!)
+        recyclerViewAdapter = ApartmentImageAdapter(GlideApp.with(this),photos)
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
-        recyclerViewAdapter.recyclerViewItemClickListener = object: ApartmentImageAdapter.RecyclerViewItemClickListener {
+        recyclerViewAdapter.setRecyclerViewItemClickListener(object: ApartmentImageAdapter.RecyclerViewItemClickListener {
             override fun changeThumbnail(position: Int) {
                 Collections.swap(photos,position,0)
                 (activity as MainActivity).changeThumbnail(position)
@@ -76,8 +74,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                     photosCheckbox.isChecked = false
                 }
             }
-
-        }
+        })
 
         val addApartmentObserver = Observer<Boolean> { newStatus ->
             add_apartment_button.isEnabled = newStatus
