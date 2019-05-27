@@ -58,4 +58,9 @@
 	<string name="user_details_button">profil użytkownika</string>
 	<string name="user_phoneNumber_label">Numer telefonu</string>
 	<string name="wrong_phone_number">Podaj prawidłowy numer telefonu</string>
+	<string name="max_people_label">Maksymalna ilość osób</string>
+	<string name="price_label">Cena</string>
+	<string name="area_label">Powierzchnia</string>
+	<string name="wrong_number_label">Podaj prawidłową liczbę</string>
+	<string name="set_as_thumbnail_label">Ustaw miniaturkę</string>
 </resources>

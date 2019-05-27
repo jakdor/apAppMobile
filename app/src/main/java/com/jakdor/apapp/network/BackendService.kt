@@ -26,6 +26,9 @@ interface BackendService {
     @POST("Pictures/{idAp}")
     fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part): Observable<ResponseBody>
 
+    @GET("User/phoneNumber")
+    fun getUserPhoneNumber(): Observable<String>
+
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
 

@@ -23,7 +23,9 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class ApartmentFragment: Fragment(), InjectableFragment {
@@ -36,7 +38,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     private lateinit var recyclerViewAdapter: ApartmentImageAdapter
 
     private var photos: ArrayList<Picture> = arrayListOf()
-    private var sentImagesCount = 0;
+    private var sentImagesCount = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (activity != null && activity is AppCompatActivity) {
@@ -52,12 +54,18 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(ApartmentViewModel::class.java)
         }
 
-        recyclerViewAdapter = ApartmentImageAdapter(GlideApp.with(this),photos)
+        recyclerViewAdapter = ApartmentImageAdapter(GlideApp.with(this),photos, context!!)
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
         item_recycler.layoutManager = linearLayoutManager
         item_recycler.adapter = recyclerViewAdapter
 
         recyclerViewAdapter.recyclerViewItemClickListener = object: ApartmentImageAdapter.RecyclerViewItemClickListener {
+            override fun changeThumbnail(position: Int) {
+                Collections.swap(photos,position,0)
+                (activity as MainActivity).changeThumbnail(position)
+                recyclerViewAdapter.notifyDataSetChanged()
+            }
+
             override fun onItemClick(view: View, position: Int) {
                 photos.removeAt(position)
                 (activity as MainActivity).removeImageFromPosition(position)
@@ -86,6 +94,8 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         observeApartmentStreetStatus()
         observeApartmentNumberStatus()
         observeUserPhoneNumberStatus()
+        observeApartmentAreaStatus()
+        observeMaxPeopleStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,6 +119,9 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             val city = apartment_city_editText.text.toString().trim()
             val street = apartment_street_editText.text.toString().trim()
             val apartmentNumber = apartment_number_editText.text.toString()
+            val tempPrice = apartment_price_editText.text.toString().trim().toFloat()
+            val maxPeople = maxPeople_editText.text.toString().trim().toInt()
+            val area = apartment_area_editText.text.toString().trim().toInt()
             val phoneNumber = user_phoneNumber_editText.text.toString().trim()
 
             val fullAddress = "$street $apartmentNumber, $city"
@@ -120,7 +133,9 @@ class ApartmentFragment: Fragment(), InjectableFragment {
                 lat = latLng.latitude
             }
 
-            viewModel?.addApartment(name,city,street,apartmentNumber, phoneNumber, lat, lng)
+            val price = (tempPrice*100).toInt()
+
+            viewModel?.addApartment(name, city, street, apartmentNumber, price, maxPeople, area, phoneNumber, lat, lng)
         }
 
         apartment_name_editText.addTextChangedListener(object: TextWatcher{
@@ -207,22 +222,48 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
 
         })
+
+        apartment_area_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentArea = apartment_area_editText.text.toString()
+
+                viewModel?.apartmentAreaValidation(apartmentArea)
+            }
+
+        })
+
+        maxPeople_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val maxPeople = maxPeople_editText.text.toString()
+
+                viewModel?.apartmentPeopleValidation(maxPeople)
+            }
+
+        })
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
-            if(photos.size > 0) {
-                val newPhotoList: ArrayList<Picture> = arrayListOf()
-                for (image in returnedPhotos) {
-                    newPhotoList.add(Picture(image, BitmapFactory.decodeFile(image)))
-                }
-                recyclerViewAdapter.updateItems(newPhotoList)
-            }else{
-                for (image in returnedPhotos) {
-                    photos.add(Picture(image, BitmapFactory.decodeFile(image)))
-                }
+        if(photos.size > 0) {
+            val newPhotoList: ArrayList<Picture> = arrayListOf()
+            for (image in returnedPhotos) {
+                newPhotoList.add(Picture(image, BitmapFactory.decodeFile(image)))
             }
-            item_recycler.scrollToPosition(photos.size - 1)
-            photosCheckbox.isChecked = true
+            recyclerViewAdapter.updateItems(newPhotoList)
+        }else{
+            for (image in returnedPhotos) {
+                photos.add(Picture(image, BitmapFactory.decodeFile(image)))
+            }
+        }
+        item_recycler.scrollToPosition(photos.size - 1)
+        photosCheckbox.isChecked = returnedPhotos.size > 0
     }
 
     fun observeApartmentIdLiveData(){
@@ -296,6 +337,26 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         viewModel?.userPhoneNumber?.observe(this, Observer {
             handleNewPhoneNumber(it)
         })
+    }
+
+    private fun observeMaxPeopleStatus() {
+        viewModel?.apartmentMaxPeopleStatus?.observe(this, Observer {
+            handleNewInt(it, maxPeople_wrapper)
+        })
+    }
+
+    private fun observeApartmentAreaStatus() {
+        viewModel?.apartmentAreaStatus?.observe(this, Observer {
+            handleNewInt(it, apartment_area_wrapper)
+        })
+    }
+
+    private fun handleNewInt(status: Boolean, input: TextInputLayout){
+        if(status){
+            input.isErrorEnabled = false
+        }else{
+            input.error = getString(R.string.wrong_number_label)
+        }
     }
 
     private fun handleNewPhoneNumber(status: ApartmentViewModel.Status) {

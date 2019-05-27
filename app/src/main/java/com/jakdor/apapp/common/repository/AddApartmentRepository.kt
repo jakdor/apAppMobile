@@ -30,11 +30,11 @@ class AddApartmentRepository
 
     val sendingImages: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
-    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, phoneNumber: String,
-                     lat: Float, long: Float){
+    fun addApartment(name: String, city: String, street: String, apartmentNumber: String, price: Int, maxPeople: Int,
+                     area: Int, phoneNumber: String, lat: Float, long: Float){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, phoneNumber,
-                lat, long)))
+            bearerAuthWrapper.apiAuthService.addApartment(ApartmentAdd(name, city, street, apartmentNumber, price,
+                maxPeople, area, phoneNumber, lat, long)))
                 .observeOn(rxSchedulersFacade.io())
                 .subscribeOn(rxSchedulersFacade.io())
                 .subscribe({ t: ApartmentAddResponse? -> if(t!=null) apartmentIdSubject.onNext(t)},

@@ -82,24 +82,81 @@
 				android:inputType="text"
 				android:layout_gravity="center"/>
 	</com.google.android.material.textfield.TextInputLayout>
-		<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/user_phoneNumber_wrapper"
+		<LinearLayout
+				android:id="@+id/linearWrapper1"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
+				android:orientation="horizontal"
 				android:layout_marginStart="30dp"
 				android:layout_marginEnd="30dp"
-				android:hint="@string/user_phoneNumber_label"
+				android:layout_marginTop="10dp"
 				app:layout_constraintTop_toBottomOf="@+id/apartment_number_wrapper"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintEnd_toStartOf="parent"
 				app:layout_constraintHorizontal_bias="0.0">
-			<EditText
-					android:id="@+id/user_phoneNumber_editText"
-					android:layout_width="match_parent"
+			<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/maxPeople_wrapper"
+					android:layout_width="200dp"
 					android:layout_height="wrap_content"
-					android:inputType="phone"
-					android:layout_gravity="center"/>
-		</com.google.android.material.textfield.TextInputLayout>
+					android:hint="@string/max_people_label">
+				<EditText
+						android:id="@+id/maxPeople_editText"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="numberSigned"
+						android:layout_gravity="center"/>
+			</com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/apartment_price_wrapper"
+					android:layout_width="138dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="10dp"
+					android:hint="@string/price_label">
+				<EditText
+						android:id="@+id/apartment_price_editText"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="numberDecimal"
+						android:layout_gravity="center"/>
+			</com.google.android.material.textfield.TextInputLayout>
+		</LinearLayout>
+		<LinearLayout
+				android:id="@+id/linearWrapper2"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginStart="30dp"
+				android:layout_marginEnd="30dp"
+				android:layout_marginTop="10dp"
+				app:layout_constraintTop_toBottomOf="@+id/linearWrapper1"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="parent"
+				app:layout_constraintHorizontal_bias="0.0">
+			<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/user_phoneNumber_wrapper"
+					android:layout_width="200dp"
+					android:layout_height="wrap_content"
+					android:hint="@string/user_phoneNumber_label">
+				<EditText
+						android:id="@+id/user_phoneNumber_editText"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="phone"
+						android:layout_gravity="center"/>
+			</com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/apartment_area_wrapper"
+					android:layout_width="138dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="10dp"
+					android:hint="@string/area_label">
+				<EditText
+						android:id="@+id/apartment_area_editText"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="numberSigned"
+						android:layout_gravity="center"/>
+			</com.google.android.material.textfield.TextInputLayout>
+		</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
