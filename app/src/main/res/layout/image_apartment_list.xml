@@ -22,11 +22,20 @@
 		<Button
 				android:id="@+id/delete_image"
 				android:text="@string/delete_apartment_image"
-				android:background="@drawable/background"
+				android:background="@drawable/button_without_radius"
 				android:textColor="@color/white"
 				android:visibility="gone"
+				android:layout_marginBottom="2dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
+		<Button
+			android:id="@+id/thumbnail_button"
+			android:text="@string/set_as_thumbnail_label"
+			android:background="@drawable/button_without_radius"
+			android:textColor="@color/white"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
 		</LinearLayout>
 	</androidx.cardview.widget.CardView>
 </ScrollView>

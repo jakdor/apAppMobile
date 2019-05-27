@@ -31,7 +31,9 @@ import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.io.File
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
@@ -266,6 +268,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun removeImageFromPosition(position: Int){
         returnedImages.removeAt(position)
+    }
+
+    fun changeThumbnail(position: Int) {
+        Collections.swap(returnedImages, position, 0)
     }
 
     /**

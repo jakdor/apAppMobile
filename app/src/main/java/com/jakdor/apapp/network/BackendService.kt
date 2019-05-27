@@ -7,6 +7,7 @@ import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import okhttp3.MultipartBody
+import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
@@ -23,7 +24,11 @@ interface BackendService {
 
     @Multipart
     @POST("Pictures/{idAp}")
-    fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part): Observable<ResponseBody>
+    fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part,
+                          @Query("isThumb") isThumb: Boolean): Observable<ResponseBody>
+
+    @GET("User/phoneNumber")
+    fun getUserPhoneNumber(): Observable<String>
 
     @POST("Auth/refresh")
     fun postRefresh(@Body refreshRequest: RefreshRequest): Observable<RefreshResponse?>
