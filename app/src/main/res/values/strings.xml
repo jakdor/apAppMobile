@@ -57,4 +57,7 @@
 	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
 	<string name="user_details_button">profil użytkownika</string>
 	<string name="enlarged_image_desc">enlarged image</string>
+	<string name="session_expired_toast">Sesja wygasła</string>
+	<string name="no_api_response_toast">Serwer nie odpowiada - sprawdź połączenie</string>
+	<string name="no_internet_toast">Wymagane połączenie z Internetem</string>
 </resources>
