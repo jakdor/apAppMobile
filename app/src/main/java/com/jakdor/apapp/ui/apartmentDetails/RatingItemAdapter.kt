@@ -55,8 +55,12 @@ constructor(private val apartmentVector: Vector<Rating>): RecyclerView.Adapter<R
     }
 
     private fun formatRatingDisplayModel(ratingModel: Rating): RatingDisplayModel{
-        val avg = (ratingModel.locationRating + ratingModel.ownerRating
-                + ratingModel.priceRating + ratingModel.standardRating) / 4.0f
+        val avg = (ratingModel.locationRating * ApartmentDetailsViewModel.locationRatingWeight
+                + ratingModel.ownerRating * ApartmentDetailsViewModel.ownerRatingWeight
+                + ratingModel.priceRating * ApartmentDetailsViewModel.priceRatingWeight
+                + ratingModel.standardRating * ApartmentDetailsViewModel.standardRatingWeight) /
+                (ApartmentDetailsViewModel.ownerRatingWeight + ApartmentDetailsViewModel.locationRatingWeight
+                        + ApartmentDetailsViewModel.standardRatingWeight + ApartmentDetailsViewModel.priceRatingWeight)
 
         return RatingDisplayModel(
             ratingModel.idRating,

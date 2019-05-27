@@ -95,6 +95,8 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         viewModel?.ratingListLiveData?.observe(this, Observer { handleNewRatingList(it) })
         viewModel?.observeRatingListSubject()
         viewModel?.requestNewRatings(apartmentId)
+
+        apartment_rating_bar.rating = viewModel?.calculateAvgRating(apartmentId) ?: 0.0f
     }
 
     private fun handleNewRatingList(ratings: List<Rating>){

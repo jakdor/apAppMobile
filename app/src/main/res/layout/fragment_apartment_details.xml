@@ -122,7 +122,6 @@
 						android:layout_marginTop="8dp"
 						android:layout_gravity="center"
 						android:numStars="5"
-						android:rating="@{safeUnbox(apartment.rating)}"
 						android:isIndicator="true"/>
 
 				<androidx.recyclerview.widget.RecyclerView

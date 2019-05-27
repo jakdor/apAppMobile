@@ -52,4 +52,23 @@ class ApartmentDetailsViewModel
             null
         }
     }
+
+    fun calculateAvgRating(apartmentId: Int): Float{
+        val apartment = getApartment(apartmentId) ?: return 0.0f
+
+        var divider = 0.0f
+
+        val sum = apartment.ownerRating * ownerRatingWeight + apartment.locationRating * locationRatingWeight +
+                apartment.standardRating * standardRatingWeight + apartment.priceRating * priceRatingWeight
+        divider += ownerRatingWeight + locationRatingWeight + standardRatingWeight + priceRatingWeight
+
+        return if(divider == 0.0f) 0.0f else sum/divider
+    }
+
+    companion object{
+        const val ownerRatingWeight: Float = 1.0f
+        const val locationRatingWeight: Float = 1.0f
+        const val standardRatingWeight: Float = 1.0f
+        const val priceRatingWeight: Float = 1.0f
+    }
 }
