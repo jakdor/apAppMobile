@@ -3,11 +3,12 @@ package com.jakdor.apapp.network
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
 import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.common.model.userDetails.UserDetails
+import com.jakdor.apapp.common.model.userDetails.UserPhoneNumberResponse
 import io.reactivex.Observable
 import okhttp3.MultipartBody
-import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.*
 

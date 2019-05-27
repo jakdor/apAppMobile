@@ -1,18 +1,14 @@
 package com.jakdor.apapp.common.repository
 
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
-import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
-import com.jakdor.apapp.common.model.auth.UserPhoneNumberResponse
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.Response
 import okhttp3.ResponseBody
 import timber.log.Timber
 import javax.inject.Inject

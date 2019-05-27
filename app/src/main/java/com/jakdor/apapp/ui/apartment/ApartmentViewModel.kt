@@ -6,7 +6,7 @@ import android.location.Geocoder
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
-import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
 import com.jakdor.apapp.common.repository.AddApartmentRepository
 import com.jakdor.apapp.common.repository.UserDetailsRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade

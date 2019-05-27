@@ -1,18 +1,15 @@
 package com.jakdor.apapp.common.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.jakdor.apapp.common.model.auth.UserPhoneNumberResponse
+import com.jakdor.apapp.common.model.userDetails.UserPhoneNumberResponse
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory
-import com.jakdor.apapp.ui.userPanel.UserPanelViewModel
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class UserDetailsRepository
 @Inject constructor(
