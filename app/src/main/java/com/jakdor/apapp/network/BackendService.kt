@@ -24,7 +24,8 @@ interface BackendService {
 
     @Multipart
     @POST("Pictures/{idAp}")
-    fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part): Observable<ResponseBody>
+    fun addApartmentImage(@Path("idAp") apartmentId: Int, @Part image: MultipartBody.Part,
+                          @Query("isThumb") isThumb: Boolean): Observable<ResponseBody>
 
     @GET("User/phoneNumber")
     fun getUserPhoneNumber(): Observable<String>

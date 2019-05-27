@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
+import org.w3c.dom.Text
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -96,6 +98,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         observeUserPhoneNumberStatus()
         observeApartmentAreaStatus()
         observeMaxPeopleStatus()
+        observeApartmentPriceStatus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,8 +123,16 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             val street = apartment_street_editText.text.toString().trim()
             val apartmentNumber = apartment_number_editText.text.toString()
             val tempPrice = apartment_price_editText.text.toString().trim().toFloat()
-            val maxPeople = maxPeople_editText.text.toString().trim().toInt()
-            val area = apartment_area_editText.text.toString().trim().toInt()
+            val tempMaxPeople = maxPeople_editText.text.toString().trim()
+            var maxPeople = 0
+            if(tempMaxPeople.isNotEmpty()){
+                maxPeople = tempMaxPeople.toInt()
+            }
+            val tempArea = apartment_area_editText.text.toString().trim()
+            var area = 0
+            if(tempArea.isNotEmpty()){
+                area = tempArea.toInt()
+            }
             val phoneNumber = user_phoneNumber_editText.text.toString().trim()
 
             val fullAddress = "$street $apartmentNumber, $city"
@@ -248,6 +259,19 @@ class ApartmentFragment: Fragment(), InjectableFragment {
             }
 
         })
+
+        apartment_price_editText.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val apartmentPrice = apartment_price_editText.text.toString()
+
+                viewModel?.apartmentPriceValidation(apartmentPrice)
+            }
+
+        })
     }
 
     fun onPhotosReturned(returnedPhotos: ArrayList<String>) {
@@ -276,6 +300,7 @@ class ApartmentFragment: Fragment(), InjectableFragment {
         if(apartmentStatus.apartmentAddStatus == ApartmentAddStatusEnum.OK && photos.size>0){
             add_apartment_button.visibility = View.GONE
             progress_vertical.visibility = View.VISIBLE
+            progress_textView.text = (sentImagesCount.toString() + "/" + photos.size.toString())
             viewModel?.addApartmentImage(apartmentStatus.id, photos)
         }else if(photos.size == 0){
             (activity as MainActivity).switchToApartmentListFragment()
@@ -348,6 +373,12 @@ class ApartmentFragment: Fragment(), InjectableFragment {
     private fun observeApartmentAreaStatus() {
         viewModel?.apartmentAreaStatus?.observe(this, Observer {
             handleNewInt(it, apartment_area_wrapper)
+        })
+    }
+
+    private fun observeApartmentPriceStatus() {
+        viewModel?.apartmentPriceStatus?.observe(this, Observer {
+            handleApartmentStatus(it, apartment_price_wrapper)
         })
     }
 

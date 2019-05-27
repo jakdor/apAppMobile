@@ -42,9 +42,9 @@ class AddApartmentRepository
         )
     }
 
-    fun addApartmentImage(apartmentId: Int, image: MultipartBody.Part){
+    fun addApartmentImage(apartmentId: Int, image: MultipartBody.Part, isThumb: Boolean){
         rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.addApartmentImage(apartmentId,image))
+            bearerAuthWrapper.apiAuthService.addApartmentImage(apartmentId,image, isThumb))
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({t: ResponseBody -> Timber.d("Success: %s", t.toString())},

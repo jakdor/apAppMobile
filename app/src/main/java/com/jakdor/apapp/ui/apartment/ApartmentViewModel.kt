@@ -36,11 +36,13 @@ class ApartmentViewModel
     private var isPhoneNumberCorrect: Boolean = false
     private var isAreaCorrect: Boolean = true
     private var isMaxPeopleCorrect: Boolean = true
+    private var isPriceNotEmpty: Boolean = false
 
     val apartmentNameStatus = MutableLiveData<Boolean>().apply { value = true }
     val apartmentCityStatus = MutableLiveData<Boolean>().apply { value = true }
     val apartmentStreetStatus = MutableLiveData<Boolean>().apply { value = true }
     val apartmentMaxPeopleStatus = MutableLiveData<Boolean>().apply { value = true }
+    val apartmentPriceStatus = MutableLiveData<Boolean>().apply { value = true }
     val apartmentAreaStatus = MutableLiveData<Boolean>().apply { value = true }
     val userPhoneNumber = MutableLiveData<Status>().apply { value = Status.OK }
     val apartmentNumberStatus = MutableLiveData<Status>().apply { value = Status.OK }
@@ -68,6 +70,7 @@ class ApartmentViewModel
     }
 
     fun addApartmentImage(apartmentId: Int, imageList: ArrayList<Picture>){
+        var isThumb = true
         for(image in imageList){
             val fileImage = File(image.picturePath)
 
@@ -75,7 +78,8 @@ class ApartmentViewModel
 
             val filePart = MultipartBody.Part.createFormData("", fileImage.name, requestBody)
 
-            addApartmentRepository.addApartmentImage(apartmentId, filePart)
+            addApartmentRepository.addApartmentImage(apartmentId, filePart, isThumb)
+            isThumb = false
         }
     }
 
@@ -100,7 +104,8 @@ class ApartmentViewModel
         isNameCorrect = false
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect 
+                && isPriceNotEmpty)
 
         if(apartmentName.trim().isEmpty()){
             isNameCorrect = false
@@ -111,7 +116,8 @@ class ApartmentViewModel
         }
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect 
+                && isPriceNotEmpty)
     }
 
     fun apartmentCityValidation(apartmentCity: String){
@@ -119,7 +125,8 @@ class ApartmentViewModel
         isCityCorrect = false
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect 
+                && isPriceNotEmpty)
 
         if(apartmentCity.trim().isEmpty()){
             isCityCorrect = false
@@ -131,7 +138,8 @@ class ApartmentViewModel
 
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
     }
 
     fun apartmentStreetValidation(apartmentStreet: String){
@@ -139,7 +147,8 @@ class ApartmentViewModel
         isStreetCorrect = false
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
         if(apartmentStreet.trim().isEmpty()){
             isStreetCorrect = false
@@ -150,7 +159,29 @@ class ApartmentViewModel
         }
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
+    }
+
+    fun apartmentPriceValidation(apartmentPrice: String){
+
+        isPriceNotEmpty = false
+
+        addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
+
+        if(apartmentPrice.trim().isEmpty()){
+            isPriceNotEmpty = false
+            apartmentStreetStatus.postValue(false)
+        }else{
+            isPriceNotEmpty = true
+            apartmentStreetStatus.postValue(true)
+        }
+
+        addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
     }
 
     fun userPhoneNumberValidation(phoneNumber: String){
@@ -160,7 +191,8 @@ class ApartmentViewModel
         val phoneNumberPattern: Pattern = Pattern.compile("^((\\+48)|(0))?[ ]?[0-9]{3}[\\- ]?[0-9]{3}[\\- ]?[0-9]{3}$")
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
         if(phoneNumber.trim().isEmpty()){
             isPhoneNumberCorrect = false
@@ -176,12 +208,14 @@ class ApartmentViewModel
         }
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
     }
 
     fun apartmentNumberValidation(apartmentNumber: String){
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
         val apartmentNumberPattern: Pattern = Pattern.compile("^([0-9]+)([/])([0-9]+\$)")
         val apartmentNumberPattern2: Pattern = Pattern.compile("^([0-9]+\$)")
@@ -192,7 +226,8 @@ class ApartmentViewModel
                     isApartmentNumberCorrect = true
                     apartmentNumberStatus.postValue(Status.OK)
                     addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                            && isPriceNotEmpty)
                     return
                 }
                 isApartmentNumberCorrect = false
@@ -209,7 +244,8 @@ class ApartmentViewModel
         apartmentNumberStatus.postValue(Status.OK)
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
     }
 
@@ -218,7 +254,8 @@ class ApartmentViewModel
         isMaxPeopleCorrect = false
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
         val numberPattern: Pattern = Pattern.compile("^([0-9]+\$)")
 
@@ -237,7 +274,8 @@ class ApartmentViewModel
         }
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
     }
 
     fun apartmentAreaValidation(number: String){
@@ -245,7 +283,8 @@ class ApartmentViewModel
         isAreaCorrect = false
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
 
         val numberPattern: Pattern = Pattern.compile("^([0-9]+\$)")
 
@@ -264,7 +303,8 @@ class ApartmentViewModel
         }
 
         addApartmentPossibility.postValue(isNameCorrect && isCityCorrect && isStreetCorrect &&
-                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect)
+                isApartmentNumberCorrect && isPhoneNumberCorrect && isAreaCorrect && isMaxPeopleCorrect
+                && isPriceNotEmpty)
     }
 
     enum class Status {
