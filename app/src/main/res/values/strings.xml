@@ -11,10 +11,10 @@
 	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
 	<string name="rating_label">Ocena</string>
-	<string name="nameLabel">Imię</string>
-	<string name="surnameLabel">Nazwisko</string>
-	<string name="emailLabel">E-mail</string>
-	<string name="loginLabel">Login</string>
+	<string name="nameLabel">Imię: </string>
+	<string name="surnameLabel">Nazwisko: </string>
+	<string name="emailLabel">E-mail: </string>
+	<string name="loginLabel">Login: </string>
 	<string name="passwordLabel">Hasło</string>
 	<string name="re_passwordLabel">Powtórz hasło</string>
 	<string name="registerButton">Zarejestruj</string>
