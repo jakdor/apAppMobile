@@ -77,6 +77,8 @@ class ApartmentListFragment: Fragment(), InjectableFragment {
     }
 
     fun handleNewApartmentList(model: ApartmentList){
+        if(model.apartments == null) swipe_refresh_layout.isRefreshing = false
+
         if (!recyclerViewInit) initRecyclerView()
         if(model.apartments != null) recyclerViewAdapter.updateItems(model.apartments!!.toMutableList())
 

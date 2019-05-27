@@ -31,7 +31,10 @@ class ApartmentRepository
             .subscribe({ t: ApartmentList? -> if(t != null){
                 apartmentsListSubject.onNext(t)
                 apartmentListCache = t.apartments
-            }},{e ->  Timber.e(e, "ERROR observing Apartments")}))
+            }},{e -> run {
+                apartmentsListSubject.onNext(ApartmentList(null, false))
+                Timber.e(e, "ERROR observing ApartmentsListSubject")
+            }}))
     }
 
     fun dispose(){

@@ -6,17 +6,21 @@ import com.jakdor.apapp.common.model.auth.*
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.RetrofitFactory
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.nio.charset.Charset
 import javax.inject.Inject
 
 class AuthRepository
-@Inject constructor(private val retrofitFactory: RetrofitFactory,
+@Inject constructor(retrofitFactory: RetrofitFactory,
                     private val preferencesRepository: PreferencesRepository){
 
     private var isLogged: Boolean = false
     private var loginStr: String = ""
     private var bearerToken : String = ""
     private var refreshToken : String = ""
+
+    val authStatusSubject = PublishSubject.create<AuthStatusEnum>()
 
     init {
         getTokens()
@@ -37,6 +41,7 @@ class AuthRepository
                     bearerToken = it.accessToken ?: ""
                     refreshToken = it.refreshToken ?: ""
                     saveTokens()
+                    authStatusSubject.onNext(AuthStatusEnum.LOGGED_IN)
                 }
             }
             .flatMap { 
@@ -65,7 +70,7 @@ class AuthRepository
             }
     }
 
-    fun saveTokens(){
+    private fun saveTokens(){
         val tokenObj = TokenStorageModel(bearerToken, refreshToken)
         val tokenSerialized = Gson().toJson(tokenObj)
         val tokenHashed = Base64.encode(tokenSerialized.toByteArray(
@@ -74,7 +79,7 @@ class AuthRepository
         preferencesRepository.saveAsync(LOGIN_KEY, loginStr)
     }
 
-    fun getTokens(){
+    private fun getTokens(){
         val tokenHashed = preferencesRepository.getString(TOKEN_KEY)
         if(tokenHashed.isEmpty()){
             isLogged = false
@@ -91,6 +96,30 @@ class AuthRepository
 
     fun isLoggedIn(): Boolean{
         return isLogged
+    }
+
+    fun noInternet(){
+        Timber.i("No Internet connection")
+        authStatusSubject.onNext(AuthStatusEnum.NO_INTERNET)
+    }
+
+    fun requestFailed(){
+        Timber.i("Last api request failed")
+        authStatusSubject.onNext(AuthStatusEnum.REQUEST_FAILED)
+    }
+
+    fun forceLogout(){
+        Timber.i("Force logout")
+        authStatusSubject.onNext(AuthStatusEnum.LOGOUT_FORCED)
+    }
+
+    fun userLogout(){
+        Timber.i("User init logout")
+        authStatusSubject.onNext(AuthStatusEnum.LOGOUT_USER)
+    }
+
+    enum class AuthStatusEnum {
+        IDLE, LOGGED_IN, LOGOUT_FORCED, LOGOUT_USER, REQUEST_FAILED, NO_INTERNET
     }
 
     companion object {
