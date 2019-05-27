@@ -105,6 +105,14 @@
 				         app:title = "@{apartment.street}"
 				         app:details = "@{apartment.apartmentNum}"/>
 
+				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_maxPeople_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/person}"
+				         app:title = "@{@string/max_people_label}"
+				         app:details = "@{apartment.maxPeople.toString()}"/>
+
 				<TextView
 						android:id="@+id/apartment_rating_label"
 						android:layout_width="match_parent"
