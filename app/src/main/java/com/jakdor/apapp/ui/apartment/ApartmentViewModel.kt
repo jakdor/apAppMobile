@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
 import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
 import com.jakdor.apapp.common.repository.AddApartmentRepository
+import com.jakdor.apapp.common.repository.UserDetailsRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -21,13 +22,15 @@ import kotlin.collections.ArrayList
 class ApartmentViewModel
 @Inject constructor(application: Application,
                     rxSchedulersFacade: RxSchedulersFacade,
-                    private val addApartmentRepository: AddApartmentRepository):
+                    private val addApartmentRepository: AddApartmentRepository,
+                    private val userDetailsRepository: UserDetailsRepository):
                     BaseViewModel(application, rxSchedulersFacade){
 
     val addApartmentPossibility = MutableLiveData<Boolean>().apply { value = false }
 
     val apartmentIdLiveData = MutableLiveData<ApartmentAddResponse>()
     val sentImagesLiveData = MutableLiveData<Boolean>()
+    val userPhoneNumberLiveData = MutableLiveData<String>()
 
     private var isNameCorrect: Boolean = false
     private var isCityCorrect: Boolean = false
@@ -61,6 +64,19 @@ class ApartmentViewModel
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({t: Boolean -> sentImagesLiveData.postValue(t)},
                 {e-> Timber.e(e,"ERROR observing sending images")}))
+    }
+
+    fun observeUserPhoneNumber(){
+        disposable.add(userDetailsRepository.userPhoneNumber
+            .observeOn(rxSchedulersFacade.io())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({t: String -> userPhoneNumberLiveData.postValue(t)},
+                {e-> Timber.e(e,"ERROR observing phone number")}))
+    }
+
+    fun getUserPhoneNumber(){
+        observeUserPhoneNumber()
+        userDetailsRepository.getUserPhoneNumber()
     }
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, price: Int, maxPeople: Int,

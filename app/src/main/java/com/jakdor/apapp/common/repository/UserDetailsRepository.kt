@@ -1,6 +1,7 @@
 package com.jakdor.apapp.common.repository
 
 import androidx.lifecycle.MutableLiveData
+import com.jakdor.apapp.common.model.auth.UserPhoneNumberResponse
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
@@ -27,6 +28,8 @@ class UserDetailsRepository
 
     val userDetailsSubject: BehaviorSubject<UserDetails> = BehaviorSubject.create()
 
+    val userPhoneNumber: BehaviorSubject<String> = BehaviorSubject.create()
+
     var error: Boolean = false
 
     fun requestUserDetails() {
@@ -42,6 +45,16 @@ class UserDetailsRepository
                     }
                 },
                     { e -> Timber.e(e, "ERROR observing userDetails"); error = true })
+        )
+    }
+
+    fun getUserPhoneNumber(){
+        rxDisposables.add(bearerAuthWrapper.wrapCall(
+            bearerAuthWrapper.apiAuthService.getUserPhoneNumber())
+            .observeOn(rxSchedulersFacade.io())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe ({ t: UserPhoneNumberResponse -> userPhoneNumber.onNext(t.userPhoneNumber)},
+                {e -> Timber.e(e,"ERROR getting user phone number")})
         )
     }
 
