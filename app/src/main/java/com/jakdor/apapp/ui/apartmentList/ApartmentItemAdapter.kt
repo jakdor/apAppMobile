@@ -10,14 +10,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.jakdor.apapp.R
 import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.databinding.ItemApartmentListBinding
-import com.jakdor.apapp.utils.diffCallback.ApartmentItemDiffCallback
+import com.jakdor.apapp.utils.DiffCallbackImpl
 import java.util.*
 
 class ApartmentItemAdapter
 constructor(private val apartmentVector: Vector<Apartment>,
             private val glide: RequestManager): RecyclerView.Adapter<ApartmentItemAdapter.Holder>() {
 
-    lateinit var recyclerViewItemClickListener: RecyclerViewItemClickListener
+    var recyclerViewItemClickListener: RecyclerViewItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -37,7 +37,7 @@ constructor(private val apartmentVector: Vector<Apartment>,
             .into(holder.binding.apartmentImage)
 
         holder.binding.apartmentItem.setOnClickListener{
-            recyclerViewItemClickListener.onItemClick(item.id)
+            recyclerViewItemClickListener?.onItemClick(item.id)
         }
     }
 
@@ -54,7 +54,7 @@ constructor(private val apartmentVector: Vector<Apartment>,
 
         val handler = Handler()
         Thread(Runnable {
-            val diffCallback = ApartmentItemDiffCallback(oldItemList, newItemList)
+            val diffCallback = DiffCallbackImpl(oldItemList, newItemList)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
             handler.post {
                 diffResult.dispatchUpdatesTo(this)
