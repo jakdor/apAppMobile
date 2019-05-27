@@ -31,7 +31,7 @@ constructor(private val apartmentVector: Vector<Apartment>,
 
         glide.load(item.imgThumb)
             .apply(RequestOptions()
-                    .fitCenter()
+                    .centerCrop()
                     .placeholder(R.mipmap.ic_launcher_round)
             )
             .into(holder.binding.apartmentImage)
