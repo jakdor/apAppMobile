@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jakdor.apapp.arch.BaseViewModel
 import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
 import com.jakdor.apapp.common.repository.AddApartmentRepository
+import com.jakdor.apapp.common.repository.UserDetailsRepository
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -21,7 +22,8 @@ import kotlin.collections.ArrayList
 class ApartmentViewModel
 @Inject constructor(application: Application,
                     rxSchedulersFacade: RxSchedulersFacade,
-                    private val addApartmentRepository: AddApartmentRepository):
+                    private val addApartmentRepository: AddApartmentRepository,
+                    private val userDetailsRepository: UserDetailsRepository):
                     BaseViewModel(application, rxSchedulersFacade){
 
     val addApartmentPossibility = MutableLiveData<Boolean>().apply { value = false }
@@ -65,7 +67,7 @@ class ApartmentViewModel
     }
 
     fun observeUserPhoneNumber(){
-        disposable.add(addApartmentRepository.userPhoneNumber
+        disposable.add(userDetailsRepository.userPhoneNumber
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
             .subscribe({t: String -> userPhoneNumberLiveData.postValue(t)},
@@ -74,7 +76,7 @@ class ApartmentViewModel
 
     fun getUserPhoneNumber(){
         observeUserPhoneNumber()
-        addApartmentRepository.getUserPhoneNumber()
+        userDetailsRepository.getUserPhoneNumber()
     }
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, price: Int, maxPeople: Int,

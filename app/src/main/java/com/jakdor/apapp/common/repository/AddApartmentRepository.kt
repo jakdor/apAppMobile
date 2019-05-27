@@ -29,8 +29,6 @@ class AddApartmentRepository
 
     val apartmentIdSubject: BehaviorSubject<ApartmentAddResponse> = BehaviorSubject.create()
 
-    val userPhoneNumber: BehaviorSubject<String> = BehaviorSubject.create()
-
     val sendingImages: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     fun addApartment(name: String, city: String, street: String, apartmentNumber: String, price: Int, maxPeople: Int,
@@ -53,16 +51,6 @@ class AddApartmentRepository
             .subscribe({t: ResponseBody -> Timber.d("Success: %s", t.toString())},
                 { e -> Timber.e(e, "ERROR adding Apartment image"); sendingImages.onNext(false) },
                 {sendingImages.onNext(true)})
-        )
-    }
-
-    fun getUserPhoneNumber(){
-        rxDisposables.add(bearerAuthWrapper.wrapCall(
-            bearerAuthWrapper.apiAuthService.getUserPhoneNumber())
-            .observeOn(rxSchedulersFacade.io())
-            .subscribeOn(rxSchedulersFacade.io())
-            .subscribe ({ t: UserPhoneNumberResponse -> userPhoneNumber.onNext(t.userPhoneNumber)},
-                {e -> Timber.e(e,"ERROR getting user phone number")})
         )
     }
 
