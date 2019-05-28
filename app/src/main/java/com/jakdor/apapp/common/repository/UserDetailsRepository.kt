@@ -1,28 +1,17 @@
 package com.jakdor.apapp.common.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.jakdor.apapp.common.model.auth.UserPhoneNumberResponse
+import com.jakdor.apapp.common.model.userDetails.PhoneNumberResponse
 import com.jakdor.apapp.common.model.userDetails.UserDetails
-import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
-import com.jakdor.apapp.network.RetrofitFactory
-import com.jakdor.apapp.ui.userPanel.UserPanelViewModel
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class UserDetailsRepository
-@Inject constructor(
-    retrofitFactory: RetrofitFactory,
-    private val bearerAuthWrapper: BearerAuthWrapper,
-    private val rxSchedulersFacade: RxSchedulersFacade
-) {
-
-    private val apiService: BackendService =
-        retrofitFactory.createService(BackendService.API_URL, BackendService::class.java)
+@Inject constructor(private val bearerAuthWrapper: BearerAuthWrapper,
+                    private val rxSchedulersFacade: RxSchedulersFacade) {
 
     private val rxDisposables: CompositeDisposable = CompositeDisposable()
 
@@ -53,7 +42,7 @@ class UserDetailsRepository
             bearerAuthWrapper.apiAuthService.getUserPhoneNumber())
             .observeOn(rxSchedulersFacade.io())
             .subscribeOn(rxSchedulersFacade.io())
-            .subscribe ({ t: UserPhoneNumberResponse -> userPhoneNumber.onNext(t.userPhoneNumber)},
+            .subscribe ({ t: PhoneNumberResponse -> userPhoneNumber.onNext(t.userPhoneNumber)},
                 {e -> Timber.e(e,"ERROR getting user phone number")})
         )
     }

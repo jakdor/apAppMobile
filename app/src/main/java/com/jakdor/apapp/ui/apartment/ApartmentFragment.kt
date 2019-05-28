@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,8 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputLayout
 import com.jakdor.apapp.R
-import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
-import com.jakdor.apapp.common.model.auth.ApartmentAddStatusEnum
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddStatusEnum
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.add_new_apartment.*
 import kotlinx.android.synthetic.main.new_apartment.*
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class ApartmentFragment: Fragment(), InjectableFragment {

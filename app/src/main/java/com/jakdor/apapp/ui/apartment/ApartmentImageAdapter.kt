@@ -1,21 +1,17 @@
 package com.jakdor.apapp.ui.apartment
 
-import android.content.Context
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.jakdor.apapp.R
-import com.jakdor.apapp.utils.diffCallback.ApartmentImageDiffCallback
-import java.util.*
-import kotlin.collections.ArrayList
+import com.jakdor.apapp.utils.DiffCallbackImpl
 
 class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
@@ -86,7 +82,7 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
         val handler = Handler()
 
         Thread(Runnable {
-            val diffCallback = ApartmentImageDiffCallback(oldImagesList, newImagesList)
+            val diffCallback = DiffCallbackImpl(oldImagesList, newImagesList)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
             handler.post {
                 diffResult.dispatchUpdatesTo(this)

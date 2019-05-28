@@ -81,6 +81,16 @@
 					android:orientation="vertical"
 					android:background="@color/materialGrey">
 
+				<TextView
+					android:id="@+id/apartment_price_label"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@{viewModel.convert(apartment.price)}"
+					android:layout_marginStart="30dp"
+					android:layout_marginBottom="20dp"
+					android:textSize="30sp"
+					android:textColor="@color/black"/>
+
 				<include layout="@layout/item_details"
 				         android:id="@+id/apartment_desc_details"
 				         android:layout_width="match_parent"
@@ -105,6 +115,22 @@
 				         app:title = "@{apartment.street}"
 				         app:details = "@{apartment.apartmentNum}"/>
 
+				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_maxPeople_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/ic_people}"
+				         app:title = "@{@string/max_people_label}"
+				         app:details = "@{Integer.toString(apartment.maxPeople)}"/>
+
+				<include layout="@layout/item_details"
+				         android:id="@+id/apartment_area_details"
+				         android:layout_width="match_parent"
+				         android:layout_height="wrap_content"
+				         app:icon = "@{@drawable/ic_area}"
+				         app:title = "@{@string/area_label}"
+				         app:details = "@{@string/area_with_square_meters(Integer.toString(apartment.area))}"/>
+
 				<TextView
 						android:id="@+id/apartment_rating_label"
 						android:layout_width="match_parent"
@@ -122,8 +148,12 @@
 						android:layout_marginTop="8dp"
 						android:layout_gravity="center"
 						android:numStars="5"
-						android:rating="@{safeUnbox(apartment.rating)}"
 						android:isIndicator="true"/>
+
+				<androidx.recyclerview.widget.RecyclerView
+						android:id="@+id/apartment_rating_recycler"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
 
 				<View
 						android:layout_width="match_parent"
@@ -132,6 +162,18 @@
 			</LinearLayout>
 
 		</androidx.core.widget.NestedScrollView>
+
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/call_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="90dp"
+				android:src="@drawable/ic_phone"
+				android:focusable="false"
+				android:clickable="false"
+				app:borderWidth="0dp"
+				app:layout_anchor="@id/apartment_appbar_container"
+				app:layout_anchorGravity="bottom|right|end"/>
 
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
 				android:id="@+id/apartment_map_fab"

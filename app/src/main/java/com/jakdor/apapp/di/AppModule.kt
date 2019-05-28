@@ -5,10 +5,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.App
 import com.jakdor.apapp.arch.ViewModelFactory
-import com.jakdor.apapp.common.repository.ApartmentRepository
-import com.jakdor.apapp.common.repository.AuthRepository
-import com.jakdor.apapp.common.repository.PreferencesRepository
-import com.jakdor.apapp.common.repository.UserDetailsRepository
+import com.jakdor.apapp.common.repository.*
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.NetworkManager
 import com.jakdor.apapp.network.RetrofitFactory
@@ -63,8 +60,12 @@ class AppModule {
             BearerAuthWrapper = BearerAuthWrapper(retrofitFactory, authRepository, networkManager)
 
     @Provides
-    fun provideUserDetailsRepository(retrofitFactory: RetrofitFactory,
-                                   bearerAuthWrapper: BearerAuthWrapper,
+    fun provideUserDetailsRepository(bearerAuthWrapper: BearerAuthWrapper,
                                    rxSchedulersFacade: RxSchedulersFacade):
-            UserDetailsRepository = UserDetailsRepository(retrofitFactory, bearerAuthWrapper, rxSchedulersFacade)
+            UserDetailsRepository = UserDetailsRepository(bearerAuthWrapper, rxSchedulersFacade)
+
+    @Provides
+    fun provideRatingRepository(bearerAuthWrapper: BearerAuthWrapper,
+                                rxSchedulersFacade: RxSchedulersFacade):
+            RatingRepository = RatingRepository(bearerAuthWrapper, rxSchedulersFacade)
 }

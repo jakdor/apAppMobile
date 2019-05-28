@@ -1,14 +1,12 @@
-package com.jakdor.apapp.utils.diffCallback
+package com.jakdor.apapp.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.jakdor.apapp.common.model.apartment.Apartment
-import com.jakdor.apapp.ui.apartmentList.ApartmentItemAdapter
 
 /**
- * Difference callback for smart reloading of [ApartmentItemAdapter] content
+ * Difference callback for smart reloading of RecyclerViewAdapter content
  */
-class ApartmentItemDiffCallback(private val oldItems: List<Apartment>,
-                                private val newItems: List<Apartment>): DiffUtil.Callback() {
+class DiffCallbackImpl<T>(private val oldItems: List<T>,
+                          private val newItems: List<T>): DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldItems[oldItemPosition] == newItems[newItemPosition]
