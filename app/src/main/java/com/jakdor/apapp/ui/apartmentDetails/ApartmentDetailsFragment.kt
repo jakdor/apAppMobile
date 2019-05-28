@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -33,6 +35,7 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
     private lateinit var binding: FragmentApartmentDetailsBinding
     private var apartmentId: Int = -1
     private var phoneNumber: String = ""
+    private var getPhoneNumber = true
 
     private lateinit var recyclerViewAdapter: RatingItemAdapter
     private var recyclerViewInit = false
@@ -60,9 +63,30 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         super.onViewCreated(view, savedInstanceState)
 
         call_button.setOnClickListener {
-                val callIntent = Intent(Intent.ACTION_DIAL)
-                callIntent.data = Uri.parse("tel:$phoneNumber")
-                startActivity(callIntent)
+            if(getPhoneNumber) {
+                viewModel?.getApartmentPhoneNumber(apartmentId)
+                getPhoneNumber = false
+            }
+
+            val builder = AlertDialog.Builder(activity as MainActivity)
+            builder.setTitle("Wybierz akcję")
+            builder.setItems(arrayOf("Zadzwoń", "Wyślij SMS")) { dialog, which ->
+                when(which){
+                    0 -> {  val callIntent = Intent(Intent.ACTION_DIAL)
+                        callIntent.data = Uri.parse("tel:$phoneNumber")
+                        phoneNumber = ""
+                        startActivity(callIntent)
+                    }
+                    1 -> {
+                        val smsIntent = Intent(Intent.ACTION_VIEW)
+                        smsIntent.type = "vnd.android-dir/mms-sms"
+                        smsIntent.putExtra("address", phoneNumber)
+                        startActivity(smsIntent)
+                    }
+                }
+                getPhoneNumber = true
+            }
+            builder.show()
         }
 
         apartment_map_fab.setOnClickListener {
@@ -101,6 +125,8 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             apartment_img_pager_tab_indicator.setupWithViewPager(apartment_img_pager, true)
         }
 
+        viewModel?.observeApartmentPhoneNumber()
+
         viewModel?.ratingListLiveData?.observe(this, Observer { handleNewRatingList(it) })
         viewModel?.observeRatingListSubject()
         viewModel?.requestNewRatings(apartmentId)
@@ -117,12 +143,12 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         recyclerViewAdapter.updateItems(ratings.toMutableList())
     }
 
-    private fun handleNewApartmentPhoneNumber(phoneNumber: String?){
-        if(phoneNumber != null && phoneNumber.trim().isNotEmpty()){
-            this.phoneNumber = phoneNumber
-            call_button.isEnabled = true
-            call_button.isFocusable = true
-            call_button.isClickable = true
+    private fun handleNewApartmentPhoneNumber(tempPhoneNumber: String?){
+        if(tempPhoneNumber != null && tempPhoneNumber.trim().isNotEmpty()){
+            this.phoneNumber = tempPhoneNumber
+            getPhoneNumber = true
+        }else if(tempPhoneNumber!!.trim().isEmpty()){
+            Toast.makeText(activity,"Brak numeru telefonu", Toast.LENGTH_SHORT).show()
         }
     }
 
