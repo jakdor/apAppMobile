@@ -1,5 +1,7 @@
 package com.jakdor.apapp.ui.apartmentDetails
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,14 +9,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakdor.apapp.R
+import com.jakdor.apapp.common.model.rating.Rating
 import com.jakdor.apapp.databinding.FragmentApartmentDetailsBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_details.*
+import java.util.*
 import javax.inject.Inject
 
 class ApartmentDetailsFragment : Fragment(), InjectableFragment {
@@ -25,6 +32,10 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
     var viewModel: ApartmentDetailsViewModel? = null
     private lateinit var binding: FragmentApartmentDetailsBinding
     private var apartmentId: Int = -1
+    private var phoneNumber: String = ""
+
+    private lateinit var recyclerViewAdapter: RatingItemAdapter
+    private var recyclerViewInit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +59,12 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        call_button.setOnClickListener {
+                val callIntent = Intent(Intent.ACTION_DIAL)
+                callIntent.data = Uri.parse("tel:$phoneNumber")
+                startActivity(callIntent)
+        }
+
         apartment_map_fab.setOnClickListener {
             val apart = viewModel?.getApartment(apartmentId)
             if(activity is MainActivity && apart != null)
@@ -68,11 +85,59 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
             binding.apartment = viewModel!!.getApartment(apartmentId)
         }
 
-        val apart = viewModel?.getApartment(apartmentId)
-        if(apart != null){
-            apartment_img_pager.adapter = ApartmentImgPagerAdapter(
-                apart.imgList, GlideApp.with(this), context!!)
+        val apartment = viewModel?.getApartment(apartmentId)
+
+        if(apartment != null){
+            val adapter = ApartmentImgPagerAdapter(apartment.imgList, GlideApp.with(this), context!!)
+
+            adapter.setOnItemClickListener(object : ApartmentImgPagerAdapter.OnItemClickListener{
+                override fun onItemClick(view: View, position: Int) {
+                    if(activity is MainActivity && apartment.imgList != null)
+                        (activity as MainActivity).switchToImageActivity(apartment.imgList!![position])
+                }
+            })
+
+            apartment_img_pager.adapter = adapter
+            apartment_img_pager_tab_indicator.setupWithViewPager(apartment_img_pager, true)
         }
+
+        viewModel?.ratingListLiveData?.observe(this, Observer { handleNewRatingList(it) })
+        viewModel?.observeRatingListSubject()
+        viewModel?.requestNewRatings(apartmentId)
+
+        viewModel?.apartPhoneNumberLiveData?.observe(this, Observer { handleNewApartmentPhoneNumber(it) })
+        viewModel?.observeApartmentPhoneNumber()
+        viewModel?.getApartmentPhoneNumber(apartmentId)
+
+        apartment_rating_bar.rating = viewModel?.calculateAvgRating(apartmentId) ?: 0.0f
+    }
+
+    private fun handleNewRatingList(ratings: List<Rating>){
+        if (!recyclerViewInit) initRecyclerView()
+        recyclerViewAdapter.updateItems(ratings.toMutableList())
+    }
+
+    private fun handleNewApartmentPhoneNumber(phoneNumber: String?){
+        if(phoneNumber != null && phoneNumber.trim().isNotEmpty()){
+            this.phoneNumber = phoneNumber
+            call_button.isEnabled = true
+            call_button.isFocusable = true
+            call_button.isClickable = true
+        }
+    }
+
+    private fun initRecyclerView(){
+        recyclerViewAdapter = RatingItemAdapter(Vector())
+        recyclerViewAdapter.recyclerViewItemClickListener = object : RatingItemAdapter.RecyclerViewItemClickListener{
+            override fun onItemClick(ratingId: Int) {
+
+            }
+        }
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
+        binding.apartmentRatingRecycler.layoutManager = linearLayoutManager
+        binding.apartmentRatingRecycler.adapter = recyclerViewAdapter
+        recyclerViewInit = true
     }
 
     companion object {

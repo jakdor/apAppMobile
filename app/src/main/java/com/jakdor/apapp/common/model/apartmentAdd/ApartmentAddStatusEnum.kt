@@ -1,4 +1,4 @@
-package com.jakdor.apapp.common.model.auth
+package com.jakdor.apapp.common.model.apartmentAdd
 
 import com.google.gson.annotations.SerializedName
 

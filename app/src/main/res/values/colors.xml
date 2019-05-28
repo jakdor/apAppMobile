@@ -12,4 +12,5 @@
 	<color name="materialGrey">#fafafa</color>
 	<color name="shadow">#40000000</color>
 	<color name="shadow2">#80000000</color>
+	<color name="babyBlue">#3BB9F0</color>
 </resources>

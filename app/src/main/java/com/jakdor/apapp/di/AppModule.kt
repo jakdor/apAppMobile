@@ -5,11 +5,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.jakdor.apapp.App
 import com.jakdor.apapp.arch.ViewModelFactory
-import com.jakdor.apapp.common.repository.ApartmentRepository
-import com.jakdor.apapp.common.repository.AuthRepository
-import com.jakdor.apapp.common.repository.PreferencesRepository
-import com.jakdor.apapp.common.repository.UserDetailsRepository
+import com.jakdor.apapp.common.repository.*
 import com.jakdor.apapp.network.BearerAuthWrapper
+import com.jakdor.apapp.network.NetworkManager
 import com.jakdor.apapp.network.RetrofitFactory
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import dagger.Module
@@ -41,9 +39,10 @@ class AppModule {
             AuthRepository = AuthRepository(retrofitFactory, preferencesRepository)
 
     @Provides
-    fun providePreferencesRepository(app: Application): PreferencesRepository
-            = PreferencesRepository(app)
+    fun providePreferencesRepository(app: Application): PreferencesRepository = PreferencesRepository(app)
 
+    @Provides
+    fun provideNetworkManager(app: Application): NetworkManager = NetworkManager(app.applicationContext)
 
     @Provides
     fun provideRxSchedulersFacade(): RxSchedulersFacade = RxSchedulersFacade()
@@ -56,12 +55,17 @@ class AppModule {
 
     @Provides
     fun provideBearerAuthWrapper(retrofitFactory: RetrofitFactory,
-                                 authRepository: AuthRepository):
-            BearerAuthWrapper = BearerAuthWrapper(retrofitFactory, authRepository)
+                                 authRepository: AuthRepository,
+                                 networkManager: NetworkManager):
+            BearerAuthWrapper = BearerAuthWrapper(retrofitFactory, authRepository, networkManager)
 
     @Provides
-    fun provideUserDetailsRepository(retrofitFactory: RetrofitFactory,
-                                   bearerAuthWrapper: BearerAuthWrapper,
+    fun provideUserDetailsRepository(bearerAuthWrapper: BearerAuthWrapper,
                                    rxSchedulersFacade: RxSchedulersFacade):
-            UserDetailsRepository = UserDetailsRepository(retrofitFactory, bearerAuthWrapper, rxSchedulersFacade)
+            UserDetailsRepository = UserDetailsRepository(bearerAuthWrapper, rxSchedulersFacade)
+
+    @Provides
+    fun provideRatingRepository(bearerAuthWrapper: BearerAuthWrapper,
+                                rxSchedulersFacade: RxSchedulersFacade):
+            RatingRepository = RatingRepository(bearerAuthWrapper, rxSchedulersFacade)
 }

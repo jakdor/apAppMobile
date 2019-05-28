@@ -3,6 +3,7 @@ package com.jakdor.apapp.network
 import com.jakdor.apapp.common.repository.AuthRepository
 import io.reactivex.Observable
 import timber.log.Timber
+import java.net.ConnectException
 import javax.inject.Inject
 
 /**
@@ -11,7 +12,8 @@ import javax.inject.Inject
 @Suppress("UNREACHABLE_CODE")
 class BearerAuthWrapper
 @Inject constructor(retrofitFactory: RetrofitFactory,
-                    private val authRepository: AuthRepository){
+                    private val authRepository: AuthRepository,
+                    private val networkManager: NetworkManager){
 
     var apiAuthService: BackendService = retrofitFactory.createService(
         BackendService.API_URL, BackendService::class.java, authRepository.getBearerToken())
@@ -20,6 +22,12 @@ class BearerAuthWrapper
 
     fun <S> wrapCall(observableCall: Observable<S>): Observable<S> {
         return Observable.create<S> {
+
+            if(!networkManager.checkNetworkStatus()){
+                authRepository.noInternet()
+                it.onError(throw Exception("No Internet"))
+                it.onComplete()
+            }
 
             var callResponse: S? = null
 
@@ -39,13 +47,17 @@ class BearerAuthWrapper
 
                     } catch (e2: Exception) {
                         Timber.i("Refresh token failed")
+                        authRepository.forceLogout()
+                        it.onError(throw Exception("Unauthorized"))
                     }
+                }
+                else if(e::class.java == ConnectException::class.java){
+                    authRepository.requestFailed()
+                    it.onError(throw Exception("API request failed"))
                 }
             }
 
-            if (callResponse == null) {
-                it.onError(throw Exception("Unauthorized"))
-            } else {
+            if (callResponse != null) {
                 it.onNext(callResponse)
             }
 

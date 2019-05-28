@@ -11,10 +11,10 @@
 	<string name="invalid_login_toast">Błędny login lub hasło</string>
 	<string name="registrationLabel">Rejestracja</string>
 	<string name="rating_label">Ocena</string>
-	<string name="nameLabel">Imię</string>
-	<string name="surnameLabel">Nazwisko</string>
-	<string name="emailLabel">E-mail</string>
-	<string name="loginLabel">Login</string>
+	<string name="nameLabel">Imię: </string>
+	<string name="surnameLabel">Nazwisko: </string>
+	<string name="emailLabel">E-mail: </string>
+	<string name="loginLabel">Login: </string>
 	<string name="passwordLabel">Hasło</string>
 	<string name="re_passwordLabel">Powtórz hasło</string>
 	<string name="registerButton">Zarejestruj</string>
@@ -56,4 +56,17 @@
 	<string name="install_maps_dialog_title">Google Maps nie zainstalowane</string>
 	<string name="data_download_error">Wystąpił problem z pobraniem danych</string>
 	<string name="user_details_button">profil użytkownika</string>
+	<string name="user_phoneNumber_label">Numer telefonu</string>
+	<string name="wrong_phone_number">Podaj prawidłowy numer telefonu</string>
+	<string name="max_people_label">Maksymalna ilość osób</string>
+	<string name="price_label">Cena</string>
+	<string name="area_label">Powierzchnia</string>
+	<string name="wrong_number_label">Podaj prawidłową liczbę</string>
+	<string name="set_as_thumbnail_label">Ustaw miniaturkę</string>
+	<string name="enlarged_image_desc">enlarged image</string>
+	<string name="area_with_square_meters">%1$s m\u00B2</string>
+	<string name="session_expired_toast">Sesja wygasła</string>
+	<string name="no_api_response_toast">Serwer nie odpowiada - sprawdź połączenie</string>
+	<string name="no_internet_toast">Wymagane połączenie z Internetem</string>
+	<string name="ratin_sufix">/5</string>
 </resources>

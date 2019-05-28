@@ -25,11 +25,15 @@ import com.jakdor.apapp.ui.apartmentList.ApartmentListFragment
 import com.jakdor.apapp.ui.login.LoginFragment
 import com.jakdor.apapp.ui.registration.RegistrationFragment
 import com.jakdor.apapp.ui.userPanel.UserPanelFragment
+import com.jakdor.apapp.utils.RxSchedulersFacade
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.io.File
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
@@ -37,10 +41,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     lateinit var authRepository: AuthRepository
 
     @Inject
+    lateinit var rxSchedulersFacade: RxSchedulersFacade
+
+    @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var options: Options
     private var returnedImages: ArrayList<String> = arrayListOf()
+
+    private val rxDisposables = CompositeDisposable()
 
     override fun supportFragmentInjector(): DispatchingAndroidInjector<Fragment> {
         return dispatchingAndroidInjector
@@ -50,10 +59,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-            options = Options.init()
-                .setRequestCode(GET_IMAGES_REQUEST_CODE)
-                .setCount(MAX_IMAGES_TO_UPLOAD)
-                .setPreSelectedUrls(returnedImages)
+        options = Options.init()
+            .setRequestCode(GET_IMAGES_REQUEST_CODE)
+            .setCount(MAX_IMAGES_TO_UPLOAD)
+            .setPreSelectedUrls(returnedImages)
 
         if(authRepository.isLoggedIn()){
             switchToApartmentListFragment()
@@ -61,6 +70,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         else{
             switchToLoginFragment()
         }
+
+        rxDisposables.add(authRepository.authStatusSubject
+            .observeOn(rxSchedulersFacade.ui())
+            .subscribeOn(rxSchedulersFacade.io())
+            .subscribe({t -> onNewAuthStatus(t)}, {Timber.e("Error observing auth status")}))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -110,10 +124,42 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!rxDisposables.isDisposed) rxDisposables.dispose()
+    }
+
+    private fun onNewAuthStatus(status: AuthRepository.AuthStatusEnum){
+        when(status){
+            AuthRepository.AuthStatusEnum.IDLE -> {}
+            AuthRepository.AuthStatusEnum.LOGGED_IN -> {}
+            AuthRepository.AuthStatusEnum.NO_INTERNET -> {
+                Toast.makeText(this, getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+            }
+            AuthRepository.AuthStatusEnum.REQUEST_FAILED -> {
+                Toast.makeText(this, getString(R.string.no_api_response_toast), Toast.LENGTH_SHORT).show()
+            }
+            AuthRepository.AuthStatusEnum.LOGOUT_USER -> logout()
+            AuthRepository.AuthStatusEnum.LOGOUT_FORCED -> {
+                logout()
+                Toast.makeText(this, getString(R.string.session_expired_toast), Toast.LENGTH_LONG).show()
+            }
+
+        }
+    }
+
+    private fun logout(){
+        val fragments = supportFragmentManager.fragments.count()
+        for (i in 0 .. fragments){
+            supportFragmentManager.popBackStack()
+        }
+
+        switchToLoginFragment()
+    }
+
     fun switchToApartmentListFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, ApartmentListFragment.getInstance(), ApartmentListFragment.CLASS_TAG)
-            .addToBackStack(ApartmentListFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched ApartmentListFragment")
     }
@@ -126,17 +172,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         Timber.i("Launched LoginFragment")
     }
 
-    fun switchToAddApartmentFragment() {
-        val apartmentFragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
-        if(apartmentFragment != null && apartmentFragment.isVisible) return
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
-            .addToBackStack(ApartmentFragment.CLASS_TAG)
-            .commit()
-        Timber.i("Launched ApartmentFragment")
-    }
-
     fun switchToRegistrationFragment(){
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentLayout, RegistrationFragment.getInstance(), RegistrationFragment.CLASS_TAG)
@@ -147,24 +182,56 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
 
     fun switchToApartmentDetailsFragment(apartmentId: Int){
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
+            .add(R.id.mainFragmentLayout, ApartmentDetailsFragment.getInstance(apartmentId),
                 ApartmentDetailsFragment.CLASS_TAG)
             .addToBackStack(ApartmentDetailsFragment.CLASS_TAG)
             .commit()
         Timber.i("Launched ApartmentDetailsFragment")
     }
 
-    fun switchToUserPanelFragment() {
+    private fun switchToAddApartmentFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(ApartmentFragment.CLASS_TAG) as ApartmentFragment?
+        if(fragment != null && fragment.isVisible) return
+
+        popFragmentsRecursively()
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
+            .add(R.id.mainFragmentLayout, ApartmentFragment.getInstance(), ApartmentFragment.CLASS_TAG)
+            .addToBackStack(ApartmentFragment.CLASS_TAG)
+            .commit()
+        Timber.i("Launched ApartmentFragment")
+    }
+
+    private fun switchToUserPanelFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(UserPanelFragment.CLASS_TAG) as UserPanelFragment?
+        if(fragment != null && fragment.isVisible) return
+
+        popFragmentsRecursively()
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.mainFragmentLayout, UserPanelFragment.getInstance(), UserPanelFragment.CLASS_TAG)
             .addToBackStack(UserPanelFragment.CLASS_TAG)
             .commit()
         Timber.i("Lunched UserPanelFragment")
     }
 
-    fun openChooser(){
-        //val isCameraAvailable = checkCameraFeaturesAvailability()
+    private fun popFragmentsRecursively(){
+        val fragments = supportFragmentManager.fragments.count()
 
+        for (i in 0 until fragments){
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    fun switchToImageActivity(imgUrl: String) {
+        val intent = Intent(this, ImageActivity::class.java)
+        intent.putExtra(ImageActivity.IMAGE_URL_BUNDLE_KEY, imgUrl)
+        startActivity(intent)
+
+        Timber.i("Lunched ImageActivity")
+    }
+
+    fun openChooser(){
         val externalStorageCheck = ContextCompat.checkSelfPermission(this,
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val cameraCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -203,6 +270,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
         returnedImages.removeAt(position)
     }
 
+    fun changeThumbnail(position: Int) {
+        Collections.swap(returnedImages, position, 0)
+    }
+
     /**
      * Google Maps app navigation intent
      */
@@ -234,7 +305,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     /**
      * Check package available
      */
-    fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean
+    private fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean
     {
         return try {
             packageManager.getPackageInfo(packageName, 0)
@@ -248,7 +319,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector{
     /**
      * Opens dialog with GoogleMaps Store
      */
-    fun googleMapsInstallIntent()
+    private fun googleMapsInstallIntent()
     {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.install_maps_dialog_title))

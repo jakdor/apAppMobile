@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.jakdor.apapp.R
-import com.jakdor.apapp.utils.diffCallback.ApartmentImageDiffCallback
+import com.jakdor.apapp.utils.DiffCallbackImpl
 
 class ApartmentImageAdapter(private val glide: RequestManager, private val imagesList: ArrayList<Picture>):
     RecyclerView.Adapter<ApartmentImageAdapter.Holder>() {
 
-    lateinit var recyclerViewItemClickListener: RecyclerViewItemClickListener
+    private var recyclerViewItemClickListener: RecyclerViewItemClickListener? = null
+
+    fun setRecyclerViewItemClickListener(listener: RecyclerViewItemClickListener){
+        recyclerViewItemClickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -41,15 +45,33 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
         holder.cardView.setOnClickListener {
             if(!secondClick) {
                 holder.deleteButton.visibility = View.VISIBLE
+                if(position != 0) {
+                    holder.thumbnailButton.visibility = View.VISIBLE
+                }
                 secondClick = true
             }else{
                 holder.deleteButton.visibility = View.GONE
+                if(position != 0) {
+                    holder.thumbnailButton.visibility = View.GONE
+                }
                 secondClick = false
             }
         }
+
         holder.deleteButton.setOnClickListener{
             holder.deleteButton.visibility = View.GONE
-            recyclerViewItemClickListener.onItemClick(holder.itemView, position)
+            if(position != 0) {
+                holder.thumbnailButton.visibility = View.GONE
+            }
+            recyclerViewItemClickListener?.onItemClick(holder.itemView, position)
+        }
+
+        holder.thumbnailButton.setOnClickListener{
+            holder.deleteButton.visibility = View.GONE
+            if(position != 0) {
+                holder.thumbnailButton.visibility = View.GONE
+            }
+            recyclerViewItemClickListener?.changeThumbnail(position)
         }
     }
 
@@ -60,7 +82,7 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
         val handler = Handler()
 
         Thread(Runnable {
-            val diffCallback = ApartmentImageDiffCallback(oldImagesList, newImagesList)
+            val diffCallback = DiffCallbackImpl(oldImagesList, newImagesList)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
             handler.post {
                 diffResult.dispatchUpdatesTo(this)
@@ -68,7 +90,6 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
                 imagesList.addAll(newImagesList)
             }
         }).start()
-
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -76,10 +97,11 @@ class ApartmentImageAdapter(private val glide: RequestManager, private val image
         var imageView: ImageView = itemView.findViewById(R.id.apartment_image)
         var cardView: CardView = itemView.findViewById(R.id.image_cardView)
         var deleteButton: Button = itemView.findViewById(R.id.delete_image)
+        var thumbnailButton: Button = itemView.findViewById(R.id.thumbnail_button)
     }
 
     interface RecyclerViewItemClickListener {
         fun onItemClick(view: View, position: Int)
-        //fun onItemLongClick(view: View, position: Int)
+        fun changeThumbnail(position: Int)
     }
 }
