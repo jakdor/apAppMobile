@@ -3,7 +3,10 @@ package com.jakdor.apapp.network
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
 import com.jakdor.apapp.common.model.auth.*
+import com.jakdor.apapp.common.model.rating.RatingListResponse
+import com.jakdor.apapp.common.model.userDetails.PhoneNumberResponse
 import com.jakdor.apapp.common.model.userDetails.UserDetails
 import io.reactivex.Observable
 import okhttp3.MultipartBody
@@ -40,6 +43,11 @@ interface BackendService {
 
     @POST("Auth/register")
     fun postRegister(@Body registerRequest: RegisterRequest): Observable<RegisterResponse?>
+
+    @GET("Ratings")
+    fun getRatings(@Query("idAp") idAp: Int,
+                   @Query("limit") limit: Int,
+                   @Query("offset") offset: Int): Observable<RatingListResponse>
 
     companion object {
         const val API_URL = "http://167.99.60.13:50649/api/"

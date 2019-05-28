@@ -17,5 +17,8 @@ constructor(@SerializedName("ID_Ap") @Expose var id: Int,
             @SerializedName("PhoneNumber") @Expose var phoneNumber: String,
             @SerializedName("Lat") @Expose var lat: Float,
             @SerializedName("Long") @Expose var long: Float,
-            @SerializedName("Rate") @Expose var rating: Float?,
-            @SerializedName("Description") @Expose var description: String)
+            @SerializedName("Description") @Expose var description: String,
+            @SerializedName("OwnerRating") @Expose var ownerRating: Float,
+            @SerializedName("LocationRating") @Expose var locationRating: Float,
+            @SerializedName("StandardRating") @Expose var standardRating: Float,
+            @SerializedName("PriceRating") @Expose var priceRating: Float)

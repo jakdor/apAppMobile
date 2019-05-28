@@ -1,7 +1,7 @@
 package com.jakdor.apapp.common.repository
 
 import com.jakdor.apapp.common.model.apartment.ApartmentAdd
-import com.jakdor.apapp.common.model.auth.ApartmentAddResponse
+import com.jakdor.apapp.common.model.apartmentAdd.ApartmentAddResponse
 import com.jakdor.apapp.network.BackendService
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.network.RetrofitFactory

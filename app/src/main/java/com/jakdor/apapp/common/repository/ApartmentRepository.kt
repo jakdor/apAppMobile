@@ -3,7 +3,7 @@ package com.jakdor.apapp.common.repository
 import com.jakdor.apapp.common.model.apartment.Apartment
 import com.jakdor.apapp.common.model.apartment.ApartmentList
 import com.jakdor.apapp.common.model.apartment.ApartmentListRequest
-import com.jakdor.apapp.common.model.auth.PhoneNumberResponse
+import com.jakdor.apapp.common.model.userDetails.PhoneNumberResponse
 import com.jakdor.apapp.network.BearerAuthWrapper
 import com.jakdor.apapp.utils.RxSchedulersFacade
 import io.reactivex.disposables.CompositeDisposable
@@ -36,7 +36,7 @@ class ApartmentRepository
                 apartmentListCache = t.apartments
             }},{e -> run {
                 apartmentsListSubject.onNext(ApartmentList(null, false))
-                Timber.e(e, "ERROR observing ApartmentsListSubject")
+                Timber.e(e, "ERROR observing getApartments")
             }}))
     }
 

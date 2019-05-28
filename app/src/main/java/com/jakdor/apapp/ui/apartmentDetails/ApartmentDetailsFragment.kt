@@ -14,14 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakdor.apapp.R
+import com.jakdor.apapp.common.model.rating.Rating
 import com.jakdor.apapp.databinding.FragmentApartmentDetailsBinding
 import com.jakdor.apapp.di.InjectableFragment
 import com.jakdor.apapp.ui.MainActivity
 import com.jakdor.apapp.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_apartment_details.*
+import java.util.*
 import javax.inject.Inject
-
 
 class ApartmentDetailsFragment : Fragment(), InjectableFragment {
 
@@ -33,6 +36,9 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
     private var apartmentId: Int = -1
     private var phoneNumber: String = ""
     private var getPhoneNumber = true
+
+    private lateinit var recyclerViewAdapter: RatingItemAdapter
+    private var recyclerViewInit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +110,7 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
         }
 
         val apartment = viewModel?.getApartment(apartmentId)
+
         if(apartment != null){
             val adapter = ApartmentImgPagerAdapter(apartment.imgList, GlideApp.with(this), context!!)
 
@@ -120,16 +127,43 @@ class ApartmentDetailsFragment : Fragment(), InjectableFragment {
 
         viewModel?.observeApartmentPhoneNumber()
 
-        val userPhoneNumberObserver = Observer<String> { tempPhoneNumber ->
-            if(tempPhoneNumber.trim().isNotEmpty()){
-                this.phoneNumber = tempPhoneNumber
-                getPhoneNumber = true
-            }else if(tempPhoneNumber.trim().isEmpty()){
-                Toast.makeText(activity,"Brak numeru telefonu", Toast.LENGTH_SHORT).show()
+        viewModel?.ratingListLiveData?.observe(this, Observer { handleNewRatingList(it) })
+        viewModel?.observeRatingListSubject()
+        viewModel?.requestNewRatings(apartmentId)
+
+        viewModel?.apartPhoneNumberLiveData?.observe(this, Observer { handleNewApartmentPhoneNumber(it) })
+        viewModel?.observeApartmentPhoneNumber()
+        viewModel?.getApartmentPhoneNumber(apartmentId)
+
+        apartment_rating_bar.rating = viewModel?.calculateAvgRating(apartmentId) ?: 0.0f
+    }
+
+    private fun handleNewRatingList(ratings: List<Rating>){
+        if (!recyclerViewInit) initRecyclerView()
+        recyclerViewAdapter.updateItems(ratings.toMutableList())
+    }
+
+    private fun handleNewApartmentPhoneNumber(tempPhoneNumber: String?){
+        if(tempPhoneNumber != null && tempPhoneNumber.trim().isNotEmpty()){
+            this.phoneNumber = tempPhoneNumber
+            getPhoneNumber = true
+        }else if(tempPhoneNumber!!.trim().isEmpty()){
+            Toast.makeText(activity,"Brak numeru telefonu", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initRecyclerView(){
+        recyclerViewAdapter = RatingItemAdapter(Vector())
+        recyclerViewAdapter.recyclerViewItemClickListener = object : RatingItemAdapter.RecyclerViewItemClickListener{
+            override fun onItemClick(ratingId: Int) {
+
             }
         }
-
-        viewModel?.apartPhoneNumberLiveData?.observe(this, userPhoneNumberObserver)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
+        binding.apartmentRatingRecycler.layoutManager = linearLayoutManager
+        binding.apartmentRatingRecycler.adapter = recyclerViewAdapter
+        recyclerViewInit = true
     }
 
     companion object {
