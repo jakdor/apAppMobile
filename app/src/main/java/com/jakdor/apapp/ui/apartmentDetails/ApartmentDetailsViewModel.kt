@@ -35,7 +35,6 @@ class ApartmentDetailsViewModel
     }
 
     fun getApartmentPhoneNumber(id: Int){
-        observeApartmentPhoneNumber()
         apartmentRepository.getApartmentPhoneNumber(id)
     }
 
